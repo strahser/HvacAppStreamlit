@@ -1,9 +1,8 @@
-from Upload.Session.StatementConfig import StatementConstants
 import plotly.graph_objects as go
 import plotly.io as pio
-import streamlit as st
 
-def load_plotly_charts(selected_levels:list[str],is_need_show_plots:bool,level_plots_data:dict[str:dict]|None):
+
+def load_plotly_charts(selected_levels:list[str],is_need_show_plots:bool,level_plots_data:dict[str:dict]):
 	if is_need_show_plots:
 		plt_list = []
 		plt_levels =[]

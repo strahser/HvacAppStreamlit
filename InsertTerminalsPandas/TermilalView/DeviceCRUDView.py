@@ -14,7 +14,7 @@ class DeviceCRUDView:
 		self.input_data_df = input_data_df
 
 	@property
-	def device_type_df(self) -> pd.DataFrame | None:
+	def device_type_df(self) -> pd.DataFrame:
 		try:
 			# device_type_df = pd.read_sql(f"select * from {ColumnChoosing.device_type}", con=self.con)
 			device_type = self.input_data_df.device_type
@@ -23,7 +23,7 @@ class DeviceCRUDView:
 			self.__exception_create(e)
 
 	@property
-	def devices_df(self) -> pd.DataFrame | None:
+	def devices_df(self) -> pd.DataFrame:
 		try:
 			# devices_df = pd.read_sql(f"select * from {ColumnChoosing.devices}", con=self.con)
 			devices = self.input_data_df.devices
@@ -31,7 +31,7 @@ class DeviceCRUDView:
 		except Exception as e:
 			self.__exception_create(e)
 
-	def create_devices_db_view(self) -> list[str] | None:
+	def create_devices_db_view(self) -> list[str]:
 		"""system names and devices agg table"""
 		try:
 			self.changed_column = self._create_device_filter_view()
@@ -57,7 +57,7 @@ class DeviceCRUDView:
 		sql_operation = SqlCRUDOperationControl(ColumnChoosing.devices)
 		sql_operation.add_data_to_column(filtered_df, table_add_data_view)
 
-	def _create_id_filter_view(self) -> list[str] | None:
+	def _create_id_filter_view(self) -> list[str]:
 		with self.col3:
 			_index = self.devices_df.columns.to_list().index(
 				ColumnChoosing.S_ID) if ColumnChoosing.S_ID in self.devices_df.columns else 0
@@ -68,7 +68,7 @@ class DeviceCRUDView:
 			                         key='select id column')
 		return id_column
 
-	def _create_device_filter_view(self) -> list[str] | None:
+	def _create_device_filter_view(self) -> list[str]:
 		try:
 			system_type_df = list(self.input_data_df.system_dictionary.keys())
 
