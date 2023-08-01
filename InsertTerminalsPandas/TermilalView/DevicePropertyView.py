@@ -118,7 +118,7 @@ class DevicePropertyView:
 			db_control = AddSelectedDataToDBControl()
 			db_control.add_device_data_new_row_to_db(self, new_type_index)
 
-	def _get_filter_data_from_db(self, column_name: str, default_terminal_data=None) -> str | int:
+	def _get_filter_data_from_db(self, column_name: str, default_terminal_data=None) -> str:
 		default_terminal_data = self.type_index if not default_terminal_data else default_terminal_data
 		con = SqlConnector.conn_sql
 		q = f"select * from device_type where {ColumnChoosing.type_index} = '{default_terminal_data}' limit 1"
