@@ -7,7 +7,7 @@ class DynamicEquipmentPropertyView(DynamicBaseView):
 
 	@staticmethod
 	def __create_beautifully_number(row_flow: float):
-		if isinstance(row_flow, float | int):
+		if isinstance(row_flow, float):
 			split_number = "{0:,}".format(round(row_flow)).replace(",", " ")
 			return split_number
 		else:
