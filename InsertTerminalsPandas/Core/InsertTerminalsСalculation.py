@@ -8,7 +8,7 @@ class InsertTerminals:
 	             device_orientation_option1: str,
 	             device_orientation_option2: str,
 	             location_type: str,
-	             device_points_number: int | float
+	             device_points_number: int
 	             ):
 		self.perimeter_curve = perimeter_curve
 		self.device_orientation_option1 = device_orientation_option1
