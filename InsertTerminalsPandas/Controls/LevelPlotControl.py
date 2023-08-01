@@ -41,7 +41,7 @@ class CreateSelectedPlotsControl(CreatePlotsControlBase):
 	def __init__(self, config_view: ConfigView, df_input_table: pd.DataFrame, input_data_df: InputDataDF):
 		super().__init__(config_view, df_input_table, input_data_df)
 
-	def _create_device_list(self, selected_id: list[int | str]):
+	def _create_device_list(self, selected_id: list[str]):
 		self.selected_id = selected_id
 		parsing_terminals = ParsingDBtoTerminalDataControl(self.df_polygons, self.config_view, self.input_data_df)
 		system_color_dictionary = self._create_system_color()
@@ -49,7 +49,7 @@ class CreateSelectedPlotsControl(CreatePlotsControlBase):
 		self.device_layout_list = parsing_terminals.device_layout_list
 		return devices_list
 
-	def plot_selected_terminals_and_polygons(self, selected_id: list[int | str]):
+	def plot_selected_terminals_and_polygons(self, selected_id: list[str]):
 		self.devices_list = self._create_device_list(selected_id)
 		PlotSelectedSpacesAndTerminals.plot_selected_polygons(self.df_polygons, self.ax, selected_id)
 		for device in self.devices_list:
