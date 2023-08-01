@@ -99,7 +99,7 @@ class ParsingDBtoTerminalDataControl:
 			self.device_layout.get_terminal_layout()
 		return self.device_layout
 	
-	def add_parsing_data_to_device_model(self, system_color_dictionary: dict, selected_id: list[int | str]):
+	def add_parsing_data_to_device_model(self, system_color_dictionary: dict, selected_id: list[str]):
 		string_id_list = [str(val) for val in selected_id]
 		condition = self.df_polygons[ColumnChoosing.S_ID].isin(string_id_list)
 		device_property_list = []
