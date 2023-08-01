@@ -169,7 +169,7 @@ class PlotSelectedSpacesAndTerminals:
 		                                                              device_property.system_name)
 	
 	@staticmethod
-	def plot_selected_polygons(df_polygons, ax, selected_id: list[int | str]):
+	def plot_selected_polygons(df_polygons, ax, selected_id: list[str]):
 		string_id_list = [str(val) for val in selected_id]
 		condition = df_polygons[ColumnChoosing.S_ID].isin(string_id_list)
 		if any(condition):
