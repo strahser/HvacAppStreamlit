@@ -32,10 +32,6 @@ def _create_input_sql_tools_view(upload_layout, key):
 def dashboard_main(upload_layout):
 	tableau, tab_static = st.tabs(["Tableau", "Static"])
 
-	def load_config(file_path):
-		with open(file_path, 'r') as config_file:
-			config_str = config_file.read()
-		return config_str
 
 	with tab_static:
 		table_view_node = ViewNodes(f"{MenuChapters.dash_board} Table")
@@ -60,20 +56,18 @@ def dashboard_main(upload_layout):
 					except Exception as e:
 						st.warning(e)
 	with tableau:
-
 		config = st.session_state[StatementConstants.tableau_config]
-
 		table = _create_input_sql_tools_view(upload_layout, f"{MenuChapters.dash_board} tableau")
 		st.session_state[StatementConstants.tableau_table] = table
 		if (table in st.session_state[StatementConstants.table_db][StatementConstants.all_tables_db]
 				or table in st.session_state[StatementConstants.table_db][StatementConstants.all_tables_db]):
 			if st.session_state[StatementConstants.tableau_table]:
-				df = pd.read_sql(f"select * from {st.session_state[StatementConstants.tableau_table]}",
-				                 con=SqlConnector.conn_sql)
+				df = pd.read_sql(f"select * from {st.session_state[StatementConstants.tableau_table]}",	con=SqlConnector.conn_sql)
 				pyg.walk(df, env='Streamlit', dark='light', themeKey="vega", spec=config)
-
 		code_area = st.text_area("Past tableau code data").replace('vis_spec = """', "").replace('"""', "")
-		clipboard_button = st.button("ADD to buffer", key="clipboard button")
+		clipboard_button = st.button("ADD to buffer", 
+									key="clipboard button",
+									help="""insert the code and block into the text and confirm by pressing the button""")
 		clear_button = st.button("cleare buffer state", key="cleare button")
 		if clipboard_button:
 			st.session_state[StatementConstants.tableau_config] = code_area
