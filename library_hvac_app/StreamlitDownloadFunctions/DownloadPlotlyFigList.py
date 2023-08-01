@@ -1,5 +1,5 @@
 import os.path
-
+import kaleido #required
 from plotly import graph_objs as go
 import streamlit as st
 import plotly
@@ -40,12 +40,12 @@ def download_jpg_zip(fig: list[go.Figure], file_name: str = "plot"):
 			# Write the zip file to the buffer
 			with zipfile.ZipFile(buffer, "w") as zip:
 				for en, f_ in enumerate(fig):
-					res1 = plotly.io.to_image(f_, "jpg", width=plot_width, height=plot_height, scale=1.5)
+					# res1 = plotly.io.to_image(f_, "jpg", width=plot_width, height=plot_height, scale=1.5)
 					res2 = plotly.io.to_image(f_, "pdf", width=plot_width, height=plot_height, scale=1.5)
 					res3 = plotly.io.to_html(f_, include_plotlyjs="cdn", default_width=plot_width,
 					                         default_height=plot_height)
 					all_data_html.append(res3)
-					zip.writestr(f"{file_name}_{en + 1}.jpg", res1)
+					# zip.writestr(f"{file_name}_{en + 1}.jpg", res1)
 					zip.writestr(f"{file_name}_{en + 1}.pdf", res2)
 					if split_html_in_file:
 						zip.writestr(f"{file_name}_{en + 1}.html", res3)

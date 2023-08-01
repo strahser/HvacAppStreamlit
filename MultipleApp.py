@@ -11,7 +11,7 @@ sys.path.insert(0, current_dir)
 sys.path.insert(0, parent_dir)
 sys.path.insert(0, root_dir)
 
-import hydralit as hy
+
 from StaticData.AppConfig import MenuChapters, MenuIcons
 from Session.StatementConfig import StatementConstants
 from Session.UploadSessionSetting import UploadSessionSettingControl
@@ -104,41 +104,41 @@ class MultipleApp:
 			DownloadControl(self.upload_layout)
 
 
-def hydralit_style_app():
-	app = hy.HydraApp(title="HVAC BIM SOLUTION")
-	multy_app = MultipleApp()
-	multy_app.create_upload_data()
+# def hydralit_style_app():
+# 	app = hy.HydraApp(title="HVAC BIM SOLUTION")
+# 	multy_app = MultipleApp()
+# 	multy_app.create_upload_data()
 
-	@app.addapp(title=MenuChapters.input_data, icon=MenuIcons.input_data)
-	def input_data():
-		multy_app.session_data()
+# 	@app.addapp(title=MenuChapters.input_data, icon=MenuIcons.input_data)
+# 	def input_data():
+# 		multy_app.session_data()
 
-	@app.addapp(title=MenuChapters.ifc_dash_board, icon=MenuIcons.polygons)
-	def polygons():
-		multy_app.ifc_dash_board()
+# 	@app.addapp(title=MenuChapters.ifc_dash_board, icon=MenuIcons.polygons)
+# 	def polygons():
+# 		multy_app.ifc_dash_board()
 
-	@app.addapp(title=MenuChapters.polygons, icon=MenuIcons.polygons)
-	def polygons():
-		multy_app.polygons()
+# 	@app.addapp(title=MenuChapters.polygons, icon=MenuIcons.polygons)
+# 	def polygons():
+# 		multy_app.polygons()
 
-	@app.addapp(title=MenuChapters.scheme, icon=MenuIcons.scheme)
-	def scheme():
-		multy_app.scheme()
+# 	@app.addapp(title=MenuChapters.scheme, icon=MenuIcons.scheme)
+# 	def scheme():
+# 		multy_app.scheme()
 
-	@app.addapp(title=MenuChapters.ahu, icon=MenuIcons.ahu)
-	def ahu():
-		multy_app.ahu()
+# 	@app.addapp(title=MenuChapters.ahu, icon=MenuIcons.ahu)
+# 	def ahu():
+# 		multy_app.ahu()
 
-	@app.addapp(title=MenuChapters.terminals, icon=MenuIcons.terminals)
-	def terminals():
-		multy_app.terminals()
+# 	@app.addapp(title=MenuChapters.terminals, icon=MenuIcons.terminals)
+# 	def terminals():
+# 		multy_app.terminals()
 
-	@app.addapp(title=MenuChapters.analytics, icon=MenuIcons.analytics)
-	def analytics():
-		multy_app.analytics()
+# 	@app.addapp(title=MenuChapters.analytics, icon=MenuIcons.analytics)
+# 	def analytics():
+# 		multy_app.analytics()
 
-	@app.addapp(title=MenuChapters.download, icon=MenuIcons.download)
-	def download():
-		multy_app.download()
+# 	@app.addapp(title=MenuChapters.download, icon=MenuIcons.download)
+# 	def download():
+# 		multy_app.download()
 
-	app.run()
+# 	app.run()
