@@ -29,7 +29,7 @@ class InputViewMultyChoosing:
 				else:
 					check_input_df = input_view_control.create_input_view(index_book=self.index_book,
 					                                                      index_sheet=self.index_sheet)
-				if isinstance(check_input_df, pd.core.frame.DataFrame | list):
+				if isinstance(check_input_df, pd.core.frame.DataFrame):
 					setattr(class_instance, name, check_input_df)
 					condition_list.append(True)
 				else:
