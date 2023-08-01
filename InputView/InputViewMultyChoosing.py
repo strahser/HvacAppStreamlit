@@ -14,7 +14,7 @@ class InputViewMultyChoosing:
 	def create_input_choosing_data_form(self,
 	                                    excel_sheet_names: list[str],
 	                                    class_instance,
-	                                    ) -> bool | None:
+	                                    ) -> bool:
 		st.subheader("select sheet data")
 		with st.expander("select sheet data"):
 			confirm_checkbox = st.checkbox("Confirm Sheet Data", key=f"{self.key} confirm_checkbox")

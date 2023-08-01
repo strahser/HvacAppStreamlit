@@ -6,7 +6,8 @@ from streamlit_option_menu import option_menu
 import streamlit_nested_layout
 # pip install git+https://github.com/joy13975/streamlit-nested-layout.git
 # icons https://icons.getbootstrap.com/icons/calculator-fill/
-#https://fsaxxx7p2ylh8cjinhdcfd.streamlit.app/
+# https://bimhvac.streamlit.app/
+
 st.set_page_config(layout="wide")
 
 
