@@ -1,10 +1,13 @@
 class StatementConstants:
 	table_db = "table db"
+	category_view_list = "category_view_list"
+	category_dictionary = "category dictionary"
 	without_category = "Without category"
 	create_json = 'create_json'
 	sql_view_query = "sql_view_query"
 	category_name = "balance_type"
 	view_name = "view_name"
+	view_comments = "view_comments"
 	mainHydralitMenuComplex = "mainHydralitMenuComplex"
 	selected_app = "selected_app"
 	loading_file = "loading_file"

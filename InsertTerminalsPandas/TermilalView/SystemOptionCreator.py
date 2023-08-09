@@ -1,3 +1,9 @@
+import pandas as pd
+import streamlit as st
+
+from InsertTerminalsPandas.TermilalView.ConfigStaticView import SystemPropertyModel
+
+
 class SystemOptionCreator:
 	"""do not in use. For changing excel system select sheet"""
 	def __init__(self, selected_df: pd.DataFrame):

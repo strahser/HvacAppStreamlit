@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 
 
 class LoadExcelBooks:
-	def __init__(self, table_dict:dict[str,list], connector):
+	def __init__(self, table_dict: dict[str, list], connector):
 		"""load excel"""
 		self.table_dict = table_dict
 		self.connector = connector

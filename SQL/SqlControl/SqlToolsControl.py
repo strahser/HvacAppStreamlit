@@ -15,11 +15,13 @@ class SqlToolsControl:
 	def create_sql_tools_panel(self):
 		self._create_input_sql_tools_view()
 		if self.table_name:
-			self.sql_table_control = SqlDataSelectAndUpdateControl(self.input_df, self.table_name)
-			self.selected_table_value = self.sql_table_control.create_agg_table()
-			self._create_sql_tools()
-		else:
-			self.selected_table_value = pd.DataFrame()
+			try:
+				self.sql_table_control = SqlDataSelectAndUpdateControl(self.input_df, self.table_name)
+				self.selected_table_value = self.sql_table_control.create_agg_table()
+				self._create_sql_tools()
+			except Exception as e:
+				st.warning(e)
+				self.selected_table_value = pd.DataFrame()
 
 	def _create_sql_tools(self):
 		with st.sidebar:

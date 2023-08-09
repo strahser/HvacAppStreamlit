@@ -8,6 +8,13 @@ from Session.StatementConfig import StatementConstants
 from StaticData.AppConfig import MenuChapters
 from InputView.NodesView import ViewNodes
 import pygwalker as pyg
+import numpy as np
+from streamlit_pandas_profiling import st_profile_report
+# pip install https://github.com/pandas-profiling/pandas-profiling/archive/master.zip
+import sweetviz as sv
+from ydata_profiling import ProfileReport
+import hiplot as hip
+
 from SQL.SqlModel.SqlConnector import SqlConnector
 
 
@@ -23,6 +30,7 @@ def loads_plots_from_session():
 
 
 def _create_input_sql_tools_view(upload_layout, key):
+	"""get selected sheet name"""
 	input_view_control = InputViewControl(upload_layout, key)
 	input_view_control.create_input_view()
 	table_name = input_view_control.sheet_name
@@ -30,9 +38,7 @@ def _create_input_sql_tools_view(upload_layout, key):
 
 
 def dashboard_main(upload_layout):
-	tableau, tab_static = st.tabs(["Tableau", "Static"])
-
-
+	pd_profile, tableau, tab_static = st.tabs(["Profile", "Tableau", "Static"])
 	with tab_static:
 		table_view_node = ViewNodes(f"{MenuChapters.dash_board} Table")
 		table_view_node.create_tree_view_options("Table")
@@ -59,20 +65,36 @@ def dashboard_main(upload_layout):
 		config = st.session_state[StatementConstants.tableau_config]
 		table = _create_input_sql_tools_view(upload_layout, f"{MenuChapters.dash_board} tableau")
 		st.session_state[StatementConstants.tableau_table] = table
-		if (table in st.session_state[StatementConstants.table_db][StatementConstants.all_tables_db]
-				or table in st.session_state[StatementConstants.table_db][StatementConstants.all_tables_db]):
+		if _check_is_table_name_in_list_all_tables_all_views(table):
 			if st.session_state[StatementConstants.tableau_table]:
-				df = pd.read_sql(f"select * from {st.session_state[StatementConstants.tableau_table]}",	con=SqlConnector.conn_sql)
+				df = pd.read_sql(f"select * from {st.session_state[StatementConstants.tableau_table]}",
+				                 con=SqlConnector.conn_sql)
 				pyg.walk(df, env='Streamlit', dark='light', themeKey="vega", spec=config)
-		code_area = st.text_area("Past tableau code data").replace('vis_spec = """', "").replace('"""', "")
-		clipboard_button = st.button("ADD to buffer", 
-									key="clipboard button",
-									help="""insert the code and block into the text and confirm by pressing the button""")
-		clear_button = st.button("cleare buffer state", key="cleare button")
-		if clipboard_button:
-			st.session_state[StatementConstants.tableau_config] = code_area
-		if clear_button:
-			st.session_state[StatementConstants.tableau_config] = None
-			code_area = ""
+			code_area = st.text_area("Past tableau code data").replace('vis_spec = """', "").replace('"""', "")
+			clipboard_button = st.button("ADD to buffer",
+			                             key="clipboard button",
+			                             help="""insert the code and block into the text and confirm by pressing the button""")
+			clear_button = st.button("clear buffer state", key="clear button")
+			if clipboard_button:
+				st.session_state[StatementConstants.tableau_config] = code_area
+			if clear_button:
+				st.session_state[StatementConstants.tableau_config] = None
+
+	with pd_profile:
+		table_name = _create_input_sql_tools_view(upload_layout, f"{MenuChapters.dash_board} profile pandas")
+		df = pd.read_sql(f"select * from {table_name}",
+		                 con=SqlConnector.conn_sql)
+		show_report_button = st.button("Show Report",key="show report button")
+		if show_report_button:
+			pr = df.profile_report()
+			st_profile_report(pr)
+
+
+def _check_is_table_name_in_list_all_tables_all_views(table: str) -> bool:
+	all_tables = st.session_state[StatementConstants.table_db][StatementConstants.all_tables_db]
+	all_views = st.session_state[StatementConstants.table_db][StatementConstants.all_tables_view]
+	condition_table__checking = (table in all_tables)
+	condition_view_checking = (table in all_views)
+	return condition_table__checking or condition_view_checking
 
 	loads_plots_from_session()

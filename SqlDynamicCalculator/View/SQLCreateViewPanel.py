@@ -1,12 +1,11 @@
 from SQL.SqlModel.AddViewTableToSessionModel import *
 from SQL.SqlView.AddSQLTableView import AddSQLTableView
-from SqlDynamicCalculator.CategoryDb import CategoryDb
 import pandas as pd
 from SQL.SqlView.CopyToClipBoardView import CopyToClipBoardView
+from library_hvac_app.list_custom_functions import to_list
 
 
 class SQLCreateViewPanel:
-
 	def __init__(self, sql_query: str, key, conn: object = SqlConnector.conn_sql):
 		"""update view from session statement. Add view query to session statement"""
 		self.sql_query = sql_query
@@ -15,7 +14,7 @@ class SQLCreateViewPanel:
 		self.create_table_db_button = None
 		self.table_space_reserve = None
 		self.st_query_code = None
-		self.category_type = None
+		self.category_name = None
 		self.new_view_table_name = None
 		self.add_to_category_checkbox = None
 		self.create_view_db_button = None
@@ -37,42 +36,32 @@ class SQLCreateViewPanel:
 			col1, col2, col3 = st.columns(3)
 			self.create_view_db_button = data_view.create_view_db_button
 			self.create_table_db_button = data_view.create_table_db_button
-
-			self.add_to_category_checkbox = data_view.add_to_category_checkbox
 			self.new_view_table_name = data_view.new_view_table_name
+			self.new_view_comments = data_view.new_view_comments
 			with col2:
-				self.category_type = self.__chose_category_type()
+				self.category_name = data_view.category_name
 		self._check_buttons()
 
 	def _check_buttons(self):
 		if self.check_button:
 			self._show_sql_table(self.sql_query)
 		if self.create_view_db_button:
-			add_view_to_session = AddViewTableToSessionModel(self.new_view_table_name, self.sql_query,
-			                                                 self.add_to_category_checkbox, self.create_view_db_button,
-			                                                 self.category_type)
-			add_view_to_session.create_sql_view_and_add_to_session()
+			add_view_to_session = AddViewTableToSessionModel(self.new_view_table_name,
+			                                                 self.sql_query,
+			                                                 self.create_view_db_button,
+			                                                 self.category_name,
+			                                                 self.new_view_comments
+
+			                                                 )
+			add_view_to_session.create_sql_view_and_add_to_session(view=True)
 		if self.create_table_db_button:
-			add_view_to_session = AddViewTableToSessionModel(self.new_view_table_name, self.sql_query,
-			                                                 self.add_to_category_checkbox, self.create_table_db_button,
-			                                                 self.category_type)
-			add_view_to_session.create_sql_view_and_add_to_session(False)
-
-	def _check_new_table_name(self):
-		condition = self.new_view_table_name and str(self.new_view_table_name) not in \
-		            list(st.session_state[StatementConstants.create_json].keys())
-		if condition:
-			return True
-		else:
-			return False
-
-	def __chose_category_type(self):
-		if self.add_to_category_checkbox:
-			category_list = list(CategoryDb.__annotations__.keys())
-			category_type = st.selectbox("Select Category Type", category_list, key=f"category_type {self.key}")
-			return category_type
-		else:
-			return StatementConstants.without_category
+			add_view_to_session = AddViewTableToSessionModel(self.new_view_table_name,
+			                                                 self.sql_query,
+			                                                 self.create_table_db_button,
+			                                                 self.category_name,
+			                                                 self.new_view_comments
+			                                                 )
+			add_view_to_session.create_sql_view_and_add_to_session(view=False)
 
 	def _show_sql_table(self, sql):
 		try:

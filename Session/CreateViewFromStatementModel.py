@@ -10,7 +10,6 @@ class CreateViewFromStatementModel:
 		self.conn = conn
 
 	def parsing_session_statement(self) -> None:
-
 		if self.statement:
 			for key, val in self.statement.items():
 				try:

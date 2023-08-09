@@ -1,7 +1,13 @@
 import io
 import base64
+
+import pandas as pd
 from PIL import Image
-def image_to_byte_array(image_path) -> bytes:
+
+from SQL.SqlModel import SqlConnector
+
+
+def image_to_byte_array(image_path) -> str:
 	im = Image.open(image_path)
 	data = io.BytesIO()
 	im.save(data, "JPEG")

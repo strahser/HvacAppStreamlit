@@ -6,7 +6,7 @@ from plotly import graph_objs as go
 from PrincipalSchems.Models.Models import *
 from PrincipalSchems.View.MainLayoutView import *
 from Polygons.PolygonPlot.PolygonMerge import *
-from Utility.TextWorker import TextWorkerForPlote
+from Utility.TextWorker import TextWorkerForPlot
 from datetime import datetime
 from library_hvac_app.list_custom_functions import *
 
@@ -275,8 +275,8 @@ class PolygonPointsMergeControl:
 		merge_df = polygon_merge.merge_df()
 		return merge_df
 
-	def _add_text_to_df(self) -> TextWorkerForPlote:
-		text_worker = TextWorkerForPlote(self._add_color_filter_to_df())
+	def _add_text_to_df(self) -> TextWorkerForPlot:
+		text_worker = TextWorkerForPlot(self._add_color_filter_to_df())
 		pl_layout = self.layout_view_context_data.space_data_view
 		text_worker.concat_value_with_prefix(
 			pl_layout.space_prefix, pl_layout.space_suffix, pl_layout.space_value

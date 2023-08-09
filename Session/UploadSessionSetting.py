@@ -11,6 +11,7 @@ class UploadSessionSetting:
 	def __init__(self, uploaded_session_file: st.file_uploader):
 
 		self.uploaded_session_file = uploaded_session_file
+		self.uploaded_settings = None
 
 	def show_session_view(self):
 		col1, col2 = st.columns([6, 5])
@@ -40,14 +41,18 @@ class UploadSessionSetting:
 					st.session_state[k] = self.uploaded_settings[k]
 				except Exception as e:
 					st.warning(e)
+		else:
+			st.warning("**WARNING**: Select the Settings File to be uploaded")
 
 	def _create_upload_view(self):
 		# 2. Select Settings to be uploaded
 		self._apply_upload_settings_view()
 		if self.uploaded_session_file:
-			self.uploaded_settings = json.load(self.uploaded_session_file)
-
-	# st.warning("**WARNING**: Select the Settings File to be uploaded")
+			try:
+				self.uploaded_settings = json.load(self.uploaded_session_file)
+			except:
+				st.warning("**WARNING**: Select the Settings File to be uploaded")
+				self.uploaded_settings = None
 
 	def _apply_upload_settings_view(self):
 		st.button(label="Apply Settings",

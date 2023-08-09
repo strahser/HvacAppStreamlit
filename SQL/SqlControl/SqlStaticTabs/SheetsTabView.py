@@ -12,11 +12,11 @@ class SheetsTabView:
 
 	def choose_table_or_view_data(self):
 
-		if isinstance(self.tables_name, list):
+		if isinstance(self.tables_name, list) and self.tables_name:
 			tabs = st.tabs(self.tables_name)
 			for en, table in enumerate(self.tables_name):
 				self._create_tabs(table, tabs, en)
-		elif isinstance(self.tables_name, str):
+		elif isinstance(self.tables_name, str) and self.tables_name:
 			self._write_df(table=self.tables_name)
 
 	def _create_tabs(self, table: str, tabs: st.tabs, en: int = 0):

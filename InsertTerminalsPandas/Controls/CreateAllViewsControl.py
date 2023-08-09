@@ -93,8 +93,7 @@ class CreateAllViewsControl:
 	def create_download_tab(self, number_of_levels: str):
 		if number_of_levels == LayoutOptions.one_level:
 			with self.tabs_downloads:
-				download_files = TerminalsDownloadResult(self.concat_level,
-				                                         self.input_data_df).create_download_data()
+				download_files = TerminalsDownloadResult(self.concat_level, self.input_data_df).create_download_data()
 				DownloadResulLayout(download_files.excel_file, download_files.json_file).create_download_layout()
 
 		if number_of_levels == LayoutOptions.all_levels:

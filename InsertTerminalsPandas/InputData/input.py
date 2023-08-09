@@ -1,5 +1,6 @@
 from collections import namedtuple
-from Upload.UploadLayout import UploadLayout, pd
+import pandas as pd
+from Upload.UploadLayout import UploadLayout
 from InputView.InputViewMultyChoosing import InputViewMultyChoosing
 from StaticData.AppConfig import ExcelSheetsLoads
 from InsertTerminalsPandas.Static.DevicePropertiesName import DevicePropertiesName
@@ -29,7 +30,7 @@ class InputDataDF:
 
 	def create_input_choosing_data_form(self):
 		view_multiprocessing = InputViewMultyChoosing(self.upload_layout, key=MenuChapters.terminals)
-		input_data_load = view_multiprocessing.create_input_choosing_data_form(
+		input_data_load = view_multiprocessing.check_input_data_loaded(
 			ExcelSheetsLoads.excel_sheet_names_Terminal,self)
 		return input_data_load
 

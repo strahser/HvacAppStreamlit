@@ -26,7 +26,7 @@ def MainAHU(upload_layout: UploadLayout, key):
 	if input_excel_AHU:
 		input_excel_AHU_files_loads = _get_input_excel_AHU_files_loads()
 		multy_load = InputViewMultyChoosing(upload_layout, key=key)
-		confirm_load = multy_load.create_input_choosing_data_form(excel_sheet_names_AHU, multy_load)
+		confirm_load = multy_load.check_input_data_loaded(excel_sheet_names_AHU, multy_load)
 		if confirm_load:
 			ahu_view = AHUControl(
 				multy_load.revit_export,

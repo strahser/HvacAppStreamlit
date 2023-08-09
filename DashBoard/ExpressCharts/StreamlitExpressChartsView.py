@@ -29,7 +29,6 @@ class StreamlitExpressChartsView:
 			st.write(f"#### Select Number Columns")
 			self.select_keys_y = st.selectbox(self.header, self.df.columns,
 								key=f"{self.key} select_keys_y {self.table_name}",
-								index=numeric_columns[0],
 								label_visibility="collapsed")
 		with col[2]:
 			st.write(f"#### Select Subgroup Columns")
@@ -38,7 +37,6 @@ class StreamlitExpressChartsView:
 			                                      label_visibility="collapsed")
 		with col[3]:
 			st.write(f"#### Select Aggregate Columns")
-
 			self.select_agg = st.multiselect(self.header, self.agg_data,
 			                                 default=self.agg_data[0],
 			                                 key=f"{self.key}  {self.table_name}",

@@ -54,7 +54,7 @@ class PolygonPlotlyControl:
 		return polygon_merge.merge_df()
 
 	def __add_text_to_df(self):
-		text_worker_for_plot = TextWorkerForPlote(self._df)
+		text_worker_for_plot = TextWorkerForPlot(self._df)
 		return text_worker_for_plot. \
 			concat_value_with_prefix(self.plot_view.space_prefix, self.plot_view.space_suffix,
 		                             self.plot_view.space_value)

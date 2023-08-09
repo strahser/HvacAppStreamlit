@@ -1,10 +1,10 @@
-import pandas as pd
 import streamlit as st
-from SQL.SqlModel.SqlConnector import SqlConnector
+
 from StaticData.AppConfig import StaticVariable
-from streamlit_modal import Modal
+
 from st_mui_dialog import st_mui_dialog
-from Session.StatementConfig import StatementConstants
+
+from Upload.UpdateDbSession import UpdateDbSession
 
 
 class UploadView:
@@ -26,31 +26,8 @@ class UploadView:
 			self.upload_db = st.file_uploader("Choose DB for update", type="sql")
 		st.subheader('Choose a JSON Polygons file for Plots')
 		self.file_json_upload = st.file_uploader("Choose a JSON Polygons file", type="json")
-		self.update_db_button = st.button("Update Data?", on_click=self.__create_pd_sql_table_query)
-		self.__create_modal_window(key="DB All Tables Show")
-
-	@staticmethod
-	def __create_pd_sql_table_query():
-		_all_tables_query = "SELECT * FROM sqlite_master where type='table'"
-		_all_views_query = "SELECT name FROM sqlite_master WHERE type='view'"
-		all_db_tables = pd.read_sql_query(_all_tables_query, con=SqlConnector.conn_sql)["name"].to_list()
-		all_db_views = pd.read_sql_query(_all_views_query, con=SqlConnector.conn_sql)["name"].to_list()
-		st.session_state[StatementConstants.table_db][StatementConstants.all_tables_db] = all_db_tables
-		st.session_state[StatementConstants.table_db][StatementConstants.all_tables_view] = all_db_views
-		return all_db_tables, all_db_views
-
-	def __create_modal_window(self, key):
-		modal = Modal("Upload DB Data", key=key, padding=100)
-		open_modal = st.button("Show DB data", key=key)
-		if open_modal:
-			modal.open()
-		if modal.is_open():
-			with modal.container():
-				col1, col2 = st.columns(2)
-				col1.write("DB Tables")
-				col1.write(st.session_state[StatementConstants.table_db][StatementConstants.all_tables_db])
-				col2.write("DB Views")
-				col2.write(st.session_state[StatementConstants.table_db][StatementConstants.all_tables_view])
+		self.update_db_button = st.button("Update Data?", on_click=UpdateDbSession.Update_sql_sessionData)
+		UpdateDbSession.create_modal_window(key="DB All Tables Show")
 
 	def __create_upload_modal(self):
 		key = "Manual Modal Window"

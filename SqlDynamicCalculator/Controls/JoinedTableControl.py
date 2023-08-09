@@ -73,13 +73,13 @@ class JoinedTableControl:
 			return _table.get_columns_for_query()
 
 	def _create_select_box_view(self):
+		"""create check boxes selected from session dictionary with category and value"""
 		selected_data = SelectedTreeInputView(header="Select book and sheets",
 		                                      key=f"{MenuChapters.analytics} {StatementConstants.select_join_table}")
 		selected = selected_data.create_select_tree()
 		return selected
 
 	def __check_number_joined_table(self):
-		selected_tables = self._create_select_box_view()
 		all_tables_and_views = ViewNodes(
 			key=f"{MenuChapters.analytics} {StatementConstants.select_join_table} all tables")
 		all_tables_and_views.create_tree_view_options("All tables")
@@ -87,8 +87,6 @@ class JoinedTableControl:
 		self.selected_tables = []
 		if isinstance(all_tables_and_views_tree, list):
 			self.selected_tables.extend(all_tables_and_views_tree)
-		if isinstance(selected_tables, list):
-			self.selected_tables.extend(selected_tables)
 		if self.selected_tables:
 			return len(self.selected_tables)
 		else:

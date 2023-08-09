@@ -4,35 +4,16 @@ import streamlit as st
 from enum import Enum
 
 
-class Language:
-	def __init__(self):
-		self.language = st.sidebar.selectbox("Select Language", ['ru', 'en'])
-
-
-def _(s, language="en"):
-	ruStrings = {"Choose Option Style": 'Выберите стиль меню',
-	             "Hydralit Style": "Гидралит Стиль",
-	             "Button Style": "Обычный Стиль",
-	             "Input Data": "Исходные Данные",
-	             "Zones": "Зонирование"
-	             }
-
-	if language == 'en':
-		return s
-	if language == 'ru':
-		return ruStrings.get(s, s)
-
-
 @dataclass()
 class MenuChapters:
-	dash_board: str = _("Dash Board")
-	ifc_dash_board:str =_("IFC")
-	analytics: str = _("Analytics")
-	polygons: str = _("Zones")
-	scheme: str = _("Scheme")
-	terminals: str = _("Terminals")
-	ahu: str = _("AHU")
-	download: str = _("Downloads")
+	dash_board: str = "Dash Board"
+	ifc_dash_board: str = "IFC"
+	analytics: str = "Analytics"
+	polygons: str = "Zones"
+	scheme: str = "Scheme"
+	terminals: str = "Terminals"
+	ahu: str = "AHU"
+	download: str = "Downloads"
 
 	@staticmethod
 	def get_buttons():

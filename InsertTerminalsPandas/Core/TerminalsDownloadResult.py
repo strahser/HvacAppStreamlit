@@ -1,3 +1,5 @@
+import streamlit
+
 from InsertTerminalsPandas.InputData.input import *
 from library_hvac_app.DbFunction.pandas_custom_function import create_json_list, df_to_excel_in_memory
 
@@ -8,8 +10,9 @@ class TerminalsDownloadResult:
 		self.input_data_df = input_data_df
 
 	def _create_downloads_excel(self):
-		excel_list = df_to_excel_in_memory(
-			self.concat_df[self.input_data_df.df_device_result_columns + ['system_name']], 'level_values')
+		streamlit.write()
+		concated_df = self.concat_df[self.input_data_df.df_device_result_columns + ['system_name']]
+		excel_list = df_to_excel_in_memory([concated_df], ['level_values'])
 		return excel_list
 
 	def _create_downloads_json(self):

@@ -1,5 +1,5 @@
 def to_list(element)->list:
-    if isinstance(element, list):
+    if hasattr(element, "__iter__"):
         res = element
     else:
         res = [element]

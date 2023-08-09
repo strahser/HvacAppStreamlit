@@ -18,6 +18,7 @@ class StatementInit:
 			st.session_state[StatementConstants.tableau_config] = None
 		if StatementConstants.tableau_table not in st.session_state:
 			st.session_state[StatementConstants.tableau_table] = ""
+
 	@staticmethod
 	def _load_app_session_state():
 		if StatementConstants.mainHydralitMenuComplex not in st.session_state:
@@ -40,9 +41,12 @@ class StatementInit:
 			st.session_state[StatementConstants.table_db] = dict()
 		if StatementConstants.all_tables_db not in st.session_state[StatementConstants.table_db].keys():
 			st.session_state[StatementConstants.table_db][StatementConstants.all_tables_db] = []
-
 		if StatementConstants.all_tables_view not in st.session_state[StatementConstants.table_db].keys():
 			st.session_state[StatementConstants.table_db][StatementConstants.all_tables_view] = []
+		if StatementConstants.category_view_list not in st.session_state:
+			st.session_state[StatementConstants.category_view_list] = []
+		if StatementConstants.category_dictionary not in st.session_state:
+			st.session_state[StatementConstants.category_dictionary]={}
 
 
 StatementInit()

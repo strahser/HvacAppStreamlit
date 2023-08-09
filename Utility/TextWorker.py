@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-class TextWorkerForPlote:
+class TextWorkerForPlot:
 	def __init__(self, _df: pd.DataFrame) -> None:
 		"""concate prefix suffix and column value. add <br> between multivalued"""
 		self._df = _df
