@@ -11,9 +11,9 @@ import pygwalker as pyg
 import numpy as np
 from streamlit_pandas_profiling import st_profile_report
 # pip install https://github.com/pandas-profiling/pandas-profiling/archive/master.zip
-import sweetviz as sv
-from ydata_profiling import ProfileReport
-import hiplot as hip
+
+
+
 
 from SQL.SqlModel.SqlConnector import SqlConnector
 
