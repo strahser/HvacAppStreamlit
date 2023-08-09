@@ -14,7 +14,6 @@ from streamlit_pandas_profiling import st_profile_report
 
 
 
-
 from SQL.SqlModel.SqlConnector import SqlConnector
 
 
