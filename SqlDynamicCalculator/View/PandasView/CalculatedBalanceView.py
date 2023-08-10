@@ -83,7 +83,7 @@ class ShowAllSelectedSheets:
 			st.write(left_table)
 		return left_table
 
-	def show_config_table(self, key: str | int = 0, number_of_table=1, table_alias="first_table"):
+	def show_config_table(self, key: int = 0, number_of_table=1, table_alias="first_table"):
 		with st.expander("Show Tables"):
 			col1, col2 = st.columns([3, 8])
 			if number_of_table == 1:
@@ -105,7 +105,7 @@ class ColumnOperation:
 	def __del__(self):
 		type(self).counter -= 1
 
-	def _get_table(self, key: str | int = 0, number_of_table: int = 1, table_alias: str = "first_table"):
+	def _get_table(self, key: int = 0, number_of_table: int = 1, table_alias: str = "first_table"):
 		show_table = ShowAllSelectedSheets(self.list_sheet, self.df_list)
 		show_table.show_config_table(key, number_of_table, table_alias)
 		return show_table
@@ -125,7 +125,7 @@ class ColumnOperation:
 		return table[filter_column]
 
 	@staticmethod
-	def _add_table_to_db(selected_df_table: pd.DataFrame, key: str | int = 0):
+	def _add_table_to_db(selected_df_table: pd.DataFrame, key: int = 0):
 		with st.expander("Add Table to DB"):
 			db_table_name = st.text_input("Enter DB table name", value="new table", key=f"db_table_name{key}")
 			button = st.button("Add table to DB?", key=f"button{key}")
@@ -189,7 +189,7 @@ class JoinTable(ColumnOperation):
 		self.right_table = None
 		self.left_table = None
 
-	def join_table(self, key=0) -> pd.DataFrame | None:
+	def join_table(self, key=0) -> pd.DataFrame:
 		table = self._get_table(key, 2, "join table")
 		with st.expander("Select Data for joined table"):
 			self.left_table = table.left_table
@@ -258,7 +258,7 @@ class CalculatedBalanceView:
 		df.sum_columns(key)
 
 	@staticmethod
-	def _create_group_table_view(selected_db, key=0) -> pd.DataFrame | None:
+	def _create_group_table_view(selected_db, key=0) -> pd.DataFrame:
 		with st.expander("Select Data for Group table"):
 			grouped_columns = st.multiselect("Select group by columns", selected_db.columns,
 			                                 key=f"grouped_columns{key}")
@@ -273,7 +273,7 @@ class CalculatedBalanceView:
 
 	@staticmethod
 	def make_group_table(df: pd.DataFrame, grouped_columns: list[str], agg_columns: list[str],
-	                     agg_funk) -> pd.DataFrame | None:
+	                     agg_funk) -> pd.DataFrame:
 		try:
 			if agg_funk:
 				group_table = df.groupby(grouped_columns, as_index=False)[agg_columns].agg(agg_funk).reset_index()

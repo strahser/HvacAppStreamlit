@@ -99,5 +99,4 @@ def _check_is_table_name_in_list_all_tables_all_views(table: str) -> bool:
 	condition_table__checking = (table in all_tables)
 	condition_view_checking = (table in all_views)
 	return condition_table__checking or condition_view_checking
-
 	loads_plots_from_session()

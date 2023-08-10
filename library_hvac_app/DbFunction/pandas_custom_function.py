@@ -341,7 +341,7 @@ def create_json_list(df: pd.DataFrame, json_df_columns: list):
 	model_list = []
 	for model in df_:
 		instance_points = model["instance_points"]
-		if isinstance(instance_points[0], list | tuple):
+		if isinstance(instance_points[0], list):
 			for points in instance_points:
 				terminal_model = TerminalModel(model, points)
 				model_list.append(terminal_model)
