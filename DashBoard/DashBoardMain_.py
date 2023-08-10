@@ -8,12 +8,10 @@ from Session.StatementConfig import StatementConstants
 from StaticData.AppConfig import MenuChapters
 from InputView.NodesView import ViewNodes
 import pygwalker as pyg
-import codecs
 from ydata_profiling import ProfileReport
 from streamlit_pandas_profiling import st_profile_report
 # pip install https://github.com/pandas-profiling/pandas-profiling/archive/master.zip
-import sweetviz as sv
-import streamlit.components.v1 as components
+
 
 
 from SQL.SqlModel.SqlConnector import SqlConnector
