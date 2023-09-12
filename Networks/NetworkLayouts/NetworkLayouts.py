@@ -12,8 +12,7 @@ class CreateSystemLayout:
             df (pd.DataFrame): df to revit
         """
         self.df = df
-        
-        system_type = input_settings_df["medium_property"]["system_type"].unique()
+        system_type = input_settings_df["system_type"].unique()
         self.system_type_choice = st.selectbox("choose system type", system_type)
         self.system_choice = st.selectbox(
             "choose system column", df.columns, index=len(df.columns) - 2
@@ -53,6 +52,7 @@ class CreateNetworkLayout:
         self._create_start_and_end_network_points()
         self._create_prefix_name()
         print("self_sys_number",self.system_number)
+
     def _create_prefix_name(self):
         st.subheader("choose system prefix")
         prefix_dict = dict(

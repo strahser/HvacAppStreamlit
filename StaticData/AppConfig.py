@@ -6,6 +6,7 @@ from enum import Enum
 
 @dataclass()
 class MenuChapters:
+	# Networks:str = "Networks"
 	dash_board: str = "Dash Board"
 	ifc_dash_board: str = "IFC"
 	analytics: str = "Analytics"
@@ -22,6 +23,7 @@ class MenuChapters:
 
 @dataclass()
 class MenuIcons:
+	# Networks: str = "bi bi-diagram-3-fill"
 	dash_board: str = "bi bi-cloud-upload"
 	ifc_dash_board: str = "bi bi-cloud-upload"
 	polygons: str = "bi bi-building add"
@@ -45,4 +47,4 @@ class ExcelSheetsLoads:
 	"""to find correct sheet (create view )"""
 	excel_sheet_names_Terminal = ['revit_export', 'EquipmentBase', 'devices', 'device_type', "config",
 	                              'device_orientation']
-	excel_sheet_names_AHU = ["revit_export", "input_excel_AHU", "medium_property"]
+	excel_sheet_names_AHU = ["revit_export", "medium_property"]

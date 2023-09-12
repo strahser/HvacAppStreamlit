@@ -4,7 +4,7 @@ from StaticData.AppConfig import StaticVariable
 
 from st_mui_dialog import st_mui_dialog
 
-from Upload.UpdateDbSession import UpdateDbSession
+from Session.UpdateDbSession import UpdateDbSession
 
 
 class UploadView:

@@ -8,6 +8,7 @@ class StatementInit:
 		self._add_table_and_views()
 		self._add_json()
 		self._load_app_session_state()
+		self._save_selected_tables_names()
 		if StatementConstants.loading_file not in st.session_state:
 			st.session_state[StatementConstants.loading_file] = {}
 		if StatementConstants.SimpleNamespace not in st.session_state:
@@ -32,8 +33,10 @@ class StatementInit:
 	def _add_json():
 		if f"{MenuChapters.analytics} {StatementConstants.select_join_table}" not in st.session_state:
 			st.session_state[f"{MenuChapters.analytics} {StatementConstants.select_join_table}"] = ""
-		if StatementConstants.create_json not in st.session_state:
-			st.session_state[StatementConstants.create_json] = {}
+		if StatementConstants.view_sql_query_model not in st.session_state:
+			st.session_state[StatementConstants.view_sql_query_model] = {}
+		if StatementConstants.json_polygons not in st.session_state:
+			st.session_state[StatementConstants.json_polygons] = {}
 
 	@staticmethod
 	def _add_table_and_views():
@@ -46,7 +49,14 @@ class StatementInit:
 		if StatementConstants.category_view_list not in st.session_state:
 			st.session_state[StatementConstants.category_view_list] = []
 		if StatementConstants.category_dictionary not in st.session_state:
-			st.session_state[StatementConstants.category_dictionary]={}
+			st.session_state[StatementConstants.category_dictionary] = {}
+
+	@staticmethod
+	def _save_selected_tables_names():
+		if StatementConstants.terminal_names_dict not in st.session_state:
+			st.session_state[StatementConstants.terminal_names_dict] = dict()
+		if StatementConstants.ahu_names_dict not in st.session_state:
+			st.session_state[StatementConstants.ahu_names_dict] = dict()
 
 
 StatementInit()

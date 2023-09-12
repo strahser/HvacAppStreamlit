@@ -72,16 +72,25 @@ class PlotTerminalsAndSpaces:
 		        linestyle=':')
 
 	@staticmethod
-	def plot_spaces(ax, all_level_spaces: pd.DataFrame, text_columns=None):
-
+	def plot_spaces(ax, all_level_spaces: pd.DataFrame, text_columns=None,selected_spaces_id=None):
 		if text_columns is None:
 			text_columns = [ColumnChoosing.S_ID, ColumnChoosing.S_Name]
 		all_level_spaces = all_level_spaces.copy()
 		all_level_spaces['add_text'] = all_level_spaces[text_columns].astype(str).agg('\n'.join, axis=1)
-		for index, row in all_level_spaces.iterrows():
-			PlotTerminalsAndSpaces._plot_line(ax, row.polygon, "grey")
-			ax.text(row.pcx, row.pcy, row.add_text)
+		if selected_spaces_id:
+			selected_spaces_id = [str(val) for val in selected_spaces_id]
+			for index, row in all_level_spaces.iterrows():
+				if str(row[ColumnChoosing.S_ID]) in selected_spaces_id:
+					PlotTerminalsAndSpaces._plot_line(ax, row.polygon, "red")
+					ax.text(row.pcx, row.pcy, row.add_text)
+				else:
+					PlotTerminalsAndSpaces._plot_line(ax, row.polygon, "grey")
+					ax.text(row.pcx, row.pcy, row.add_text)
 
+		else:
+			for index, row in all_level_spaces.iterrows():
+				PlotTerminalsAndSpaces._plot_line(ax, row.polygon, "grey")
+				ax.text(row.pcx, row.pcy, row.add_text)
 	@staticmethod
 	def save_plot(fig):
 		img = io.StringIO()

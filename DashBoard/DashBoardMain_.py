@@ -13,7 +13,6 @@ from streamlit_pandas_profiling import st_profile_report
 # pip install https://github.com/pandas-profiling/pandas-profiling/archive/master.zip
 
 
-
 from SQL.SqlModel.SqlConnector import SqlConnector
 
 
@@ -23,7 +22,6 @@ def loads_plots_from_session():
 		select_plot_view.create_checkboxes_plot_view()
 	try:
 		show_selected_levels(select_plot_view.selected_levels)
-
 	except Exception as e:
 		st.warning(e)
 
@@ -60,6 +58,7 @@ def dashboard_main(upload_layout):
 										charter_tab.create_dynamic_view(agg)
 					except Exception as e:
 						st.warning(e)
+		loads_plots_from_session()
 	with tableau:
 		config = st.session_state[StatementConstants.tableau_config]
 		table = _create_input_sql_tools_view(upload_layout, f"{MenuChapters.dash_board} tableau")
@@ -85,7 +84,7 @@ def dashboard_main(upload_layout):
 			df = pd.read_sql(f"select * from {table_name}",
 			                 con=SqlConnector.conn_sql)
 			try:
-				show_report_button = st.button("Show Report",key="show report button")
+				show_report_button = st.button("Show Report", key="show report button")
 				if show_report_button:
 					pr = ProfileReport(df)
 					st_profile_report(pr)
@@ -99,4 +98,3 @@ def _check_is_table_name_in_list_all_tables_all_views(table: str) -> bool:
 	condition_table__checking = (table in all_tables)
 	condition_view_checking = (table in all_views)
 	return condition_table__checking or condition_view_checking
-	loads_plots_from_session()

@@ -54,7 +54,7 @@ class TableColumnsSelectorControl:
 	                                    index_book: int = 0,
 	                                    index_sheet: int = 0):
 		input_view_control = InputViewControl(self.upload_layout, f'{self.key} {MenuChapters.analytics}')
-		table = input_view_control.create_input_view(index_book, index_sheet)
+		table = input_view_control.create_input_view()
 		st.write(table)
 		self.selected_sheet = input_view_control.input_view.selected_excel_sheet
 		st.write(self.selected_sheet)

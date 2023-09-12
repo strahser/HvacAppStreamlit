@@ -1,5 +1,10 @@
 from collections import namedtuple
 import pandas as pd
+import streamlit as st
+
+import SQL.SqlModel.SqlConnector
+from InsertTerminalsPandas.Static.CalculationOptions import CalculationOptions
+from Session.StatementConfig import StatementConstants
 from Upload.UploadLayout import UploadLayout
 from InputView.InputViewMultyChoosing import InputViewMultyChoosing
 from StaticData.AppConfig import ExcelSheetsLoads
@@ -11,11 +16,15 @@ SystemProperty = namedtuple('SystemProperty', ['system_flow', 'system_name'])
 
 class InputDataDF:
 
-	def __init__(self, upload_layout: UploadLayout):
+	def __init__(self, upload_layout: UploadLayout,):
 		self.upload_layout = upload_layout
 		self.json_data = upload_layout.json_file
+		self.revit_export = None
+		self.EquipmentBase = []
 		self.devices = None
 		self.device_type = None
+		self.config = None
+		self.device_orientation = None
 		self.device_property_columns_names = None
 		self.additional_columns = None
 		self.calculation_options = None
@@ -23,16 +32,14 @@ class InputDataDF:
 		self.df_device_result_columns = None
 		self.system_dictionary = None
 		self.unique_terminals = None
-		self.concat_base = None
-		self.device_orientation = None
-		self.config = None
-		self.revit_export = None
 
-	def create_input_choosing_data_form(self):
+	def show_form(self):
 		view_multiprocessing = InputViewMultyChoosing(self.upload_layout, key=MenuChapters.terminals)
-		input_data_load = view_multiprocessing.check_input_data_loaded(
-			ExcelSheetsLoads.excel_sheet_names_Terminal,self)
-		return input_data_load
+		view_multiprocessing.check_input_data_loaded(
+			ExcelSheetsLoads.excel_sheet_names_Terminal,
+			StatementConstants.terminal_names_dict
+		)
+
 
 	def create_config_data(self):
 		self.concat_base = pd.concat(self.EquipmentBase)

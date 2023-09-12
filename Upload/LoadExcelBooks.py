@@ -22,5 +22,6 @@ class LoadExcelBooks:
 			for sheet_name, sheet in book.items():
 				sheet.to_sql(sheet_name, if_exists='replace', con=self.connector, index=False)
 				self.table_dict[book_name].append(sheet_name)
+			self.table_dict[book_name]=list(set(self.table_dict[book_name]))
 			st.session_state[StatementConstants.table_db].update(self.table_dict)
 		return self.table_dict

@@ -22,12 +22,10 @@ class ConfigView:
 		col1, col2, col3 = st.columns(3)
 		with col1:
 			st.subheader('Choose  Columns Options')
-			column_confirm_checkbox = st.checkbox("confirm column choosing",key=f"{self.key} column_confirm_checkbox")
 			column_choosing = ConfigColumnChoosingView(self.input_data_df.revit_export,key=self.key)
-			if column_confirm_checkbox:
-				for attr_ in LabelListStatic.attr_list:
-					config_column_attr = getattr(column_choosing, attr_)
-					setattr(ColumnChoosing, attr_, config_column_attr)
+			for attr_ in LabelListStatic.attr_list:
+				config_column_attr = getattr(column_choosing, attr_)
+				setattr(ColumnChoosing, attr_, config_column_attr)
 			with col2:
 				st.subheader('Choose  System Options')
 				self.system_select = st.multiselect('select system type', self.system_type,

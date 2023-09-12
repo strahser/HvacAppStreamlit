@@ -28,14 +28,7 @@ class DevicePropertiesName:
 		'system_name',
 		'instance_points',
 	]
-	calculation_options = [
-		CalculationOptions.minimum_terminals,
-		CalculationOptions.device_area,
-		CalculationOptions.directive_terminals,
-		CalculationOptions.directive_length
-
-	]
-
+	calculation_options = CalculationOptions.get_list_of_enum_values()
 	device_property_columns_names: list[str] = [
 		"type_index",
 		'device_orientation_option1',

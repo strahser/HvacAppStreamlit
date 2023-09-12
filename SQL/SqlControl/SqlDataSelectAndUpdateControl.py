@@ -1,6 +1,6 @@
 import pandas as pd
 from SQL.SqlView.AggTabelView import AggTabelView
-from SQL.SqlControl.SqlTableToolsControl import SqlTableToolsControl
+from SQL.SQlTools.Control.SqlTableToolsControl import SqlTableToolsControl
 
 
 class SqlDataSelectAndUpdateControl:

@@ -8,7 +8,7 @@ import streamlit as st
 
 class UpdateDbSession:
 	@staticmethod
-	def Update_sql_sessionData():
+	def Update_sql_sessionData() -> tuple:
 		_all_tables_query = "SELECT * FROM sqlite_master where type='table'"
 		_all_views_query = "SELECT name FROM sqlite_master WHERE type='view'"
 		all_db_tables = pd.read_sql_query(_all_tables_query, con=SqlConnector.conn_sql)["name"].to_list()
@@ -20,8 +20,8 @@ class UpdateDbSession:
 	@staticmethod
 	def create_modal_window(key):
 		modal = Modal("Upload DB Data", key=key, padding=100)
-		open_modal = st.button("Show DB data", key=key)
-		if open_modal:
+		open_modal_button = st.button("Show DB data", key=f"{key} open_modal_button button ")
+		if open_modal_button:
 			modal.open()
 		if modal.is_open():
 			with modal.container():
@@ -30,3 +30,13 @@ class UpdateDbSession:
 				col1.write(st.session_state[StatementConstants.table_db][StatementConstants.all_tables_db])
 				col2.write("DB Views")
 				col2.write(st.session_state[StatementConstants.table_db][StatementConstants.all_tables_view])
+
+	@staticmethod
+	def update_table_list(table_name:str)->None:
+		session_table_dict = st.session_state[StatementConstants.table_db]
+		for key, val in session_table_dict.items():
+			if isinstance(val, list):
+				for v in val:
+					if table_name == v:
+						val.remove(v)
+						session_table_dict[key] = val

@@ -1,8 +1,7 @@
+
 from Upload.UploadLayout import UploadLayout
 import streamlit as st
 from InputView.InputViewControl import InputViewControl
-import pandas as pd
-from InputView.InputViewModel.PreselectValueModel import PreselectValueModel
 
 
 class InputViewMultyChoosing:
@@ -12,47 +11,30 @@ class InputViewMultyChoosing:
 		self.table_dict = self.upload_layout.table_dict
 		self.key = key
 
-	def check_input_data_loaded(self,
-	                            excel_sheet_names: list[str],
-	                            class_instance,
-	                            ) -> bool:
-		"""check if all excel/pandas tables loaded?"""
-		st.subheader("select sheet data")
-		with st.expander("select sheet data"):
-			confirm_checkbox = st.checkbox("Confirm Sheet Data", key=f"{self.key} confirm_checkbox")
-			for name in excel_sheet_names:
-				st.subheader(f"Select {name.replace('_', ' ')} file")
-				input_view_control = InputViewControl(self.upload_layout, key=f"{str(self.key)} {name}")
-				excel_book = self._select_excel_index(name)
-				if excel_book and isinstance(excel_book,list):
-					try:
-						check_input_df = [
-							pd.read_sql(f"select * from {sheet}", con=input_view_control.connector) for sheet in excel_book
-						]
-						setattr(class_instance, name, check_input_df)
-					except Exception as e:
-						st.warning(e)
-
-				else:
-					check_input_df = input_view_control.create_input_view(index_book=self.index_book,
-					                                                      index_sheet=self.index_sheet)
-					setattr(class_instance, name, check_input_df)
-			if  confirm_checkbox:
-				return True
-			else:
-				st.warning("Check is all selected excel sheets  exist?")
-
-	def _select_excel_index(self, search_sheet: str):
-
-		preselect_ = PreselectValueModel(self.upload_layout.table_dict)
-		preselect_.preselect_data(search_sheet)
-		self.all_sheets_checkbox = st.checkbox("all sheets?", value=preselect_.all_sheets,
-		                                       key=f"{self.key} all_sheets_checkbox_ {search_sheet}")
-		self.index_book = preselect_.index_book
-		self.index_sheet = preselect_.index_sheet
-		if self.all_sheets_checkbox:
-			return self.table_dict[search_sheet]
-		else:return search_sheet
+	def check_input_data_loaded(self, excel_sheet_names: list[str], statement_constant_name: str) -> None:
+		"""check if all excel/pandas tables loaded? add to session_state dictionary of list"""
+		self.show_input_data = st.checkbox("Show Input Data", key="show_input_data")
+		placeholder = st.empty()
+		if self.show_input_data:
+			with placeholder.container():
+				st.subheader("select sheet data")
+				with st.expander("+"):
+					temp_dict = {}
+					for name in excel_sheet_names:
+						st.write(f"Select {name.replace('_', ' ')} file")
+						with st.expander("+"):
+							input_view_control = InputViewControl(self.upload_layout, key=f"{str(self.key)} {name}")
+							all_sheets_check_box = st.checkbox("All sheets", key=f"all sheets name {name}")
+							input_view_control.create_input_view()
+							if all_sheets_check_box:
+								sheet_name = input_view_control.input_view.all_selected_sheet
+								temp_dict[name] = sheet_name
+							else:
+								sheet_name = input_view_control.sheet_name
+								temp_dict[name] = sheet_name
+					submit_button = st.button("Submit", key="submit terminal button")
+					if submit_button:
+						st.session_state[statement_constant_name] = temp_dict
 
 
 

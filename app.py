@@ -3,6 +3,7 @@ from MultipleApp import MultipleApp
 from StaticData.CSS import CssStyle
 from StaticData.AppConfig import MenuChapters, MenuIcons
 from streamlit_option_menu import option_menu
+
 import streamlit_nested_layout
 # pip install git+https://github.com/joy13975/streamlit-nested-layout.git
 # icons https://icons.getbootstrap.com/icons/calculator-fill/

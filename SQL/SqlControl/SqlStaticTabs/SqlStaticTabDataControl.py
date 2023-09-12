@@ -79,7 +79,7 @@ class SqlStaticTabDataControl:
 			col = st.columns(3)
 			try:
 				df = pd.read_sql_query(f"select * from {selected_sheet}", con=self.connector)
-				selected_column = st.multiselect("select column for checking", df.columns)
+				selected_column = col[0].multiselect("select column for checking", df.columns)
 				df_list = []
 				for data in selected_column:
 					unique_column_data = pd.DataFrame({data: df[data].unique()})

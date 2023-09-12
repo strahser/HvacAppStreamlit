@@ -3,10 +3,11 @@ from SQL.SqlView.AddSQLTableView import AddSQLTableView
 import pandas as pd
 from SQL.SqlView.CopyToClipBoardView import CopyToClipBoardView
 from library_hvac_app.list_custom_functions import to_list
+from streamlit_modal import Modal
 
 
 class SQLCreateViewPanel:
-	def __init__(self, sql_query: str, key, conn: object = SqlConnector.conn_sql):
+	def __init__(self, sql_query: str, key, conn: sqlite3.connect = SqlConnector.conn_sql):
 		"""update view from session statement. Add view query to session statement"""
 		self.sql_query = sql_query
 		self.conn = conn
@@ -61,6 +62,7 @@ class SQLCreateViewPanel:
 			                                                 self.category_name,
 			                                                 self.new_view_comments
 			                                                 )
+
 			add_view_to_session.create_sql_view_and_add_to_session(view=False)
 
 	def _show_sql_table(self, sql):

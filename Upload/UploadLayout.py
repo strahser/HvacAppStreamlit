@@ -30,7 +30,8 @@ class UploadLayout:
 		if self.upload_view.update_db_button:
 			self._table_dict = self._select_db_or_excel_update()
 		if self.upload_view.file_json_upload:
-			self.json_file = self._get_json_file_from_memory()
+			st.session_state[StatementConstants.json_polygons] = self._get_json_file_from_memory()
+			self.json_file = st.session_state[StatementConstants.json_polygons]
 
 	def _select_db_or_excel_update(self):
 		if (self.upload_view.select_db_or_excel == StaticVariable.load_excel.value

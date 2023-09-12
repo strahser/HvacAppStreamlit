@@ -85,7 +85,6 @@ class NetworkPressurePlotter(NetworkPlotter):
         self.ax.minorticks_on()
 
     def add_text_to_branchse(self, df_network):
-
         self.add_text_from_df(
             df_network,
             "pcx",
@@ -98,6 +97,7 @@ class NetworkPressurePlotter(NetworkPlotter):
             bbox=box_2,
             **text_style,
         )
+
     def calculate(self):
         for df_ in self.df_network:
             self.plot_lines(df_)

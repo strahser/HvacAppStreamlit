@@ -18,13 +18,58 @@ class InputView:
 		self.columns = st.columns(4)
 		self.index_book = 0
 		self.index_sheet = 0
+		self.all_selected_sheet: list = []
 
-	def select_books_or_views_view(self) -> None:
+	def select_books_or_views_view(self) -> str:
 		self.selected_excel_sheet = self._create_radio_button()
 		return self.selected_excel_sheet
 
+	def _create_radio_button(self):
+		selected_option = st.radio("Select Input table or Input view",
+		                           ("Show Tables", "Show Views", "Show Category"),
+		                           key=f"{self.key} selected_option")
+		if selected_option == "Show Tables" and self.all_books:
+			return self.get_selected_sheet()
+		if selected_option == "Show Views" and self.all_views:
+			return self._select_db_view_sheet()
+		if selected_option == "Show Category":
+			return self._get_category_json_view()
+
+	def get_selected_sheet(self) -> str:
+		self.selected_excel_books = self._select_excel_book()
+		selected_sheet = self._select_excel_sheet(self.selected_excel_books)
+		return selected_sheet
+
+	def _select_excel_book(self) -> str:
+		with self.columns[0]:
+			selected_excel_book = st.selectbox(
+				"Select Excel Book",
+				self.all_books.keys(),
+				key=f"{self.key} selected_excel_books"
+			)
+			return selected_excel_book
+
+	def _select_excel_sheet(self, selected_excel_books) -> str:
+		with self.columns[1]:
+			selected_excel_sheet = st.selectbox("Select Excel Sheet",
+			                                    to_list(self.all_books[selected_excel_books]),
+			                                    key=f"{self.key} selected_excel_sheet",
+			                                    )
+			self.all_selected_sheet = to_list(self.all_books[selected_excel_books])
+			return selected_excel_sheet
+
+	def _select_db_view_sheet(self) -> str:
+		with self.columns[0]:
+			selected_excel_sheet = st.selectbox("Select Db Views",
+			                                    self.all_views,
+			                                    key=f"{self.key} selected_view",
+			                                    )
+			self.selected_excel_books = StatementConstants.all_tables_view
+			self.all_selected_sheet = self.all_views
+			return selected_excel_sheet
+
 	def _get_category_json_view(self) -> str:
-		all_tables = st.session_state[StatementConstants.create_json]
+		all_tables = st.session_state[StatementConstants.view_sql_query_model]
 		if all_tables:
 			df = pd.DataFrame(all_tables.values())
 			df = df.groupby([StatementConstants.category_name])[StatementConstants.view_name].agg(list).to_dict()
@@ -40,48 +85,7 @@ class InputView:
 				                                    list(df[selected_excel_book]),
 				                                    key=f"{self.key} selected_excel_sheet",
 				                                    )
+
 				self.selected_excel_books = selected_excel_book
-			return selected_excel_sheet
-
-	def _create_radio_button(self):
-
-		selected_option = st.radio("Select Input table or Input view",
-		                           ("Show Tables", "Show Views", "Show Category"),
-		                           key=f"{self.key} selected_option")
-		if selected_option == "Show Tables" and self.all_books:
-			return self.get_selected_sheet()
-		if selected_option == "Show Views" and self.all_views:
-			return self._select_db_view_sheet()
-		if selected_option == "Show Category":
-			return self._get_category_json_view()
-
-	def get_selected_sheet(self):
-		self.selected_excel_books = self._select_excel_book()
-		selected_sheet = self._select_excel_sheet(self.selected_excel_books)
-		return selected_sheet
-
-	def _select_excel_book(self, ):
-		with self.columns[0]:
-			selected_excel_book = st.selectbox(
-				"Select Excel Book",
-				self.all_books.keys(),
-				key=f"{self.key} selected_excel_books"
-			)
-			return selected_excel_book
-
-	def _select_excel_sheet(self, selected_excel_books):
-		with self.columns[1]:
-			selected_excel_sheet = st.selectbox("Select Excel Sheet",
-			                                    to_list(self.all_books[selected_excel_books]),
-			                                    key=f"{self.key} selected_excel_sheet",
-			                                    )
-			return selected_excel_sheet
-
-	def _select_db_view_sheet(self):
-		with self.columns[0]:
-			selected_excel_sheet = st.selectbox("Select Db Views",
-			                                    self.all_views,
-			                                    key=f"{self.key} selected_view",
-			                                    )
-			self.selected_excel_books = StatementConstants.all_tables_view
+			self.all_selected_sheet = list(df[selected_excel_book])
 			return selected_excel_sheet

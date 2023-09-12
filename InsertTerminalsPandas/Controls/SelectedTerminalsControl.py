@@ -173,7 +173,7 @@ class PlotSelectedSpacesAndTerminals:
 		string_id_list = [str(val) for val in selected_id]
 		condition = df_polygons[ColumnChoosing.S_ID].isin(string_id_list)
 		if any(condition):
-			PlotTerminalsAndSpaces.plot_spaces(ax, df_polygons[condition])
+			PlotTerminalsAndSpaces.plot_spaces(ax= ax,all_level_spaces= df_polygons[condition])
 		else:
-			PlotTerminalsAndSpaces.plot_spaces(ax, df_polygons)
+			PlotTerminalsAndSpaces.plot_spaces(ax=ax, all_level_spaces=df_polygons)
 		return string_id_list

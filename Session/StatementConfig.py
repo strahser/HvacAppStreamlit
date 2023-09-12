@@ -3,7 +3,8 @@ class StatementConstants:
 	category_view_list = "category_view_list"
 	category_dictionary = "category dictionary"
 	without_category = "Without category"
-	create_json = 'create_json'
+	view_sql_query_model = 'view_sql_query_model'
+	json_polygons = "json_polygons"
 	sql_view_query = "sql_view_query"
 	category_name = "balance_type"
 	view_name = "view_name"
@@ -21,6 +22,8 @@ class StatementConstants:
 	tableau_config = "tableau_config"
 	tableau_table = "tableau_table"
 	ifc_category = "ifc"
+	terminal_names_dict = "terminal_names_dict"
+	ahu_names_dict = "ahu_names_dict"
 
 
 class SettingConfig:

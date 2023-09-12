@@ -27,7 +27,7 @@ class SheetsTabView:
 			st.warning(e)
 
 	def _write_df(self, table: str):
-		col_names, col_df = st.columns([2, 7])
+		col_names, col_df = st.columns([3, 7])
 		with col_names:
 			st.markdown(f"Columns of **{table}**")
 			columns = pd.read_sql_query(f"select * from {table}", con=self.connection).columns

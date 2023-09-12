@@ -1,5 +1,5 @@
 from Polygons.PolygonView.SelectPlotView import SelectPlotView
-from Polygons.PolygonsControl.PlotToolsPanel import UploadLayout, st, PlotToolsPanel,show_selected_levels
+from Polygons.PolygonsControl.PlotToolsPanel import UploadLayout, st, PlotToolsPanel, show_selected_levels
 from Session.StatementConfig import StatementConstants
 from library_hvac_app.StreamlitDownloadFunctions.DownloadPlotlyFigList import download_all_plt_html, download_jpg_zip
 from SQL.SqlControl.SqlToolsControl import SqlToolsControl
@@ -25,14 +25,16 @@ class TabsPolygonSqlCreator:
 			self._create_sql_tools_panel()
 		with self.plot_setting_tab:
 			self._create_plot_tools_panel()
-		if self.plot_tools_panel.show_plots:
+
+		if self.plot_tools_panel.show_plots_checkbox:
+			self.plot_tools_panel.create_plots(self.sql_tool.selected_table_value)
 			show_selected_levels(self.plot_tools_panel.level_list)
+
 		with self.downloads_tab:
 			self._create_download_tab()
 
 	def _create_sql_tools_panel(self):
-		self.sql_tool = SqlToolsControl(self.upload_layout,
-		                                key=self.key)
+		self.sql_tool = SqlToolsControl(self.upload_layout, key=self.key)
 		self.sql_tool.create_sql_tools_panel()
 
 	def _create_plot_tools_panel(self):
@@ -40,7 +42,8 @@ class TabsPolygonSqlCreator:
 		                                       self.sql_tool.input_df,
 		                                       key=self.key,
 		                                       )
-		self.plot_tools_panel.create_plot_tools_panel(self.sql_tool.selected_table_value)
+		self.plot_tools_panel.create_plot_tools_panel()
+	# 	self.sql_tool.selected_table_value
 
 	def _create_download_tab(self):
 		with self.downloads_tab:

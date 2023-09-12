@@ -12,6 +12,40 @@ class PlotlyFigList:
 	level_name: str
 
 
+class CheckSelectedPlotID:
+	def __init__(self, plot_view: PlotView):
+		self.plot_view = plot_view
+
+	def __get_column_filter(self, column_filtered_list_id: pd.DataFrame) -> list:
+		"""column_filtered_list_id - selected agg_table_values"""
+		if not column_filtered_list_id.empty:
+			column_filtered_list_id = column_filtered_list_id[self.plot_view.unique_table_id].values
+			return [str(val) for val in column_filtered_list_id]
+		else:
+			return []
+
+	@staticmethod
+	def __get_clicked_filter(clicked_filter_id_list: list[str]) -> list[str]:
+		"""return id to type str"""
+		if clicked_filter_id_list:
+			return [str(val) for val in clicked_filter_id_list]
+		else:
+			return []
+
+	def check_filter_mode(self, row: pd.Series, column_filtered_list_id: pd.DataFrame,
+	                      clicked_filter_id_list: list[str]):
+		clicked_filter = self.__get_clicked_filter(clicked_filter_id_list)
+		if clicked_filter or not column_filtered_list_id.empty:
+			column_filter = self.__get_column_filter(column_filtered_list_id)
+			concat_filter = column_filter + clicked_filter
+			if row[self.plot_view.unique_table_id] in concat_filter:
+				return "toself"
+		elif self.plot_view.is_need_fill_color == "space fill color":
+			return "toself"
+		else:
+			return None
+
+
 class PolygonPlotlyControl:
 	def __init__(self,
 	             upload_layout: UploadLayout,
@@ -25,7 +59,7 @@ class PolygonPlotlyControl:
 		self.merge_df = self.__add_text_to_df()
 
 	def plot_polygons_plot(self, level_list: list[str],
-	                       column_filtered_list_id: pd.DataFrame = None,
+	                       column_filtered_list_id: list[str] = None,
 	                       clicked_filter_id_list: list[str] = None,
 	                       line_width=2
 	                       ) -> list[PlotlyFigList]:
@@ -34,14 +68,14 @@ class PolygonPlotlyControl:
 		for level_val in level_list:
 			fig = go.Figure()
 			filter_df = self.merge_df[self.merge_df[self.plot_view.level_column_name] == level_val]
-			fig_values = self.plot_one_level(fig, filter_df, level_val, column_filtered_list_id,
+			fig_values = self.plot_one_level(fig, filter_df, level_val,
+			                                 column_filtered_list_id,
 			                                 clicked_filter_id_list,
 			                                 line_width)
 
 			with st.expander(f"{level_val}"):
 				self.fig_list.append(fig_values)
 		return self.fig_list
-
 
 	def _get_polygon_merge_list(self, _df):
 		polygon_merge = PolygonMerge(
@@ -87,36 +121,6 @@ class PolygonPlotlyControl:
 		)
 		return fig
 
-	def __get_column_filter(self, column_filtered_list_id: pd.DataFrame) -> list:
-		if not column_filtered_list_id.empty:
-			column_filtered_list_id = column_filtered_list_id[self.plot_view.id_for_color_filter].values
-			return [str(val) for val in column_filtered_list_id]
-
-		else:
-			return []
-
-	@staticmethod
-	def __get_clicked_filter(clicked_filter_id_list: list[str]):
-		if clicked_filter_id_list:
-			return [str(val) for val in clicked_filter_id_list]
-		else:
-			return []
-
-	def __check_filter_mode(self, row: pd.Series,
-	                        column_filtered_list_id: pd.DataFrame, clicked_filter_id_list: list[str]
-	                        ):
-
-		if self.plot_view.is_need_fill_color == "space fill color":
-			return "toself"
-		if self.plot_view.is_need_fill_color == "use clicked mouse color filter":
-			column_filter = self.__get_column_filter(column_filtered_list_id)
-			clicked_filter = self.__get_clicked_filter(clicked_filter_id_list)
-			concat_filter = column_filter + clicked_filter
-			if row[self.plot_view.id_for_color_filter] in concat_filter:
-				return "toself"
-		else:
-			return None
-
 	def plot_one_level(
 			self, fig: go.Figure,
 			filter_df: pd.DataFrame,
@@ -124,6 +128,7 @@ class PolygonPlotlyControl:
 			column_filtered_list_id=pd.DataFrame(),
 			clicked_filter_id_list=None,
 			line_width=2) -> PlotlyFigList:
+		checked_selected_plot_id = CheckSelectedPlotID(self.plot_view)
 		clicked_filter_id_list = clicked_filter_id_list if clicked_filter_id_list else []
 		for idx, row in filter_df.iterrows():
 			x = row["px"]
@@ -134,7 +139,7 @@ class PolygonPlotlyControl:
 				go.Scatter(
 					x=row["px"],
 					y=row["py"],
-					fill=self.__check_filter_mode(row, column_filtered_list_id, clicked_filter_id_list),
+					fill=checked_selected_plot_id.check_filter_mode(row, column_filtered_list_id, clicked_filter_id_list),
 					line_color=row["color"],
 					line_width=line_width,
 					legendgroup=row[self.plot_view.color_filter_name],
@@ -173,4 +178,3 @@ class PolygonPlotlyControl:
 		fig_values = PlotlyFigList(fig, level_val)
 		self.__show_only_unique_legend(fig)
 		return fig_values
-

@@ -22,8 +22,11 @@ class TabsViewControl:
 		input_table_tab, option_tab, custom_function_tab = st.tabs(["Input Table", "Option", "Custom Function"])
 		with input_table_tab:
 			with st.expander("Show Input Table"):
-				self.joined_table_control = JoinedTableControl(self.upload_layout, self.conn)
-				self.joined_table_control.create_join_table_columns()
+				try:
+					self.joined_table_control = JoinedTableControl(self.upload_layout, self.conn)
+					self.joined_table_control.create_join_table_columns()
+				except:
+					return None
 		with option_tab:
 			with st.expander("Show Options"):
 				self.joined_table_tables_string = self.joined_table_control \

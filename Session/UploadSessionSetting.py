@@ -6,6 +6,8 @@ from StaticData.AppHelp import AppHelp
 from Session.AutoloadSession import AutoloadSession
 import streamlit as st
 
+from library_hvac_app.list_custom_functions import flatten
+
 
 class UploadSessionSetting:
 	def __init__(self, uploaded_session_file: st.file_uploader):
@@ -21,15 +23,31 @@ class UploadSessionSetting:
 		with col2:
 			self._create_download_settings()
 
+	def _create_excluding_session_dictionary(self):
+		excluding_list = SettingConfig.excluding_list
+
+		all_keys = st.session_state.keys()
+		correct_keys = []
+		for excl_val in excluding_list:
+			temp_list =[]
+			for k in all_keys:
+				if excl_val  in k:
+					temp_list.append(k)
+			correct_keys.append(temp_list)
+		bad_list_keys = flatten(correct_keys)
+		settings_to_download = {}
+		for k, v in st.session_state.items():
+			if k not in bad_list_keys:
+				settings_to_download[k] = v
+		return settings_to_download
+
 	def _create_download_settings(self):
 		# 1. StreamlitDownloadFunctions Settings Button
-		excluding_list = SettingConfig.excluding_list
-		self.settings_to_download = {k: v for k, v in st.session_state.items()
-		                             if k not in excluding_list
-		                             }
+		settings_to_download = self._create_excluding_session_dictionary()
+		# st.write(self.settings_to_download.keys())
+		# st.write([val for val in settings_to_download.keys() if "button" in val])
 		self.button_download = st.download_button(label="Download Session Settings",
-		                                          data=json.dumps(self.settings_to_download, ensure_ascii=False,
-		                                                          indent=4),
+		                                          data=json.dumps(settings_to_download, ensure_ascii=False, indent=4),
 		                                          file_name=f"settings.json",
 		                                          help="Click to load Current Settings")
 
@@ -55,11 +73,11 @@ class UploadSessionSetting:
 				self.uploaded_settings = None
 
 	def _apply_upload_settings_view(self):
-		st.button(label="Apply Settings",
-		          on_click=self._create_upload_settings,
-		          # args=(self.uploaded_settings,),
-		          key="Apply Settings button",
-		          help=AppHelp.button_apply_settings)
+		apply_setting_button = st.button(label="Apply Settings",
+		                                 on_click=self._create_upload_settings,
+		                                 # args=(self.uploaded_settings,),
+		                                 key="Apply Settings button",
+		                                 help=AppHelp.button_apply_settings)
 
 	def _create_upload_db_from_setting_button(self):
 		self.load_statement_model_button = st.button("Load Statement Model",
@@ -81,6 +99,8 @@ class UploadSessionSettingControl:
 	def load_session_download():
 		uploaded_session_file = st.file_uploader(
 			label="Select the Settings File to be uploaded",
-			help=AppHelp.uploaded_session_file_help)
+			help=AppHelp.uploaded_session_file_help,
+			type=[".json"]
+		)
 		upload_session = UploadSessionSetting(uploaded_session_file)
 		upload_session.show_session_view()

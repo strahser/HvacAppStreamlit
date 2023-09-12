@@ -14,7 +14,6 @@ class AddViewTableToSessionModel:
 	             conn: sqlite3.Connection = SqlConnector.conn_sql):
 		self.new_view_table_name = new_view_table_name
 		self.sql_query = sql_query
-
 		self.create_view_db_button = create_view_db_button
 		self.new_category_name = new_category_name
 		self.new_view_comments = new_view_comments
@@ -28,14 +27,13 @@ class AddViewTableToSessionModel:
 				self.conn.cursor().execute(sql_view)
 				self.conn.commit()
 				self._create_json_table_query_view(sql_view)
-				# self._add_view_to_category_list(self.new_category_name, self.new_view_table_name)
 				st.success(f"View Create") if view else st.success("Table Create")
 			except Exception as e:
 				st.warning(e)
 
 	def _create_json_table_query_view(self, input_sql: str):
 		""" create json in session"""
-		st.session_state[StatementConstants.create_json][self.new_view_table_name] = {
+		st.session_state[StatementConstants.view_sql_query_model][self.new_view_table_name] = {
 			StatementConstants.sql_view_query: input_sql,
 			StatementConstants.category_name: self.new_category_name,
 			StatementConstants.view_name: self.new_view_table_name,

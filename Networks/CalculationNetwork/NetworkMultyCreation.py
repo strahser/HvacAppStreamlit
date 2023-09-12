@@ -1,9 +1,8 @@
-from collections import defaultdict
-from typing import Any
-
-from Networks.CalculationNetwork.NetworkBuilder import *
+import pandas as pd
 from itertools import combinations
 import collections
+
+from Networks.CalculationNetwork.NetworkBuilder import NetworkBuilder
 
 
 class NetworkMultyCreate:
@@ -14,7 +13,7 @@ class NetworkMultyCreate:
     """
 
     @staticmethod
-    def add_networks(network_builder_list_data: list, add_row_list: list)->list and int:
+    def add_networks(network_builder_list_data: dict, add_row_list: list)->list and int:
         """create chain of instance of network_builder_list_
 
         Args:
@@ -83,20 +82,20 @@ class NetworkProduct:
         Returns:
                 list: _description_
         """
-        network_builder_list = [
+        netork_builder_list = [
             NetworkBuilder(
-                polygon_merge = single_input_dict['polygon_merge'],
-                system_location_point = single_input_dict['system_location_point'],
-                system_name = single_input_dict['system_name'],
-                sys_flow_column = single_input_dict['sys_flow_column'],
-                network_coordinate_x = single_input_dict['network_coordinate_x'],
-                network_coordinate_y = single_input_dict['network_coordinate_y'],
-                route_name = single_input_dict['route_name'],
-                    add_row_dict=self.add_row_dict,
+            polygon_merge = single_input_dict['polygon_merge'],
+            system_location_point = single_input_dict['system_location_point'],
+            system_name = single_input_dict['system_name'],
+            sys_flow_column = single_input_dict['sys_flow_column'],
+            network_coordinate_x = single_input_dict['network_coordinate_x'],
+            network_coordinate_y = single_input_dict['network_coordinate_y'],
+            route_name = single_input_dict['route_name'],
+                add_row_dict=self.add_row_dict,
             )
             for single_input_dict in self.network_builder_list_data
         ]
-        return network_builder_list
+        return netork_builder_list
 
     @staticmethod
     def get_sub_combination_of_lists(iter_sublist):
@@ -121,12 +120,14 @@ class NetworkProduct:
 
 
 class NetworkAddRow:
-    def __init__(self, network_product_list_inst, network_product_result, list_of_from_to) -> None:
+    def __init__(
+        self, network_product_list_inst, network_product_result, list_of_from_to
+    ) -> list:
         self.network_product_list_inst = network_product_list_inst
         self.network_product_result = network_product_result
         self.list_of_from_to = list_of_from_to
 
-    def group_list_to(self) -> defaultdict[Any, list]:
+    def group_list_to(self) -> pd.DataFrame:
         list_from = [sublist[0] for sublist in self.list_of_from_to]
         list_to = [sublist[1] for sublist in self.list_of_from_to]
         product_inst = self.network_product_result

@@ -24,7 +24,7 @@ from InsertTerminalsPandas.AppInsertTerminals import insert_terminals_main
 from AhuLayout.AppAhuLayout import MainAHU
 from DownloadToExcel.Control.DownloadControl import DownloadControl
 from StaticData.AppConfig import MenuChapters, StaticVariable
-
+from Networks.MainNetwork import create_network_plot
 
 class MultipleApp:
 	def __init__(self):
@@ -36,10 +36,9 @@ class MultipleApp:
 			with st.expander("__Input data show__."):
 				self.upload_view = UploadView()
 				self.upload_view.get_upload_layout()
-				self.condition_json = self.upload_view.file_json_upload
 				self.upload_layout = UploadLayout(self.upload_view)
 				self.upload_layout.get_files_from_memory()
-
+				self.condition_json = self.upload_layout.json_file
 		with col[1]:
 			with st.expander("__Session Config__"):
 				order_state = collections.OrderedDict(sorted(st.session_state.items()))  # for test streamlit
@@ -48,6 +47,7 @@ class MultipleApp:
 					st.write(order_state[selected_key])
 				if clear_session:
 					st.empty()
+
 
 	@staticmethod
 	def _check_db_exist():
@@ -66,6 +66,9 @@ class MultipleApp:
 		clear_session = st.button("Clear Session")
 		return show_session, clear_session,selected_key
 
+	def Networks(self):
+		create_network_plot()
+
 	def dash_board(self):
 		dashboard_main(self.upload_layout)
 
@@ -80,7 +83,6 @@ class MultipleApp:
 			st.warning("no loaded file json polygons")
 
 	def scheme(self):
-
 		if self.condition_excel and self._check_db_exist:
 			schem_main = SchemeMain(self.upload_layout, key=MenuChapters.scheme)
 			schem_main.main()
@@ -99,6 +101,7 @@ class MultipleApp:
 			main_analytical_tabel(self.upload_layout)
 
 	def download(self):
+
 		if self.condition_excel:
 			DownloadControl(self.upload_layout)
 

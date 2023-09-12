@@ -8,7 +8,7 @@ from Session.StatementConfig import StatementConstants
 class StatementCategoryModel:
 	@staticmethod
 	def __create_df_balance_view():
-		df = pd.DataFrame(st.session_state[StatementConstants.create_json]).T
+		df = pd.DataFrame(st.session_state[StatementConstants.view_sql_query_model]).T
 		if StatementConstants.category_name in df.columns and StatementConstants.view_name in df.columns:
 			group_df = df \
 				.groupby([StatementConstants.category_name])[StatementConstants.view_name] \

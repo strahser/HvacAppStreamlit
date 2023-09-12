@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 from InsertTerminalsPandas.InputData.input import InputDataDF
 from InsertTerminalsPandas.Static.ColumnChoosing import ColumnChoosing
-from SQL.SqlControl.SqlCRUDOperationControl import SqlCRUDOperationControl
+from SQL.SQlTools.SqlOperations.SqlCRUDOperation import SqlCRUDOperation
 from SQL.SqlModel.SqlConnector import SqlConnector
 from library_hvac_app.streamlit_custom_functions import AggGridOptions
 
@@ -54,7 +54,7 @@ class DeviceCRUDView:
 
 	@staticmethod
 	def __add_data_to_column(filtered_df: list, table_add_data_view):
-		sql_operation = SqlCRUDOperationControl(ColumnChoosing.devices)
+		sql_operation = SqlCRUDOperation(ColumnChoosing.devices)
 		sql_operation.add_data_to_column(filtered_df, table_add_data_view)
 
 	def _create_id_filter_view(self) -> list[str]:
@@ -71,7 +71,6 @@ class DeviceCRUDView:
 	def _create_device_filter_view(self) -> list[str]:
 		try:
 			system_type_df = list(self.input_data_df.system_dictionary.keys())
-
 			with self.col1:
 				st.subheader('Choose  System Options')
 				selected_system_columns_names = st.selectbox('select system type columns',

@@ -49,15 +49,20 @@ class CreateSelectedPlotsControl(CreatePlotsControlBase):
 		self.device_layout_list = parsing_terminals.device_layout_list
 		return devices_list
 
-	def plot_selected_terminals_and_polygons(self, selected_id: list[str]):
+	def plot_selected_terminals_and_polygons(self, selected_id: list[str],polygon_expander_name:str="Plot "):
 		self.devices_list = self._create_device_list(selected_id)
 		PlotSelectedSpacesAndTerminals.plot_selected_polygons(self.df_polygons, self.ax, selected_id)
 		for device in self.devices_list:
 			PlotSelectedSpacesAndTerminals.plot_selected_terminals(self.ax, device)
 		plt.axis('off')
-		self.fig.set_size_inches(self.config_view.plot_width, self.config_view.plot_height)
-		fig = PlotTerminalsAndSpaces.save_plot(self.fig)
-		st.write(fig, unsafe_allow_html=True)
+		st.subheader(polygon_expander_name)
+		with st.expander(""):
+			col1,col2,col3 = st.columns(3)
+			height = col1.number_input("Plot height",min_value=2,max_value=30,step=2,value=5,key="terminal plot height")
+			width = col2.number_input("Plot width", min_value=2,max_value=30,step=2,value=5,key="terminal plot width")
+			self.fig.set_size_inches(width, height)
+			fig = PlotTerminalsAndSpaces.save_plot(self.fig)
+			st.write(fig, unsafe_allow_html=True)
 
 	def create_selected_terminals_df(self):
 		df = pd.DataFrame(self.devices_list)[DevicePropertiesName.selected_df_columns_name]
@@ -69,8 +74,8 @@ class CreateLevelPlots(CreatePlotsControlBase):
 	def __init__(self, config_view: ConfigView, df_input_table: pd.DataFrame, input_data_df: InputDataDF):
 		super().__init__(config_view, df_input_table, input_data_df)
 
-	def plot_all_polygons(self):
-		PlotTerminalsAndSpaces.plot_spaces(self.ax, self.df_polygons)
+	def plot_all_polygons(self,selected_spaces_id=None):
+		PlotTerminalsAndSpaces.plot_spaces(ax=self.ax,all_level_spaces= self.df_polygons,selected_spaces_id= selected_spaces_id)
 
 	def plot_terminals_from_joining_excel_input_data(self, level_value: str = None):
 		self.df_result_list = []
