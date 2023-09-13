@@ -17,10 +17,7 @@ class PlotToolsPanel:
 		self.level_plots_session = st.session_state[StatementConstants.levels_plots]
 		self.show_plots_checkbox = st.sidebar.checkbox("Show Plots", key=f"{self.key} show_plots")
 
-	def create_plot_tools_panel(self):
-		self._create_polygons_config()
-
-	def _create_polygons_config(self):
+	def create_polygons_config_panel(self):
 		self.plot_view = PlotView(self.input_df, key=self.key)
 		self.plot_view.get_plot_layout()
 		self.level_name = self.plot_view.level_column_name
@@ -68,8 +65,12 @@ class PlotToolsPanel:
 def show_selected_levels(level_list: list[str])->None:
 	st.subheader("Levels Plots")
 	for level in level_list:
-		f_html = st.session_state[StatementConstants.levels_plots][level]
-		fig = go.Figure(data=f_html['data'], layout=f_html['layout'])
-		with st.expander(level):
-			st.write(fig, unsafe_allow_html=True)
+		try:
+			f_html = st.session_state[StatementConstants.levels_plots][level]
+			fig = go.Figure(data=f_html['data'], layout=f_html['layout'])
+			with st.expander(level):
+				st.write(fig, unsafe_allow_html=True)
+		except Exception as e:
+			st.warning(f"please check if ID column exist, level column exist Error {e}")
+
 

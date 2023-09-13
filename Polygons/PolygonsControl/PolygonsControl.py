@@ -1,9 +1,5 @@
-from Polygons.PolygonView.SelectPlotView import SelectPlotView
 from Polygons.PolygonsControl.PlotToolsPanel import UploadLayout, st, PlotToolsPanel, show_selected_levels
-from Session.StatementConfig import StatementConstants
-from library_hvac_app.StreamlitDownloadFunctions.DownloadPlotlyFigList import download_all_plt_html, download_jpg_zip
 from SQL.SqlControl.SqlToolsControl import SqlToolsControl
-import pandas as pd
 
 
 class TabsPolygonSqlCreator:
@@ -42,7 +38,8 @@ class TabsPolygonSqlCreator:
 		                                       self.sql_tool.input_df,
 		                                       key=self.key,
 		                                       )
-		self.plot_tools_panel.create_plot_tools_panel()
+		self.plot_tools_panel.create_polygons_config_panel()
+
 	# 	self.sql_tool.selected_table_value
 
 	def _create_download_tab(self):

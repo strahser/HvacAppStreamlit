@@ -24,9 +24,18 @@ class InputView:
 		self.selected_excel_sheet = self._create_radio_button()
 		return self.selected_excel_sheet
 
+	def __create_radio_button_exist_values(self):
+		all_checkboxes = {"Show Tables": self.all_books.keys(),
+		                  "Show Views": self.all_views,
+		                  "Show Category": st.session_state[StatementConstants.category_dictionary]
+		                  }
+		existing_checkboxing =[key for key,val in all_checkboxes.items() if val]
+
+		return existing_checkboxing
+
 	def _create_radio_button(self):
 		selected_option = st.radio("Select Input table or Input view",
-		                           ("Show Tables", "Show Views", "Show Category"),
+		                           self.__create_radio_button_exist_values(),
 		                           key=f"{self.key} selected_option")
 		if selected_option == "Show Tables" and self.all_books:
 			return self.get_selected_sheet()
