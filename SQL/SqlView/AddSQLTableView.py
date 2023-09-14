@@ -35,12 +35,12 @@ class AddSQLTableView:
 
 	def __chose_category_type(self):
 		category = to_list(st.session_state[StatementConstants.category_view_list])
-		if len(category) > 0:
+		try:
 			category_type = st.selectbox(
 				"Select Category Type",
 				category,
 				key=f"category_type {self.key}"
 			)
 			return category_type
-		else:
+		except:
 			return StatementConstants.without_category

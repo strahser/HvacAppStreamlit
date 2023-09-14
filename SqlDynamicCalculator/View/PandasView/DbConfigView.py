@@ -1,8 +1,10 @@
+from SqlDynamicCalculator import CategoryDb
 from SqlDynamicCalculator.Models.PandasModels.ConfigModel import *
-from SqlDynamicCalculator.CategoryDb import CategoryDb
+
 from SqlDynamicCalculator.Models.PandasModels.ConfigModel import ConfigModel
 from InputView.InputView import *
 from SqlDynamicCalculator.Models.PandasModels.InputViewModel import *
+from library_hvac_app.DbFunction.pandas_custom_function import create_group_sum
 
 
 class DbConfigView:

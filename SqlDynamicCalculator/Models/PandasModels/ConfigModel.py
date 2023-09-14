@@ -1,13 +1,14 @@
-from SQL.SqlModel import SqlConnector
+from SQL.SqlModel.SqlConnector import SqlConnector
 from Session.StatementConfig import StatementConstants
-from library_hvac_app.pandas_custom_functions import pd, create_group_sum
+import pandas as pd
+
 
 import streamlit as st
 
 
 class SqlDFLoad:
 	def __init__(self):
-		self.conn = SqlConnector.conn_sql
+		self.conn = SqlConnector
 
 	def get_all_db_tables(self):
 		return pd.read_sql_query(
@@ -52,7 +53,7 @@ class ConfigModel:
 	                      ):
 		q = f"""select input_excel_sheet from {StatementConstants.balance_load_columns_table}"""
 		col = pd.read_sql_query(q, con=conn)['input_excel_sheet'].to_list()
-		print(input_excel_sheet)
+
 		if str(input_excel_sheet) not in col:
 			conn.cursor().viewer_execute(
 				f'INSERT INTO {StatementConstants.balance_load_columns_table} values(?,?,?,?,?,?)', (
