@@ -79,8 +79,7 @@ class CssStyle:
 	  console.log(match.textContent);
 	  alert(match.textContent);
 	  // 👉️ Bobby Hadz
-	});
-	
+	});	
 	
 	function showDiv(value) {
 	document.getElementById('count').value = 500 * value;
@@ -93,7 +92,6 @@ class CssStyle:
       }
 
 }
-
 	</script>
 	'''
 	expander_css = '''
@@ -131,7 +129,43 @@ class CssStyle:
 		"nav-link": {"font-size": "16px", "text-align": "left", "margin": "0px", "--hover-color": "#1d49aa"},
 		"nav-link-selected": {"background-color": "#1d49aa"},
 	}
-	
+	table_style = """"
+	<style>	
+	.table {
+	width: 100%;
+	border: none;
+	margin-bottom: 20px;
+}
+.table thead th {
+	font-weight: bold;
+	text-align: left;
+	border: none;
+	padding: 10px 15px;
+	background: #d8d8d8;
+	font-size: 14px;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+}
+.table tbody td {
+	text-align: left;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	padding: 10px 15px;
+	font-size: 14px;
+	vertical-align: top;
+}
+.table thead tr th:first-child, .table tbody tr td:first-child {
+	border-left: none;
+}
+.table thead tr th:last-child, .table tbody tr td:last-child {
+	border-right: none;
+}
+.table tbody tr:nth-child(even){
+	background: #f3f3f3;
+}
+</style>
+	"""
+
 	@classmethod
 	def run(cls):
 		html(cls.html_string)  # JavaScript works

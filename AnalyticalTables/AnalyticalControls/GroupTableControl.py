@@ -1,4 +1,7 @@
-from AnalyticalTables.AnalyticalControls.PivotTableControl import *
+import pandas as pd
+import streamlit as st
+from AnalyticalTables.AnalyticalModels.AnaliticalTableModel import get_group_table
+from AnalyticalTables.AnalyticalView.View import GroupTableView
 
 
 class GroupTableControl:

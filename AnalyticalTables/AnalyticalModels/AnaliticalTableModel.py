@@ -40,5 +40,5 @@ def get_pivot_table(
 			aggfunc=pivot_agg_func_multiselect,
 			fill_value=0,
 			margins=True
-		).reset_index()
+		)
 		return df_pivot

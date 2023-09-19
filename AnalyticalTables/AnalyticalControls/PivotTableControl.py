@@ -1,5 +1,7 @@
 from AnalyticalTables.AnalyticalView.View import *
 from AnalyticalTables.AnalyticalModels.AnaliticalTableModel import *
+from StaticData import CSS
+from StaticData.CSS import CssStyle
 
 
 class PivotTableControl:
@@ -19,4 +21,8 @@ class PivotTableControl:
 
 	def show_pivot_table(self):
 		st.subheader("Pivot table")
-		st.dataframe(self.get_pivot_table())
+		try:
+			df_html = self.get_pivot_table().to_html(classes="table ")
+			st.write(df_html,unsafe_allow_html=True)
+		except Exception as e:
+			st.warning(e)

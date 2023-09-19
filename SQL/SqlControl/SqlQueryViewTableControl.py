@@ -1,5 +1,6 @@
 import streamlit as st
 
+from AnalyticalTables.AnalyticalControls.PivotAndGroupTableControl import PivotAndGroupTableControl
 from SQL.SqlControl.SqlStaticTabs.SqlStaticTabDataControl import SqlStaticTabDataControl
 from SQL.SqlModel.SqlConnector import SqlConnector
 from SQL.SqlView.CopyToClipBoardView import CopyToClipBoardView
@@ -40,6 +41,9 @@ class SqlQueryViewTableControl:
 	def _create_sql_tools_panel(self):
 		self.sql_tool = SqlToolsControl(self.upload_layout, key=self.key)
 		self.sql_tool.create_sql_tools_panel()
+		st.subheader("Pivot table and Group Table Sample")
+		self.pivot_and_group_table = PivotAndGroupTableControl()
+		self.pivot_and_group_table.create_pivot_and_group_table(self.sql_tool.input_df,show_input_df=False)
 
 	@staticmethod
 	def _create_example_query():

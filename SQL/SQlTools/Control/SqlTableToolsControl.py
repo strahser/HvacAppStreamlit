@@ -75,7 +75,6 @@ class SqlTableToolsControl:
 						if key == self.table_name:
 							del view_sql_query_model[key]
 							break
-
 					st.success(f"View {self.table_name} was deleted")
 				except Exception as e:
 					st.warning(e)
