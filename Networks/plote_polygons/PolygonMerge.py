@@ -1,11 +1,39 @@
+import json
+
+from Networks.plote_polygons.SetColor import *
 import os
 
-import pandas as pd
-from Networks.plote_polygons.SetColor import *
-
-from Networks.plote_polygons.SetColor import SetColor
-from library_hvac_app.files_custom_functions import Loader
 from library_hvac_app.list_custom_functions import flatten
+
+
+class Loader:
+    def __init__(self, data_path, ) -> None:
+        self.data_path = data_path
+
+    def load_json(self):
+        with open(self.data_path, "r") as read_file:
+            data = json.load(read_file)
+        return data
+
+    def load_json_pd(self, idx='S_ID'):
+
+        if isinstance(self.data_path, pd.DataFrame):
+            return self.data_path
+        elif isinstance(self.data_path, dict):
+            df_out = pd.DataFrame.from_dict(self.data_path)
+            df = df_out.T
+            df = df.rename_axis(idx).reset_index()
+            df[idx] = df[idx].astype(str)
+            return df
+        elif os.path.splitext(self.data_path)[1] == ".json":
+            df_out = pd.read_json(self.data_path)
+            df = df_out.T
+            df = df.rename_axis(idx).reset_index()
+            df[idx] = df[idx].astype(str)
+            return df
+        else:
+            df = self.data_path
+            return df
 
 
 class PolygonMerge:

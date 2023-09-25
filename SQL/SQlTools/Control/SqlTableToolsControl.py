@@ -20,7 +20,7 @@ class SqlTableToolsControl:
 		self._init_df = init_df
 		self._filtered_df = filtered_df
 		self._sql_crud_control = SqlCRUDOperation(table_name)
-		self._table_add_data_view = SQLToolsView(self._init_df)
+		self._table_add_data_view = SQLToolsView(self._init_df,self.table_name)
 
 	def create_crud_operation(self):
 		self._table_add_data_view.create_sql_tools_panel()
@@ -56,12 +56,10 @@ class SqlTableToolsControl:
 
 	def _delete_table_or_view(self):
 		if self._table_add_data_view.delete_table_checkbox:
-			st.write(st.session_state[StatementConstants.view_sql_query_model])
 			self._table_add_data_view.create_delete_tables_buttons()
 			if self._table_add_data_view.delete_table_db_button:
 				try:
 					self._sql_crud_control.delete_exist_table(self.table_name)
-					UpdateDbSession.update_table_list(self.table_name)
 					st.success(f"Table {self.table_name} was deleted")
 				except Exception as e:
 					st.warning(e)

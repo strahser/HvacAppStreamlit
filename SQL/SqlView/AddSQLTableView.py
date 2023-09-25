@@ -39,8 +39,7 @@ class AddSQLTableView:
 			category_type = st.selectbox(
 				"Select Category Type",
 				category,
-				key=f"category_type {self.key}"
-			)
+				key=f"category_type {self.key}"	)
 			return category_type
 		except:
 			return StatementConstants.without_category

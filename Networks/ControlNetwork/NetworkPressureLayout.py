@@ -26,7 +26,7 @@ class NetworkPressureLayout:
         self.json_path = json_path
         self.input_settings_df = input_settings_df
         self.network_layout = self.create_network_layout()
-        self.filtred_coulmns = [
+        self.filtered_columns = [
             "S_Name",
             "from",
             "to",
@@ -51,14 +51,15 @@ class NetworkPressureLayout:
         network_layout()
         return network_layout
 
-    def get_concate_pressure_df(self, df_list):
+    @staticmethod
+    def get_concat_pressure_df(df_list):
         if len(df_list) > 1:
             return pd.concat(df_list)
         else:
             return df_list[0]
 
     @staticmethod
-    def drop_center_rows_dupblicates(df, prefix_from):
+    def drop_center_rows_duplicates(df, prefix_from):
         prefix_from = to_list(prefix_from)
         for prefix_from in prefix_from:
             if prefix_from:
@@ -67,18 +68,18 @@ class NetworkPressureLayout:
 
     # table
     def create_pressure_df(self):
-        self.df_pressure_concate = self.get_concate_pressure_df(
-            [val.concat_df() for val in self.network_layout.pressuer_df_list]
+        self.df_pressure_concate = self.get_concat_pressure_df(
+            [val.concate_df() for val in self.network_layout.pressuer_df_list]
         )
         self.df_pressure_concate_filter = self.df_pressure_concate.filter(
-            self.filtred_coulmns
+            self.filtered_columns
         )
         return self.df_pressure_concate_filter
 
     def create_pressure_long_route_df(self):
         long_route = GetLongRoute(self.df_pressure_concate)
         self.longe_route_df = long_route.get_long_df()
-        self.longe_route_df_filter = self.longe_route_df.filter(self.filtred_coulmns)
+        self.longe_route_df_filter = self.longe_route_df.filter(self.filtered_columns)
         return self.longe_route_df_filter
 
     # plots
@@ -108,7 +109,7 @@ class NetworkPressureLayout:
         return pressure_plotter
 
     def create_pressure_long_route_plotter(self):
-        longe_route_df = self.drop_center_rows_dupblicates(
+        longe_route_df = self.drop_center_rows_duplicates(
             self.longe_route_df, self.network_layout.list_of_from
         )
         pressure_plotter_long_route = NetworkPressurePlotter(
@@ -130,29 +131,29 @@ class NetworkPressureLayout:
         saved_figure1 = self.create_network_plotter().save_plot(fig)
         return saved_figure1
 
-    def create_df_and_plote_layout(self):
+    def create_df_and_plot_layout(self):
         fig1, fig2, fig3 = self.get_figures_for_layout()
         with st.expander("Network Table"):
             st.subheader("Pressure drop calculation")
             st.write(self.df_pressure_concate_filter)
             st.subheader("Main route Pressure drop calculation")
             st.write(self.longe_route_df_filter)
-        with st.expander("Draft polte"):
+        with st.expander("Draft plot"):
             st.pyplot(fig1)
-        with st.expander("Pressure polte"):
+        with st.expander("Pressure plot"):
             st.pyplot(fig2)
             st.pyplot(fig3)
         with st.expander('downloads'):
-            st.download_button(label='📥 StreamlitDownloadFunctions draft plote',
+            st.download_button(label='📥 StreamlitDownloadFunctions draft plot',
                                     data=self.get_saved_figures(fig1) ,
-                                    file_name= 'draft_plote.svg')
-            st.download_button(label='📥 StreamlitDownloadFunctions pressure plote',
+                                    file_name= 'draft_plot.svg')
+            st.download_button(label='📥 StreamlitDownloadFunctions pressure plot',
                         data=self.get_saved_figures(fig2) ,
-                        file_name= 'pressure_plote.svg')
+                        file_name= 'pressure_plot.svg')
             df1 = self.df_pressure_concate_filter
             df2 = self.longe_route_df_filter
 
-            bufer_list = df_to_excel_in_memory([df1,df2],['sheet1','sheet2'])
+            buffer_list = df_to_excel_in_memory([df1,df2],['sheet1','sheet2'])
             st.download_button(label='📥 StreamlitDownloadFunctions pressure tables',
-                        data=bufer_list,
+                        data=buffer_list,
                         file_name="pandas_multiple.xlsx",)

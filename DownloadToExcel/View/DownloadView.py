@@ -15,7 +15,6 @@ class DownloadView:
 	def __init__(self, input_view: InputView, con=SqlConnector.conn_sql):
 		self.con = con
 		self.input_view = input_view
-		st.session_state[StatementConstants.table_db][StatementConstants.all_tables_db]
 		self.tables_name = st.session_state[StatementConstants.table_db][StatementConstants.all_tables_db]
 		self.views_name = st.session_state[StatementConstants.table_db][StatementConstants.all_tables_view]
 		self.all_tables_names = self.tables_name + self.views_name

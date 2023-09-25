@@ -28,9 +28,9 @@ class NetworkCreateSingleRoute:
 		)
 
 	def __call__(self):
-		self._creat_network_from_layoute_data()
+		self._create_network_from_layout_data()
 
-	def get_network_builder_input_data(self) -> list:
+	def get_network_builder_input_data(self) -> list[dict]:
 		"""create list of dictionares of input for NetworkBuilder
 
         Returns:
@@ -60,7 +60,7 @@ class NetworkCreateSingleRoute:
 			builders_list.append(temp_dict)
 		return builders_list
 
-	def _creat_network_from_layoute_data(self):
+	def _create_network_from_layout_data(self):
 		single_input_dict = self.get_network_builder_input_data()[0]
 		self.network_builder = NetworkBuilder(
 			polygon_merge=single_input_dict['polygon_merge'],

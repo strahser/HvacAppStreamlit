@@ -6,7 +6,7 @@ from enum import Enum
 
 @dataclass()
 class MenuChapters:
-	# Networks:str = "Networks"
+	Networks:str = "Networks"
 	dash_board: str = "Dash Board"
 	ifc_dash_board: str = "IFC"
 	analytics: str = "Analytics"
@@ -23,7 +23,7 @@ class MenuChapters:
 
 @dataclass()
 class MenuIcons:
-	# Networks: str = "bi bi-diagram-3-fill"
+	Networks: str = "bi bi-diagram-3-fill"
 	dash_board: str = "bi bi-cloud-upload"
 	ifc_dash_board: str = "bi bi-cloud-upload"
 	polygons: str = "bi bi-building add"

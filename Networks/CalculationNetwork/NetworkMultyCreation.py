@@ -13,7 +13,7 @@ class NetworkMultyCreate:
     """
 
     @staticmethod
-    def add_networks(network_builder_list_data: dict, add_row_list: list)->list and int:
+    def add_networks(network_builder_list_data: dict, add_row_list: list)->list:
         """create chain of instance of network_builder_list_
 
         Args:
@@ -82,7 +82,7 @@ class NetworkProduct:
         Returns:
                 list: _description_
         """
-        netork_builder_list = [
+        network_builder_list = [
             NetworkBuilder(
             polygon_merge = single_input_dict['polygon_merge'],
             system_location_point = single_input_dict['system_location_point'],
@@ -95,7 +95,7 @@ class NetworkProduct:
             )
             for single_input_dict in self.network_builder_list_data
         ]
-        return netork_builder_list
+        return network_builder_list
 
     @staticmethod
     def get_sub_combination_of_lists(iter_sublist):

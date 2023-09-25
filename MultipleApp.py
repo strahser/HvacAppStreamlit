@@ -26,6 +26,7 @@ from DownloadToExcel.Control.DownloadControl import DownloadControl
 from StaticData.AppConfig import MenuChapters, StaticVariable
 from Networks.MainNetwork import create_network_plot
 
+
 class MultipleApp:
 	def __init__(self):
 		self.condition_excel = self._check_db_exist()
@@ -42,12 +43,11 @@ class MultipleApp:
 		with col[1]:
 			with st.expander("__Session Config__"):
 				order_state = collections.OrderedDict(sorted(st.session_state.items()))  # for test streamlit
-				show_session, clear_session,selected_key = self.session_data(order_state)
+				show_session, clear_session, selected_key = self.session_data(order_state)
 				if show_session:
 					st.write(order_state[selected_key])
 				if clear_session:
 					st.empty()
-
 
 	@staticmethod
 	def _check_db_exist():
@@ -55,16 +55,17 @@ class MultipleApp:
 			return True
 
 	@staticmethod
-	def session_data(order_state:dict):
+	def session_data(order_state: dict):
 		session = UploadSessionSettingControl()
 		session.autoload_session()
 		session.load_session_download()
 		selected_index = list(order_state.keys()).index(StatementConstants.table_db)
-		col =st.columns(3)
-		selected_key = col[0].selectbox("Select key in session data for display", order_state.keys(), index=selected_index)
+		col = st.columns(3)
+		selected_key = col[0].selectbox("Select key in session data for display", order_state.keys(),
+		                                index=selected_index)
 		show_session = st.button("Show Session")
 		clear_session = st.button("Clear Session")
-		return show_session, clear_session,selected_key
+		return show_session, clear_session, selected_key
 
 	def Networks(self):
 		create_network_plot()

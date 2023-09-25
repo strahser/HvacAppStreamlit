@@ -4,8 +4,9 @@ from st_mui_dialog import st_mui_dialog
 
 
 class SQLToolsView:
-	def __init__(self, init_df: pd.DataFrame):
+	def __init__(self, init_df: pd.DataFrame,table_name:str):
 		self.init_df = init_df
+		self.table_name = table_name
 
 	def create_sql_tools_panel(self):
 		with st.expander("SQL Tolls"):
@@ -46,11 +47,11 @@ class SQLToolsView:
 	def create_delete_tables_buttons(self):
 		self.delete_view_db_button = st_mui_dialog(
 			title="Confirmation Delete View",
-			content="Please confirm that you want to delete View",
+			content=f"Please confirm that you want to delete View {self.table_name}",
 			button_txt="Delete View"
 		)
 		self.delete_table_db_button = st_mui_dialog(
 			title="Confirmation Delete Table",
-			content="Please confirm that you want to delete table",
+			content=f"Please confirm that you want to delete table {self.table_name}",
 			button_txt="Delete Table"
 		)

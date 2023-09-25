@@ -1,16 +1,15 @@
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
 import os
 import inspect
 import sys
-import matplotlib as mpl
+
 mpl.use('Agg')
-import matplotlib.pyplot as plt
-from matplotlib.patches import Polygon
-
-
 
 def mpl_fig_setting(show_grid=False):
     fig, ax = plt.subplots()
-    fig.set_size_inches(22, 14)
+    # fig.set_size_inches(22, 14)
     ax.spines['top'].set_visible(show_grid)
     ax.spines['bottom'].set_visible(show_grid)
     ax.spines['left'].set_visible(show_grid)
