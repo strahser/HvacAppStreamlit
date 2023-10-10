@@ -57,7 +57,6 @@ class NetworkBuilder:
 		self.df_branch = self.make_system_filter(system_name)
 		self.concate_additional_row_to_main_df()
 		self.calculate()
-
 		"""
         create network with intersection of main route and branches.define main route path
         data_dict = nw_default_dict

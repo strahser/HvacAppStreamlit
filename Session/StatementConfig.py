@@ -24,6 +24,7 @@ class StatementConstants:
 	ifc_category = "ifc"
 	terminal_names_dict = "terminal_names_dict"
 	ahu_names_dict = "ahu_names_dict"
+	network_plots = "Network Plots"
 
 
 class SettingConfig:

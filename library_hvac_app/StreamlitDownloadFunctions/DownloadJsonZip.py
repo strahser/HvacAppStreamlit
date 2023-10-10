@@ -4,7 +4,7 @@ import io
 import streamlit as st
 
 
-def __download_json_zip(json_string: dict):
+def download_json_zip(json_string: dict):
 	# Create an in-memory buffer to store the zip file
 	with io.BytesIO() as buffer:
 		# Write the zip file to the buffer

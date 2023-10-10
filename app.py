@@ -27,7 +27,8 @@ def create_multiple_app():
 	def run_upp():
 		multy_app = MultipleApp()
 		multy_app.create_upload_data()
-		for name in MenuChapters.__annotations__.keys():
+
+		for name in MenuChapters.menu_list:
 			if getattr(MenuChapters, name) == selected2:
 				att = getattr(multy_app, name)
 				st.session_state["mainHydralitMenuComplex"] = getattr(MenuChapters, name)

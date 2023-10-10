@@ -1,5 +1,7 @@
-from Networks.CalculationNetwork.NetworkBuilder import *
-from Networks.NetworkLayouts.NetworkLayouts import *
+from Networks.CalculationNetwork.NetworkBuilder import NetworkBuilder
+from Networks.NetworkViews.NetworkMainView import NetworkMainView, NetworkConfigView
+from Networks.plote_polygons.PolygonMerge import PolygonMerge
+import pandas as pd
 
 
 class NetworkCreateSingleRoute:
@@ -7,9 +9,11 @@ class NetworkCreateSingleRoute:
 			self,
 			df: pd.DataFrame,
 			json_path: str,
-			system_layouts: AddLayoutsToList,
-			networks_layouts: list
-	) -> None:
+			network_main_view: NetworkMainView,
+			network_config_view: NetworkConfigView,
+			networks_layouts: list,
+			level_location_point_coordinates
+	):
 		"""mapping NetworkBuilder and layouts
 
         Args:
@@ -17,15 +21,17 @@ class NetworkCreateSingleRoute:
             json_path (str): _description_
         """
 		self.df = df
-		self.system_layouts = system_layouts
-		self.networks_layouts = networks_layouts
+		self.network_main_view = network_main_view
 		self.polygon_merge = PolygonMerge(
 			self.df,
 			json_path,
-			self.system_layouts.system_choice,
-			"S_level",
-			self.system_layouts.level_val,
+			network_main_view.network_system_view.system_choice,
+			network_main_view.network_system_view.level_column,
+			network_config_view.network_level_view.level_val,
 		)
+		self.system_layouts = network_main_view
+		self.level_location_point_coordinates = level_location_point_coordinates
+		self.networks_layouts = networks_layouts
 
 	def __call__(self):
 		self._create_network_from_layout_data()
@@ -38,15 +44,12 @@ class NetworkCreateSingleRoute:
         """
 		builders_list = []
 		for layout in self.networks_layouts:
-			prefix_ = "_" + layout.system_number
+			prefix_ = "_" + str(layout.system_number)
 			temp_dict = dict(
 				polygon_merge=self.polygon_merge,
-				system_location_point=(
-					getattr(layout, "local_point_x" + prefix_),
-					getattr(layout, "local_point_y" + prefix_),
-				),
-				system_name=self.system_layouts.system_name_choice,
-				sys_flow_column=self.system_layouts.sys_flow_choice,
+				system_location_point=self.level_location_point_coordinates,
+				system_name=self.network_main_view.network_system_view.system_name_choice,
+				sys_flow_column=self.network_main_view.network_system_view.sys_flow_choice,
 				network_coordinate_x=(
 					getattr(layout, "network_start_point_x" + prefix_),
 					getattr(layout, "network_end_point_x" + prefix_),

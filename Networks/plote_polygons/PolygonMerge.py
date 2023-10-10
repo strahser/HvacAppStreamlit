@@ -38,7 +38,7 @@ class Loader:
 
 class PolygonMerge:
     def __init__(self, in_df:pd.DataFrame,
-                json_path:os.path,
+                json_path:str,
                 color_filter_name,
                 level_column,
                 level_val) -> None:

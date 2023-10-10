@@ -14,7 +14,6 @@ sys.path.insert(0, parent_dir)
 sys.path.insert(0, root_dir)
 from Polygons.PolygonPlot.PolygonMerge import *
 from Polygons.PolygonPlot.SetColor import *
-
 import math
 
 
@@ -41,7 +40,7 @@ class PolygonPlotter:
 		self._df = self._df[self._df[self.level_column] == self.level_val]
 		return self._df
 
-	def __draw_all_lines(self):
+	def draw_all_lines(self):
 		"""for testing and future excitation"""
 		for x_val, y_val in zip(self._df[self.pcx], self._df[self.pcx]):
 			self.ax.plot(
@@ -69,9 +68,7 @@ class PolygonPlotter:
 			label="main",
 		)
 
-	def create_polygon_data(
-			self, new_zip_coord_name="polygon_coord", pol_x="px", pol_y="py"
-	):
+	def create_polygon_data(self, new_zip_coord_name="polygon_coord", pol_x="px", pol_y="py"):
 		"""
         create new column for zip(x,y) polygon coordinates from json polygon coordinates px,py
         """
@@ -187,7 +184,7 @@ class PolygonPlotter:
 			return df_
 
 	@staticmethod
-	def save_plot(fig):
+	def save_plot_to_svg(fig):
 		img = io.StringIO()
 		fig.savefig(img, format="svg")
 		# clip off the xml headers from the image

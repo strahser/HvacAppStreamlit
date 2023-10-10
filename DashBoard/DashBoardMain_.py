@@ -84,8 +84,8 @@ def dashboard_main(upload_layout):
 			df = pd.read_sql(f"select * from {table_name}",
 			                 con=SqlConnector.conn_sql)
 			try:
-				show_report_button = st.button("Show Report", key="show report button")
-				if show_report_button:
+				show_report_checkbox= st.button("Show Report", key="show_report_checkbox")
+				if show_report_checkbox:
 					pr = ProfileReport(df)
 					st_profile_report(pr)
 			except Exception as e:

@@ -59,4 +59,3 @@ def download_jpg_zip(fig: list[go.Figure], file_name: str = "plot"):
 				data=buffer,  # StreamlitDownloadFunctions buffer
 				file_name=f"{file_name}.zip"
 			)
-

@@ -67,11 +67,17 @@ class MultipleApp:
 		clear_session = st.button("Clear Session")
 		return show_session, clear_session, selected_key
 
+	def dash_board(self):
+		tab1, tab2 = st.tabs(["Dashboard", "SQL"])
+		with tab1:
+			dashboard_main(self.upload_layout)
+		with tab2:
+			if self.condition_excel:
+				main_analytical_tabel(self.upload_layout)
+
+
 	def Networks(self):
 		create_network_plot()
-
-	def dash_board(self):
-		dashboard_main(self.upload_layout)
 
 	@staticmethod
 	def ifc_dash_board():
@@ -102,7 +108,6 @@ class MultipleApp:
 			main_analytical_tabel(self.upload_layout)
 
 	def download(self):
-
 		if self.condition_excel:
 			DownloadControl(self.upload_layout)
 

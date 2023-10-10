@@ -82,7 +82,7 @@ class NetworkAddPressure:
             rout_name_prefix (str): [description]
         """
 		self.prefix_from = to_list(prefix_from)
-		self.excel_loader = excel_loader
+		self.excel_loader = excel_loader#todo remove load db to class
 		self.network = network
 		self.df = df_branch
 		self.new_columns = NetworkPressureConstants.new_columns

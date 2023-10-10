@@ -13,7 +13,7 @@ class NetworkMultyCreate:
     """
 
     @staticmethod
-    def add_networks(network_builder_list_data: dict, add_row_list: list)->list:
+    def add_networks(network_builder_list_data:list[dict], add_row_list: list)->list:
         """create chain of instance of network_builder_list_
 
         Args:
@@ -44,9 +44,7 @@ class NetworkMultyCreate:
 
 
 class NetworkProduct:
-    def __init__(
-        self, network_builder_list_data: list, add_row_dict: dict = None
-    ) -> dict:
+    def __init__( self, network_builder_list_data: list, add_row_dict: dict = None):
         """_summary_
 
         Args:
@@ -120,14 +118,12 @@ class NetworkProduct:
 
 
 class NetworkAddRow:
-    def __init__(
-        self, network_product_list_inst, network_product_result, list_of_from_to
-    ) -> list:
+    def __init__(self, network_product_list_inst, network_product_result, list_of_from_to):
         self.network_product_list_inst = network_product_list_inst
         self.network_product_result = network_product_result
         self.list_of_from_to = list_of_from_to
 
-    def group_list_to(self) -> pd.DataFrame:
+    def group_list_to(self) -> dict:
         list_from = [sublist[0] for sublist in self.list_of_from_to]
         list_to = [sublist[1] for sublist in self.list_of_from_to]
         product_inst = self.network_product_result

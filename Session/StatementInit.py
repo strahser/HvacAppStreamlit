@@ -19,6 +19,8 @@ class StatementInit:
 			st.session_state[StatementConstants.tableau_config] = None
 		if StatementConstants.tableau_table not in st.session_state:
 			st.session_state[StatementConstants.tableau_table] = ""
+		if StatementConstants.network_plots not in st.session_state:
+			st.session_state[StatementConstants.network_plots] = {}
 
 	@staticmethod
 	def _load_app_session_state():
