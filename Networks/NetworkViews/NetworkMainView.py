@@ -9,7 +9,6 @@ class NetworkMainView:
 		self.df = df
 		self.input_settings_df = input_settings_df
 		self.tabs = st.tabs(["System Options", "Network config", "Results", "Downloads"])
-		self.create_plots_button = st.sidebar.button("Create Plots", key="create_plots button")
 		self.network_config_view_list: list[NetworkConfigView] = []
 		self.network_system_view = None
 

@@ -7,8 +7,8 @@ class NetworkSystemView:
 
 	def __init__(self, df: pd.DataFrame, input_settings_df: pd.DataFrame):
 		self.df = df
-		system_type = input_settings_df["system_type"].unique()
-		self.system_type_choice = st.selectbox("choose system type", system_type)
+		self.system_type = input_settings_df["system_type"].unique()
+		self.system_type_choice = st.selectbox("choose system type", self.system_type)
 		self.system_choice = st.selectbox("choose system column", df.columns)
 		self.sys_flow_choice = st.selectbox("choose flow column", df.columns)
 		self.level_column = st.selectbox("choose level column", df.columns)
