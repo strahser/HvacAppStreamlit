@@ -8,11 +8,11 @@ class NetworkBranchModel:
 	system_name: str
 	system_type: str
 	system_level: str
-	network_draft_plot_data: str | object
-	network_pressure_plot_data: str | object
-	network_long_plot_data: str | object
-	network_pressure_table: pd.DataFrame | dict
-	network_long_pressure_table: pd.DataFrame | dict
+	network_draft_plot_data: str
+	network_pressure_plot_data: str
+	network_long_plot_data: str
+	network_pressure_table: pd.DataFrame
+	network_long_pressure_table: pd.DataFrame
 	network_draft_plot_name: str = "Draft plot"
 	network_pressure_plot_name: str = "Pressure plot"
 	network_long_plot_name: str = "Long Pressure plot"
