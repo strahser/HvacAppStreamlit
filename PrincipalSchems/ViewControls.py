@@ -1,11 +1,15 @@
 # region Import
 import io
+import zipfile
+
 from InputView.InputViewControl import InputViewControl, UploadLayout
 import numpy as np
 from plotly import graph_objs as go
+import plotly
 from PrincipalSchems.Models.Models import *
 from PrincipalSchems.View.MainLayoutView import *
 from Polygons.PolygonPlot.PolygonMerge import *
+from PrincipalSchems.View.StaticView import StaticTabsView
 from Utility.TextWorker import TextWorkerForPlot
 from datetime import datetime
 from library_hvac_app.list_custom_functions import *
@@ -360,7 +364,7 @@ class PlotlyPlotter:
 						y=[prop.level_coord_y, prop.level_coord_y],
 						legendgroup="level name",
 						name="level name",
-						textfont=dict(size=18, family="Issocuper", color="black"),
+						textfont=dict(size=14, family="Issocuper", color="black"),
 						text=f"<em> {str(prop.level_name)} </em>",
 						showlegend=False,
 						mode="text",
@@ -396,9 +400,7 @@ class PlotlyPlotter:
 				)
 			)
 
-	def _plot_polygons_plot(
-			self, show_color: bool = False, line_color_filter: str = False
-	):
+	def _plot_polygons_plot(self, show_color: bool = False, line_color_filter: str = False):
 
 		for idx, row in self._df.iterrows():
 			if show_color and line_color_filter:
@@ -439,7 +441,7 @@ class PlotlyPlotter:
 					y=[point.y_start_points, point.y_start_points],
 					line_color=point.color,
 					marker=dict(
-						size=15,
+						size=14,
 						color=point.color,
 						symbol="arrow-bar-down",
 						# line=dict(width=0.5),
@@ -464,15 +466,15 @@ class PlotlyPlotter:
 							y=[point.offset_point_y, point.offset_point_y],
 							line_color=point.color,
 							marker=dict(
-								size=15,
+								size=14,
 								color=point.color,
 								symbol="arrow-bar-down",
 								# line=dict(width=0.5),
 							),
 							legendgroup=point.system_name,
 							name=point.system_name,
-							textfont=dict(size=16, family="Issocuper", color=point.color),
-							text=f"<i> L {point.system_name} {point.level_value} = {round(row['system_flow'])} </i>",
+							textfont=dict(size=14, family="Issocuper", color=point.color),
+							text=f"<i>{point.level_value} L{point.system_name} = {round(row['system_flow'])} </i>",
 							textposition=textposition,
 							legendgrouptitle_text="Systems" + " " + point.system_name,
 							showlegend=False,
@@ -525,9 +527,7 @@ class PlotlyPlotter:
 			)
 		)
 
-	def __text_check_position(
-			self, base_point_x: float, base_point_y: float, px: float, py: float
-	):
+	def __text_check_position(self, base_point_x: float, base_point_y: float, px: float, py: float) -> str:
 		"""check position for equipment text"""
 
 		if base_point_x < px and base_point_y == py:
@@ -539,11 +539,9 @@ class PlotlyPlotter:
 		else:
 			return "bottom center"
 
-	def plot_add_text_to_equipment_point(
-			self,
-			dynamic_widgets_view_context_data: DynamicWidgetsViewContextData,
-			location_point_list: list[pd.DataFrame],
-	):
+	def plot_add_text_to_equipment_point(self, dynamic_widgets_view_context_data: DynamicWidgetsViewContextData,
+	                                     location_point_list: list[pd.DataFrame],
+	                                     ):
 
 		for en, df in enumerate(location_point_list):  # levels iteration
 			for idx_, row in df.iterrows():  # df row iteration
@@ -622,7 +620,7 @@ class PlotlyPlotter:
 				"xanchor": "center",
 				"yanchor": "top",
 			},
-			title_font_size=20,
+			title_font_size=18,
 			title_font_family="Issocuper",
 		)
 		self.__show_only_unique_legend()
@@ -653,9 +651,7 @@ class PlotterCreateLayout:
 	def __init__(self, fig, data_for_plotting: DataForPlotting) -> None:
 		self.fig = fig
 		self.data_for_plotting = data_for_plotting
-		self.polygon_plotter_merge_control = (
-			data_for_plotting.polygon_points_merge_control
-		)
+		self.polygon_plotter_merge_control = (data_for_plotting.polygon_points_merge_control)
 
 	def create_plote_layout(self, textposition: str = "bottom left"):
 		plot_plotter = PlotlyPlotter(self.fig, self.polygon_plotter_merge_control)
@@ -689,17 +685,24 @@ class SchemeMain:
 		self.key = key
 
 	def download_plt_html(self):
-		# plt save
-		buffer = io.StringIO()
-		self.fig.write_html(buffer, include_plotlyjs="cdn")
-		html_bytes = buffer.getvalue().encode()
-		today = datetime.today().strftime('%Y-%m-%d')
-		st.download_button(
-			label="Download Plotly HTML",
-			data=html_bytes,
-			file_name="principal_schem" + today + ".html",
-			mime="text/html",
-		)
+		today = datetime.now()
+		with io.BytesIO() as buffer:
+			# Write the zip file to the buffer
+			width = st.session_state["Scheme plot_width"]
+			height = st.session_state["Scheme plot_height"]
+			with zipfile.ZipFile(buffer, "w") as zip:
+				res1 = plotly.io.to_image(self.fig, "pdf", width=width, height=height, scale=1.5)
+				res2 = plotly.io.to_image(self.fig, "jpg", width=width, height=height, scale=1.5)
+				res3 = plotly.io.to_html(self.fig, include_plotlyjs="cdn", default_width=width, default_height=height)
+				zip.writestr(f"Scheme_{today}.pdf", res1)
+				zip.writestr(f"Scheme_{today}.jpg", res2)
+				zip.writestr(f"Scheme_{today}.html", res3)
+				buffer.seek(0)
+			btn = st.download_button(
+				label="Download ZIP",
+				data=buffer,  # StreamlitDownloadFunctions buffer
+				file_name=f"Scheme_{today}.zip"
+			)
 
 	@staticmethod
 	def get_flow_text_direction(tabs_view: TabsView):
@@ -717,11 +720,8 @@ class SchemeMain:
 			with st.expander("Hide/Show Input Data", True):
 				input_view_control = InputViewControl(self.upload_layout, key=self.key)
 				self.input_df = input_view_control.create_input_view()
-				print("selected df",self.input_df)
 				static_layout_view = StaticLayoutView(self.input_df, key=self.key)
-				self.input_df.rename(
-					columns={static_layout_view.ID_COLUMN: "S_ID"}, inplace=True
-				)  # todo SID
+				self.input_df.rename(columns={static_layout_view.ID_COLUMN: "S_ID"}, inplace=True)  # todo SID
 				tabs_view1 = TabsView(static_layout_view, key=self.key)
 				tabs_view2 = TabsView(static_layout_view, key=self.key, color_reverse=True)
 				tabs_view1.create_choose_column_level()

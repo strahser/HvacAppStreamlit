@@ -22,12 +22,13 @@ class NetworkCreateSingleRoute:
         """
 		self.df = df
 		self.network_main_view = network_main_view
+		self.network_config_view = network_config_view
 		self.polygon_merge = PolygonMerge(
 			self.df,
 			json_path,
-			network_main_view.network_system_view.system_choice,
-			network_main_view.network_system_view.level_column,
-			network_config_view.network_level_view.level_val,
+			self.network_main_view.network_system_view.system_choice,
+			self.network_main_view.network_system_view.level_column,
+			self.network_config_view.network_level_view.level_val,
 		)
 		self.system_layouts = network_main_view
 		self.level_location_point_coordinates = level_location_point_coordinates

@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 
 # mpl.use('Agg')
 
-def mpl_fig_setting(show_grid=False):
+def mpl_fig_setting(show_grid=False,):
     fig, ax = plt.subplots()
-    fig.set_size_inches(22, 14)
+    fig.set_size_inches(14, 14)
     ax.spines['top'].set_visible(show_grid)
     ax.spines['bottom'].set_visible(show_grid)
     ax.spines['left'].set_visible(show_grid)

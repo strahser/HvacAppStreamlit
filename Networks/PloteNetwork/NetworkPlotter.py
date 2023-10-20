@@ -11,7 +11,7 @@ class NetworkPlotter(PolygonPlotter):
 			polygon_merge: PolygonMerge,
 			network_list: list,
 			df_network,
-			space_name: str = 'S_ID',
+			space_name: str = 'S_ID',#todo replace S_ID
 			show_grid: bool = True,
 			is_filled: bool = False,
 			title_prefix: str = ''
@@ -73,6 +73,7 @@ class NetworkPlotter(PolygonPlotter):
 				loc_point.system_location_point[1],
 				s=150, c="b"
 			)
+
 			self.ax.text(
 				loc_point.system_location_point[0],
 				loc_point.system_location_point[1],
@@ -101,7 +102,7 @@ class NetworkPlotter(PolygonPlotter):
 			linestyle="-.",
 		)
 
-	def add_text_to_branchse(self, df_network):
+	def add_text_to_branches(self, df_network):
 
 		self.add_text_from_df(
 			df_network,
@@ -134,13 +135,13 @@ class NetworkPlotter(PolygonPlotter):
 			weight="bold",
 		)
 
-	def calculate(self):
+	def calculate(self) -> plt.figure:
 		for df_network in self.df_network:
 			self.get_intersection_column_name(df_network)
 			self.add_location_point(),
 			self.draw_branches(df_network),
 			self.draw_main_routs(df_network)
-			self.add_text_to_branchse(df_network)
+			self.add_text_to_branches(df_network)
 			self.add_text_to_main_routs(df_network)
 			self.add_title()
 		self.plot_polygons("", [], is_filled=self.is_filled)

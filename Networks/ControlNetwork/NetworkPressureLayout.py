@@ -1,41 +1,31 @@
-import dataclasses
 import io
 import zipfile
 import streamlit as st
-from dataclasses import dataclass, field
+
+from Networks.CalculationNetwork.NetworkLevelValue import NetworkLevelValue
+from Networks.CalculationNetwork.PressureCalculator.GetLongRoute import GetLongRoute
 from Networks.ControlNetwork.CreateMainNetworkLayout import *
-from Networks.NetworkModels.NetworkModel import NetworkBranchModel, NetworkSystemModel
+from Networks.NetworkModels.NetworkBranchModel import NetworkBranchModel
 from Networks.PloteNetwork.NetworkPressurePlotter import *
 from Session.StatementConfig import StatementConstants
 from library_hvac_app.DbFunction.pandas_custom_function import df_to_excel_in_memory
-
-
-class FilteredNetworkData:
-	filtered_columns = [
-		"S_Name",
-		"from",
-		"to",
-		"distance",
-		"power",
-		"flow",
-		"diameter",
-		"velocity",
-		"line_pressure",
-		"dinamic_pressure",
-		"full_pressure",
-	]
 
 
 class NetworkPressureLayout:
 	def __init__(self, network_main_view: NetworkMainView, network_config_view: NetworkConfigView, json_path: str):
 		self.network_main_view = network_main_view
 		self.network_config_view = network_config_view
-		self.df_to_revit = network_main_view.df
+		self.df_to_revit = network_main_view.df_to_revit
+		self.json_path = json_path
 		self.input_settings_df = network_main_view.input_settings_df
 		self.network_layout = CreateMainNetworkLayout(network_main_view, network_config_view, json_path=json_path)
 		self.network_layout.create_main_layout()
 		self.system_name = self.network_main_view.network_system_view.system_name_choice
 		self.level = self.network_config_view.network_level_view.level_val
+		self.long_route_df_filter = None
+		self.long_route_df = None
+		self.df_pressure_concat = None
+		self.df_pressure_concat_filter = None
 
 	def _add_system_name_to_session(self):
 		if self.system_name not in st.session_state[StatementConstants.network_plots]:
@@ -45,45 +35,54 @@ class NetworkPressureLayout:
 		self.network_layout.create_main_layout()
 		self.network_layout()
 
+	def create_new_plots(self):
+		self.create_pressure_df()
+		self.add_data_to_session()
+
 	@property
-	def system_expander_name(self) -> str:
-		system = self.network_main_view.network_system_view.system_name_choice
-		level = self.network_config_view.network_level_view.level_val
-		return f"System {system} {level}"
+	def polygon_merge(self):
+		polygon_merge = PolygonMerge(
+			self.df_to_revit,
+			self.json_path,
+			self.network_main_view.network_system_view.system_choice,
+			self.network_main_view.network_system_view.level_column,
+			self.network_config_view.network_level_view.level_val,
+		)
+		return polygon_merge
 
-	def create_new_plots(self, plot_data_from_session):
-		with self.network_layout.network_main_view.tabs[2]:
-			with st.expander(self.system_expander_name):
-				self.create_pressure_df()
-				self.get_figures_for_layout()
-				plot_data_from_session(self.system_name)
+	def add_data_to_session(self) -> None:
+		_fig1, _fig2, _fig3 = self._create_svg_from_fig()
+		system_branch = NetworkBranchModel(system_level=self.level,
+		                                   network_draft_plot_data=_fig1,
+		                                   network_pressure_plot_data=_fig2,
+		                                   network_long_plot_data=_fig3,
+		                                   network_pressure_table=self.df_pressure_concat_filter.to_dict(),
+		                                   network_long_pressure_table=self.long_route_df_filter.to_dict(),
+		                                   system_name=self.system_name,
+		                                   system_type=self.network_main_view.network_system_view.system_type_choice
+		                                   )
+		st.session_state[StatementConstants.network_plots][self.system_name][
+			system_branch.branch_name] = system_branch.dict()
 
-	def get_figures_for_layout(self) -> None:
+	def _get_figures_for_layout(self) -> tuple[object, object, object]:
+		height, weight = self.network_main_view.plot_height, self.network_main_view.plot_width
 		self._add_system_name_to_session()
 		self.create_pressure_long_route_df()
 		_fig1 = self.create_network_plotter().calculate()
 		_fig2 = self.create_pressure_plotter().calculate()
 		_fig3 = self.create_pressure_long_route_plotter().calculate()
+		_fig1.set_size_inches(weight, height)
+		_fig2.set_size_inches(weight, height)
+		_fig3.set_size_inches(weight, height)
+		return _fig1, _fig2, _fig3
+
+	def _create_svg_from_fig(self):
+		_fig1, _fig2, _fig3 = self._get_figures_for_layout()  # plt object
+		# svg object
 		fig1 = self.get_saved_figures(_fig1)
 		fig2 = self.get_saved_figures(_fig2)
 		fig3 = self.get_saved_figures(_fig3)
-		system_branch = NetworkBranchModel(system_level=self.level,
-		                                   network_draft_plot_data=_fig1,
-		                                   network_pressure_plot_data=_fig2,
-		                                   network_long_plot_data=_fig3,
-		                                   network_pressure_table=self.df_pressure_concate_filter,
-		                                   network_long_pressure_table=self.longe_route_df_filter,
-		                                   system_name=self.system_name,
-		                                   system_type=self.network_main_view.network_system_view.system_type_choice
-		                                   )
-		all_systems_names = [val.branch_name for val in st.session_state[StatementConstants.network_plots][self.system_name] if hasattr(val, "branch_name")]
-		st.write(all_systems_names)
-		if system_branch.branch_name in all_systems_names:
-			for en, val in enumerate(st.session_state[StatementConstants.network_plots][self.system_name]):
-				if hasattr(val, "branch_name") and f"{self.system_name}_{self.level} == val.branch_name":
-					st.session_state[StatementConstants.network_plots][self.system_name][en] = system_branch
-		elif system_branch.branch_name not in all_systems_names:
-			st.session_state[StatementConstants.network_plots][self.system_name].append(system_branch)
+		return fig1, fig2, fig3
 
 	@staticmethod
 	def get_concat_pressure_df(df_list):
@@ -102,19 +101,20 @@ class NetworkPressureLayout:
 
 	# table
 	def create_pressure_df(self):
-		self.df_pressure_concate = self.get_concat_pressure_df(
+		"""get calculated DF"""
+		self.df_pressure_concat = self.get_concat_pressure_df(
 			[val.concate_df() for val in self.network_layout.pressure_df_list]
 		)
-		self.df_pressure_concate_filter = self.df_pressure_concate.filter(FilteredNetworkData.filtered_columns)
-		return self.df_pressure_concate_filter
+		self.df_pressure_concat_filter = self.df_pressure_concat \
+			# .filter(FilteredNetworkData.filtered_columns)
+		return self.df_pressure_concat_filter
 
 	def create_pressure_long_route_df(self):
-		long_route = GetLongRoute(self.df_pressure_concate)
-		self.longe_route_df = long_route.get_long_df()
-		self.longe_route_df_filter = self.longe_route_df.filter(FilteredNetworkData.filtered_columns)
-		return self.longe_route_df_filter
-
-	# plots
+		long_route = GetLongRoute(self.df_pressure_concat)
+		self.long_route_df = long_route.get_long_df()
+		self.long_route_df_filter = self.long_route_df \
+			# .filter(FilteredNetworkData.filtered_columns)
+		return self.long_route_df_filter
 
 	def create_network_plotter(self):
 		network_plotter = NetworkPlotter(
@@ -143,7 +143,7 @@ class NetworkPressureLayout:
 
 	def create_pressure_long_route_plotter(self):
 		long_route_df = self.drop_center_rows_duplicates(
-			self.longe_route_df, self.network_layout.list_of_from
+			self.long_route_df, self.network_layout.list_of_from
 		)
 		pressure_plotter_long_route = NetworkPressurePlotter(
 			polygon_merge=self.network_layout.networks_update[0].polygon_merge,
@@ -171,13 +171,3 @@ class NetworkPressureLayout:
 				data=buffer,  # StreamlitDownloadFunctions buffer
 				file_name=f"{file_name}.zip"
 			)
-
-	def create_df_and_plot_layout(self):
-		with st.expander(f'downloads {self.system_expander_name}'):
-			# self.download_list_fig()
-			df1 = self.df_pressure_concate_filter
-			df2 = self.longe_route_df_filter
-			buffer_list = df_to_excel_in_memory([df1, df2], ['sheet1', 'sheet2'])
-			st.download_button(label='📥 pressure tables',
-			                   data=buffer_list,
-			                   file_name="pandas_multiple.xlsx", )

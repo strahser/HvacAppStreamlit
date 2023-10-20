@@ -1,4 +1,7 @@
+from itertools import cycle
+
 from PrincipalSchems.View.DynamicBaseView import *
+from PrincipalSchems.View.StaticView import MainSchemeConfig
 
 
 class DynamicSystemView(DynamicBaseView):

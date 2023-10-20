@@ -44,7 +44,7 @@ class PltPolygonPlotter:
 		self.ax.axis('off')
 		self.data_for_plotting = data_for_plotting
 		self.polygon_points_merge_control = data_for_plotting.polygon_points_merge_control
-		self._df = self.polygon_points_merge_control.df_text.df
+		self._df = self.polygon_points_merge_control.df_text.df_to_revit
 		self.level_property = self.polygon_points_merge_control.get_level_property()
 		self.legend_points = []
 		self.fig.set_size_inches(self.__get_plot_dimension())

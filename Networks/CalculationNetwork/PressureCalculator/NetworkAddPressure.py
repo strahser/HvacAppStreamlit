@@ -1,67 +1,11 @@
-import networkx as nx
 import pandas as pd
 
 from Networks.CalculationNetwork.NetworkBuilder import NetworkBuilder
 from Networks.CalculationNetwork.NetworkEngineer import SettingBuilder
 from Networks.CalculationNetwork.Network_engineer import ExcelLoader
+from Networks.CalculationNetwork.StaticData.NetworkPressureConstants import NetworkPressureConstants
 from Networks.CalculationNetwork.utility import p_distance, segment_center
 from library_hvac_app.list_custom_functions import to_list
-
-
-class NetworkPressureConstants:
-	"""define names of columns, calculated functions values
-    """
-	branch_columns = [
-		"S_ID",
-		"m_idx",
-		"sys_flow_column",
-		"pcx",
-		"pcy",
-	]
-	route_columns = [
-		"m_idx",
-		"shift_idx",
-		"sum_column",
-		"x_intersect",
-		"y_intersect",
-	]
-	filtered_columns = [
-		"S_Name",
-		"from",
-		"to",
-		"distance",
-		"power",
-		"flow",
-		"diameter",
-		"velocity",
-		"Renolds",
-		"lambda",
-		"line_pressure",
-		'full_line_pressure',
-		"dinamic_pressure",
-		'k_local_pressure',
-		'full_dinamic_pressure',
-		"full_pressure",
-	]
-	new_columns = [
-		"from",
-		"to",
-		"power",
-		"from_x",
-		"from_y",
-	]
-	_calculation_dict: dict = {
-		"flow": lambda x: x["seting_builder"].get_flow(),
-		"k_local_pressure": lambda x: x["seting_builder"].get_k_local_pressure(),
-		"diameter": lambda x: x["seting_builder"].choose_standart_diameter(),
-		"velocity": lambda x: x["seting_builder"].drop_presuer.get_velocity(),
-		"Renolds": lambda x: x["seting_builder"].drop_presuer.get_renolds_number(),
-		"lambda": lambda x: x["seting_builder"].drop_presuer.get_lamda_turbulence(),
-		"line_pressure": lambda x: x["seting_builder"].drop_presuer.get_presure_line_drop(),
-		'dinamic_pressure': lambda x: x["seting_builder"].drop_presuer.get_presure_dynamic_drop(),
-		"full_dinamic_pressure": lambda x: x["seting_builder"].drop_presuer.get_full_dynamic_drop_pressure(
-			x["k_local_pressure"])
-	}
 
 
 class NetworkAddPressure:
@@ -82,7 +26,7 @@ class NetworkAddPressure:
             rout_name_prefix (str): [description]
         """
 		self.prefix_from = to_list(prefix_from)
-		self.excel_loader = excel_loader#todo remove load db to class
+		self.excel_loader = excel_loader  # todo remove load db to class
 		self.network = network
 		self.df = df_branch
 		self.new_columns = NetworkPressureConstants.new_columns
@@ -194,16 +138,22 @@ class NetworkAddPressure:
 		seting_builder = SettingBuilder(self.excel_loader, power, network_branch_type)
 		drop_pressure = seting_builder.drop_presuer
 		k_local_pressure = seting_builder.get_k_local_pressure()
-		pressure_calculation_dict = dict(
-			flow=seting_builder.get_flow(),
-			diameter=seting_builder.choose_standart_diameter(),
-			velocity=drop_pressure.get_velocity(),
-			line_pressure=drop_pressure.get_presure_line_drop(),
-			dinamic_pressure=drop_pressure.get_full_dynamic_drop_pressure(
-				k_local_pressure
+		if power == 0:
+			return dict(
+				flow=None,
+				diameter=None,
+				velocity=None,
+				line_pressure=None,
+				dinamic_pressure=None
 			),
-		)
-		return pressure_calculation_dict
+		else:
+			return dict(
+				flow=seting_builder.get_flow(),
+				diameter=seting_builder.choose_standart_diameter(),
+				velocity=drop_pressure.get_velocity(),
+				line_pressure=drop_pressure.get_presure_line_drop(),
+				dinamic_pressure=drop_pressure.get_full_dynamic_drop_pressure(k_local_pressure)
+			)
 
 	def _apply_pressure_data_columns(self, root_type):
 		"""apply 'flow','diameter','velocity', 'line_pressure', 'dinamic_pressure'
@@ -216,13 +166,9 @@ class NetworkAddPressure:
             [pd]: [description]
         """
 		df = self.get_root_distance(root_type)
-
-		df["seting_builder"] = df.apply(
-			lambda x: SettingBuilder(self.excel_loader, x["power"], root_type), axis=1
-		)
-		for key, val in NetworkPressureConstants._calculation_dict.items():
+		df["seting_builder"] = df.apply(lambda x: SettingBuilder(self.excel_loader, x["power"], root_type), axis=1)
+		for key, val in NetworkPressureConstants.calculation_dict.items():
 			df[key] = df.apply(val, axis=1)
-
 		df = df.drop(columns="seting_builder")
 		df = df.assign(full_line_pressure=df["distance"] * df["line_pressure"])
 		df = df.assign(full_pressure=df["full_line_pressure"] + df["dinamic_pressure"])
@@ -252,56 +198,9 @@ class NetworkAddPressure:
 		return df
 
 	def _get_filtred_df(self, df):
-
 		df = df.filter(NetworkPressureConstants.filtered_columns)
 		return df
 
 	def get_filter_concate_df(self):
 		filtred_df = self._get_filtred_df(self.concate_df())
 		return filtred_df
-
-
-class GetLongRoute:
-	def __init__(self, df) -> None:
-		self.df = df
-
-	def _get_long_route(
-			self,
-	):
-		self.graf = NetworkGraph(self.df)
-		self.graf.create_network("from", "to", "full_pressure")
-		long_route = self.graf.get_longest_network()
-		return long_route
-
-	def get_long_df(self):
-		long_route = set(self._get_long_route())
-		filtred_list = long_route & set(self.df["from"].values)
-		mask = self.df["from"].isin(filtred_list)
-		df_filter = self.df[mask]
-		return df_filter
-
-
-class NetworkGraph:
-	def __init__(self, df) -> None:
-		self.df = df
-		self.G = nx.DiGraph()
-
-	def create_network(self, from_column, to_column, value_column):
-		"""
-        add vertix to graph for example 'S_ID',main_idx''S_SA_fresh'
-        """
-		for (
-				sourse,
-				end_p,
-				weght,
-		) in zip(self.df[from_column], self.df[to_column], self.df[value_column]):
-			self.G.add_edge(sourse, end_p, weight=weght)
-		return self.G
-
-	def get_longest_network(self):
-		longest_path = nx.dag_longest_path(self.G, weight="weight")
-		return longest_path
-
-	def get_max_pressure_value(self):
-		max_value = nx.dag_longest_path_length(self.G, weight="weight")
-		return max_value

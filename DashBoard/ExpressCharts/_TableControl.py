@@ -9,5 +9,5 @@ class _TableControl:
 		self.select_agg = express_chart_view.select_agg
 		self.header = express_chart_view.header
 		self.table_name = express_chart_view.table_name
-		self.df = express_chart_view.df
+		self.df = express_chart_view.df_to_revit
 		self.key = key

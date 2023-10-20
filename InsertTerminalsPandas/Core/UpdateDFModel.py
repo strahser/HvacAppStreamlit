@@ -14,7 +14,7 @@ class DataFrameUpdating:
 	def _make_filter_df_by_value_list(self, selected_df_data_id) -> pd.DataFrame:
 		if selected_df_data_id:
 			df_temp = self.input_df.copy()
-			self.condition = df_temp[ColumnChoosing.S_ID].astype(str).isin([str(val) for val in selected_df_data_id])
+			self.condition = df_temp[ColumnChoosing._S_ID].astype(str).isin([str(val) for val in selected_df_data_id])
 			df_temp_out = df_temp[self.condition]
 			return df_temp_out
 		else:

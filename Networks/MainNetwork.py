@@ -1,26 +1,20 @@
 import pandas as pd
 import streamlit as st
 import SQL.SqlModel.SqlConnector
+from Networks.CalculationNetwork.NetworkLevelValue import NetworkLevelValue
 from Networks.ControlNetwork.NetworkPressureLayout import NetworkPressureLayout
 from Networks.NetworkViews.NetworkMainView import NetworkMainView
 from Session.StatementConfig import StatementConstants
+from library_hvac_app.files_custom_functions import Loader
 
 
-def show_existing_plots():
-	return st.selectbox("Select Existing System", st.session_state[StatementConstants.network_plots].keys())
+def create_plot_layouts(network_main_view: NetworkMainView):
+	json_polygons = st.session_state[StatementConstants.json_polygons]
 
-
-def plot_data_from_session(system_name: str):
-	for systems in st.session_state[StatementConstants.network_plots][system_name]:
-		if hasattr(systems, "system_name"):
-			with st.expander(systems.network_draft_plot_name):
-				st.write(systems.network_draft_plot_data, unsafe_allow_html=True)
-			with st.expander(systems.network_pressure_plot_name):
-				st.write(systems.network_pressure_plot_data, unsafe_allow_html=True)
-				st.write(systems.network_pressure_table)
-			with st.expander(systems.network_long_plot_name):
-				st.write(systems.network_long_plot_data, unsafe_allow_html=True)
-				st.write(systems.network_long_pressure_table)
+	for config_view in network_main_view.network_config_view_list:
+		main_network = NetworkPressureLayout(network_main_view, config_view, json_polygons)
+		main_network.create_network_layout()
+		main_network.create_new_plots()
 
 
 def create_network_plot():
@@ -31,16 +25,11 @@ def create_network_plot():
 		revit_export = pd.read_sql(f"select * from revit_export", con=SQL.SqlModel.SqlConnector.SqlConnector.conn_sql)
 		medium_property = pd.read_sql(f"select * from medium_property",
 		                              con=SQL.SqlModel.SqlConnector.SqlConnector.conn_sql)
-		network_main_view = NetworkMainView(revit_export, medium_property)
-		network_main_view.create_layout()
-		choose_existing_or_new_system = st.sidebar.radio("Choose Create o Exist", ["New System", "Exist System"])
-		create_plots_button = st.sidebar.button("Create Plots", key="create_plots button")
-		if choose_existing_or_new_system == "Exist System":
-			selected_plot = show_existing_plots()
-			plot_data_from_session(selected_plot)
-		if choose_existing_or_new_system == "New System":
-			if create_plots_button:
-				for config_view in network_main_view.network_config_view_list:
-					main_network = NetworkPressureLayout(network_main_view, config_view, json_polygons)
-					main_network.create_network_layout()
-					main_network.create_new_plots(plot_data_from_session)
+		ducts_round = pd.read_sql(f"select * from ducts_round",
+		                          con=SQL.SqlModel.SqlConnector.SqlConnector.conn_sql)
+		pipes = pd.read_sql(f"select * from pipes",
+		                    con=SQL.SqlModel.SqlConnector.SqlConnector.conn_sql)
+
+		input_settings_df = {"medium_property": medium_property, "ducts_round": ducts_round, "pipes": pipes}
+		network_main_view = NetworkMainView(revit_export, input_settings_df)
+		network_main_view.create_layout(create_plot_layouts)

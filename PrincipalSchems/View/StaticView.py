@@ -1,13 +1,10 @@
-import pandas as pd
-import streamlit as st
-from collections import namedtuple
-from collections import defaultdict
-from itertools import cycle
 """
 pip install pipwin
 
 pipwin install cairocffi
 """
+
+
 class StaticTabsView:
 	"""add tabs names"""
 
@@ -18,6 +15,7 @@ class StaticTabsView:
 		"system detail config",
 		"plot config"
 	]
+
 
 class MainSchemeConfig:
 	"""data for system direction,system color

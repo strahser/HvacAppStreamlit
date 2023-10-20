@@ -1,5 +1,4 @@
-# import json
-import simplejson as json
+import json
 import numpy as np
 
 from Session.CreateViewFromStatementModel import CreateViewFromStatementModel
@@ -40,7 +39,6 @@ class UploadSessionSetting:
 
 	def _create_excluding_session_dictionary(self):
 		excluding_list = SettingConfig.excluding_list
-
 		all_keys = st.session_state.keys()
 		correct_keys = []
 		for excl_val in excluding_list:
@@ -59,15 +57,15 @@ class UploadSessionSetting:
 	def _create_download_settings(self):
 		# 1. StreamlitDownloadFunctions Settings Button
 		settings_to_download = self._create_excluding_session_dictionary()
-		# self.button_download = st.download_button(label="Download Session Settings",
-		#                                           data=json.dumps(
-		# 	                                          settings_to_download,
-		# 	                                          ensure_ascii=False,
-		# 	                                          indent=4,
-		# 	                                          cls=NpEncoder
-		#                                           ),
-		#                                           file_name=f"settings.json",
-		#                                           help="Click to load Current Settings")
+		self.button_download = st.download_button(label="Download Session Settings",
+		                                          data=json.dumps(
+			                                          settings_to_download,
+			                                          ensure_ascii=False,
+			                                          indent=4,
+			                                          cls=NpEncoder
+		                                          ),
+		                                          file_name=f"settings.json",
+		                                          help="Click to load Current Settings")
 
 	def _create_upload_settings(self):
 		"""Set session state values to what specified in the json_settings."""

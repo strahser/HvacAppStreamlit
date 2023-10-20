@@ -1,4 +1,5 @@
-from PrincipalSchems.View.StaticView import *
+import pandas as pd
+import streamlit as st
 
 
 class DynamicBaseView:

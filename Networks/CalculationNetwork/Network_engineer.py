@@ -12,7 +12,7 @@ class ExcelLoader:
 		self.input_settings_df = {
 			"medium_property":pd.read_sql(f"select * from medium_property", con=SqlConnector.conn_sql),#todo make refactoring
 			"ducts_round":pd.read_sql(f"select * from ducts_round", con=SqlConnector.conn_sql),#todo make refactoring
-			"pipes": pd.read_sql(f"select * from ducts_round", con=SqlConnector.conn_sql),# todo make refactoring
+			"pipes": pd.read_sql(f"select * from pipes", con=SqlConnector.conn_sql),# todo make refactoring
 		}
 
 	def get_medium_dict(self):
@@ -198,8 +198,7 @@ class DropPressure:
 
 
 class SettingBuilder:
-	"""choose data from excel setting file
-    """
+	"""choose data from excel setting file    """
 
 	def __init__(self, excel_loader: ExcelLoader, power: float, network_branch_type: str) -> None:
 		"""load data from excel to DF

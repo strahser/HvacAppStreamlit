@@ -1,4 +1,5 @@
-from PrincipalSchems.View.DynamicBaseView import *
+from PrincipalSchems.View.DynamicBaseView import DynamicBaseView
+from PrincipalSchems.View.StaticView import EquipmentSymbol
 
 
 class DynamicEquipmentPropertyView(DynamicBaseView):

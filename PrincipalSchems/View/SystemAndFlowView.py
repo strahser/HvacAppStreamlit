@@ -1,4 +1,8 @@
-from PrincipalSchems.View.StaticView import *
+
+import pandas as pd
+import streamlit as st
+
+from PrincipalSchems.View.StaticView import MainSchemeConfig
 
 
 class SystemAndFlowView:
