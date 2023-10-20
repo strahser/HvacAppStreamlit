@@ -721,7 +721,7 @@ class SchemeMain:
 				input_view_control = InputViewControl(self.upload_layout, key=self.key)
 				self.input_df = input_view_control.create_input_view()
 				static_layout_view = StaticLayoutView(self.input_df, key=self.key)
-				self.input_df.rename(columns={static_layout_view.ID_COLUMN: "S_ID"}, inplace=True)  # todo SID
+				self.input_df.rename(columns={static_layout_view.ID_COLUMN: "S_ID"}, inplace=True)
 				tabs_view1 = TabsView(static_layout_view, key=self.key)
 				tabs_view2 = TabsView(static_layout_view, key=self.key, color_reverse=True)
 				tabs_view1.create_choose_column_level()

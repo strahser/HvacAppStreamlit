@@ -2,7 +2,7 @@ import os
 from docx import Document
 from docx.shared import Pt, Mm
 from docx.enum.text import WD_BREAK
-from docx.oxml.xmlchemy import OxmlElement
+from docx.oxml import OxmlElement
 from docx.oxml.shared import qn
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 import pandas as pd

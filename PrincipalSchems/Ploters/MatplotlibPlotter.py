@@ -268,8 +268,6 @@ class PltPlotter(PltPolygonPlotter):
 				self.ax.scatter(
 					x=df["base_point_x"],
 					y=df["base_point_y"],
-					# todo
-					# marker =self.data_for_plotting.dynamic_widgets_view_context_data.equipment_symbol_list[en]
 					marker="x",
 					s=500
 
