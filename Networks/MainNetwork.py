@@ -10,7 +10,6 @@ from library_hvac_app.files_custom_functions import Loader
 
 def create_plot_layouts(network_main_view: NetworkMainView):
 	json_polygons = st.session_state[StatementConstants.json_polygons]
-
 	for config_view in network_main_view.network_config_view_list:
 		main_network = NetworkPressureLayout(network_main_view, config_view, json_polygons)
 		main_network.create_network_layout()
@@ -29,7 +28,6 @@ def create_network_plot():
 		                          con=SQL.SqlModel.SqlConnector.SqlConnector.conn_sql)
 		pipes = pd.read_sql(f"select * from pipes",
 		                    con=SQL.SqlModel.SqlConnector.SqlConnector.conn_sql)
-
 		input_settings_df = {"medium_property": medium_property, "ducts_round": ducts_round, "pipes": pipes}
 		network_main_view = NetworkMainView(revit_export, input_settings_df)
 		network_main_view.create_layout(create_plot_layouts)

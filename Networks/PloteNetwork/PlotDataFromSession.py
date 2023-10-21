@@ -27,5 +27,5 @@ def plot_data_from_session(system_name: str) -> list[NetworkBranchModel]:
 					st.write(pd.DataFrame(systems_from_dict.network_long_pressure_table)
 					         .filter(FilteredNetworkData.filtered_columns)
 					         )
-				st.write(systems_from_dict.max_pressure,systems_from_dict.max_flow)
+	st.write( st.session_state[StatementConstants.network_plots])
 	return all_models

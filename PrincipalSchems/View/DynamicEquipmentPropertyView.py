@@ -19,9 +19,7 @@ class DynamicEquipmentPropertyView(DynamicBaseView):
 		for en, val in enumerate(self.equipment_config_scheme_list):
 			self.columns[en + 1].write(val)
 
-	def add_level_widget_to_layout(
-			self, unique_level_column_list: list, column_number=1
-	):
+	def add_level_widget_to_layout(self, unique_level_column_list: list, column_number=1):
 		for ind, row in self.df_.iterrows():
 			setattr(
 				self,

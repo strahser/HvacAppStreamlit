@@ -30,12 +30,11 @@ class UploadSessionSetting:
 		self.uploaded_settings = None
 
 	def show_session_view(self):
-		col1, col2 = st.columns([6, 5])
-		with col1:
-			self._create_upload_view()
-			self._create_upload_db_from_setting_button()
-		with col2:
-			self._create_download_settings()
+		st.subheader("Upload settings")
+		self._create_upload_view()
+		self._create_upload_db_from_setting_button()
+		st.subheader("Download settings")
+		self._create_download_settings()
 
 	def _create_excluding_session_dictionary(self):
 		excluding_list = SettingConfig.excluding_list

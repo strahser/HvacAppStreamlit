@@ -8,13 +8,13 @@ from Session.StatementConfig import StatementConstants
 
 class NetworkMainView:
 	def __init__(self, df_to_revit: pd.DataFrame, input_settings_df: dict):
-		self.plot_width = None
-		self.plot_height = None
 		self.df_to_revit = df_to_revit
 		self.input_settings_df = input_settings_df
 		self.choose_existing_or_new_system = st.sidebar.radio("Choose Create o Exist", ["New System", "Exist System"])
 		self.tabs = st.tabs(["System Options", "Network config", "Results", "Downloads"])
 		self.network_config_view_list: list[NetworkConfigView] = []
+		self.plot_width = None
+		self.plot_height = None
 		self.network_system_view = None
 
 	def create_layout(self, create_plot_layouts):
@@ -59,7 +59,4 @@ class NetworkMainView:
 			self.network_system_view = NetworkSystemView(self.df_to_revit, self.input_settings_df)
 			self.plot_width = st.number_input("Plot Width", value=15)
 			self.plot_height = st.number_input("Plot Height", value=15, step=1)
-			# condition_flow_not_nan = self.df_to_revit[self.network_system_view.sys_flow_choice].notna()
-			# condition_flow_not_zero = self.df_to_revit[self.network_system_view.sys_flow_choice] != 0
-			# self.df_to_revit.df_to_revit = self.df_to_revit[(condition_flow_not_nan) & (condition_flow_not_zero)]
 		return self.network_system_view

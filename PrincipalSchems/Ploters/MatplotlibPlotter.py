@@ -5,6 +5,8 @@ import streamlit as st
 import pandas as pd
 from matplotlib.backends.backend_pdf import PdfPages
 
+from PrincipalSchems.ViewControls import DataForPlotting
+
 
 def legend_without_duplicate_labels_ax(ax):
 	handles, labels = ax.get_legend_handles_labels()

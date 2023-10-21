@@ -11,7 +11,7 @@ class NetworkPlotter(PolygonPlotter):
 			polygon_merge: PolygonMerge,
 			network_list: list,
 			df_network,
-			space_name: str = 'S_ID',#todo replace S_ID
+			space_name: str = 'S_ID',  # todo replace S_ID
 			show_grid: bool = True,
 			is_filled: bool = False,
 			title_prefix: str = ''
@@ -48,7 +48,6 @@ class NetworkPlotter(PolygonPlotter):
             )
         """
 		super().__init__(polygon_merge, show_grid)
-
 		self.network_list = to_list(network_list)
 		self.df_network = df_network
 		self.sys_flow_column = network_list[0].sys_flow_column

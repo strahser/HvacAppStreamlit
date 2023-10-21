@@ -11,7 +11,6 @@ class UploadView:
 
 	def get_upload_layout(self):
 		st.subheader("Choose Excel or DB load")
-
 		self.select_db_or_excel = st.radio(label="Choose Excel or DB load",
 		                                   options=[StaticVariable.load_excel.value, StaticVariable.load_db.value],
 		                                   horizontal=True,

@@ -26,28 +26,22 @@ from DownloadToExcel.Control.DownloadControl import DownloadControl
 from StaticData.AppConfig import MenuChapters, StaticVariable
 from Networks.MainNetwork import create_network_plot
 
-
 class MultipleApp:
 	def __init__(self):
 		self.condition_excel = self._check_db_exist()
 
 	def create_upload_data(self):
-		col = st.columns(2)
-		with col[0]:
-			with st.expander("__Input data show__."):
-				self.upload_view = UploadView()
-				self.upload_view.get_upload_layout()
-				self.upload_layout = UploadLayout(self.upload_view)
-				self.upload_layout.get_files_from_memory()
-				self.condition_json = self.upload_layout.json_file
-		with col[1]:
-			with st.expander("__Session Config__"):
-				order_state = collections.OrderedDict(sorted(st.session_state.items()))  # for test streamlit
-				show_session, clear_session, selected_key = self.session_data(order_state)
-				if show_session:
-					st.write(order_state[selected_key])
-				if clear_session:
-					st.empty()
+		with st.expander("__Input data show__."):
+			self.upload_view = UploadView()
+			self.upload_view.get_upload_layout()
+			self.upload_layout = UploadLayout(self.upload_view)
+			self.upload_layout.get_files_from_memory()
+			self.condition_json = self.upload_layout.json_file
+
+			st.subheader("Settings property")
+			order_state = collections.OrderedDict(sorted(st.session_state.items()))  # for test streamlit
+			self.session_data(order_state)
+
 
 	@staticmethod
 	def _check_db_exist():
@@ -59,13 +53,13 @@ class MultipleApp:
 		session = UploadSessionSettingControl()
 		session.autoload_session()
 		session.load_session_download()
-		selected_index = list(order_state.keys()).index(StatementConstants.table_db)
-		col = st.columns(3)
-		selected_key = col[0].selectbox("Select key in session data for display", order_state.keys(),
-		                                index=selected_index)
-		show_session = st.button("Show Session")
-		clear_session = st.button("Clear Session")
-		return show_session, clear_session, selected_key
+		# selected_index = list(order_state.keys()).index(StatementConstants.table_db)
+		# col = st.columns(3)
+		# selected_key = col[0].selectbox("Select key in session data for display", order_state.keys(),
+		#                                 index=selected_index)
+		# show_session = st.button("Show Session")
+		# clear_session = st.button("Clear Session")
+		# return show_session, clear_session, selected_key
 
 	def dash_board(self):
 		tab1, tab2 = st.tabs(["Dashboard", "SQL"])
