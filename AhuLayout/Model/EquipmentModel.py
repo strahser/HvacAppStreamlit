@@ -1,4 +1,8 @@
+import pandas as pd
+
 from AhuLayout.Model.ParametersModel import *
+
+
 # region data Equipment
 def _read_air_parameters_from_db(db_table: pd.DataFrame,
                                  key_db_column_name: str) -> AirParameters:
@@ -327,6 +331,5 @@ class MixUpEquipment(Equipment):
 		if condition:
 			self._read_mix_up_air_parameters_from_db(system_name, system_data)
 			return self
-
 
 # 	endregion

@@ -93,8 +93,8 @@ def result_to_excel_add_table(df_dict: dict[str, pd.DataFrame],
 			df_dict[sh_name].to_excel(
 				writer,
 				sheet_name=sh_name,
-				startrow=1, startcol=0,
-				header=False,
+				startrow=0, startcol=0,
+				header=True,
 				index=index,
 				freeze_panes=(1, 1),
 				float_format="%.2f")

@@ -5,16 +5,20 @@ import os
 import inspect
 import sys
 
+from AhuLayout.Model.AHUModel import AHU, ListAHUModel, PivotTableAHUModel
+from AhuLayout.Model.ContextAhuDictionary import ContextAhuDictionary
+from AhuLayout.Model.LabelsModel import InputTableLabels
+from AhuLayout.Model.TotalDataConsumptionModel import TotalDataConsumptionModel
+from library_hvac_app.DbFunction.pandas_custom_function import df_to_excel_in_memory_simple
+from library_hvac_app.streamlit_custom_functions import AggGridOptions
+from AhuLayout.Control.DownloadAhuDataToDocx import download_ahu_data_to_docx
+
 current_dir = os.path.dirname(
 	os.path.abspath(inspect.getfile(inspect.currentframe())))
 parent_dir = os.path.dirname(current_dir)
 root_dir = os.path.dirname(parent_dir)
 sys.path.insert(0, parent_dir)
 sys.path.insert(0, root_dir)
-from AhuLayout.Model.AHUModel import *
-from AhuLayout.Model.TotalDataConsumptionModel import TotalDataConsumptionModel
-from library_hvac_app.DbFunction.pandas_custom_function import df_html_format, df_to_excel_in_memory_simple
-from library_hvac_app.streamlit_custom_functions import get_download_docx_in_memory, get_download_excel_data, AggGridOptions
 
 
 class AHUHtmlConfig:
@@ -34,7 +38,7 @@ class AHUControl:
 		self.filtered_df = [k for k, v in self.input_excel_AHU.items() if "Result_index" in v.columns and k != 'Расчет']
 		self.ahu_list = self._create_ahu_list()
 
-	def _create_ahu_list(self):
+	def _create_ahu_list(self) -> list[AHU]:
 		ahu_list_inst = ListAHUModel(self.input_excel_AHU)
 		ahu_list = ahu_list_inst.create_ahu_list(self.df_setting)
 		return ahu_list
@@ -59,7 +63,6 @@ class AHUControl:
 			return list_value.index(value)
 		else:
 			return 0
-
 
 	def create_ahu_data_tab(self):
 		with self.ahu_data_tabs:
@@ -118,7 +121,8 @@ class AHUControl:
 			col = st.columns(4)
 			with col[0]:
 				st.subheader("Enter Project Number")
-				project_number = st.text_input("Input Project Number", value="PN-1-1-1", label_visibility="collapsed",key=self.key)
+				project_number = st.text_input("Input Project Number", value="PN-1-1-1", label_visibility="collapsed",
+				                               key=self.key)
 			with col[1]:
 				st.subheader("Excel Tables ")
 				buffer_list = df_to_excel_in_memory_simple([self.pivot_df, self.df_], ["pivot_df", "summary_table"])
@@ -129,8 +133,8 @@ class AHUControl:
 				)
 			with col[2]:
 				st.subheader("AHU Data")
-				get_download_docx_in_memory(self.ahu_list,
-				                            AHUHtmlConfig.path_to_template,
-				                            ContextAhuDictionary,
-				                            InputTableLabels,
-				                            project_number)
+				download_ahu_data_to_docx(self.ahu_list,
+				                          AHUHtmlConfig.path_to_template,
+				                          ContextAhuDictionary,
+				                          InputTableLabels,
+				                          project_number)

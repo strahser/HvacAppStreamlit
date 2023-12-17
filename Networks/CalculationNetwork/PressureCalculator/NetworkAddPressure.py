@@ -2,7 +2,7 @@ import pandas as pd
 
 from Networks.CalculationNetwork.NetworkBuilder import NetworkBuilder
 from Networks.CalculationNetwork.NetworkEngineer import SettingBuilder
-from Networks.CalculationNetwork.Network_engineer import ExcelLoader
+from Networks.CalculationNetwork.NetworkEngineer import ExcelQuery
 from Networks.CalculationNetwork.StaticData.NetworkPressureConstants import NetworkPressureConstants
 from Networks.CalculationNetwork.utility import p_distance, segment_center
 from library_hvac_app.list_custom_functions import to_list
@@ -11,7 +11,7 @@ from library_hvac_app.list_custom_functions import to_list
 class NetworkAddPressure:
 	def __init__(
 			self,
-			excel_loader: ExcelLoader,
+			excel_loader: ExcelQuery,
 			network: NetworkBuilder,
 			df_branch: pd.DataFrame,
 			prefix_from: str,
@@ -26,7 +26,7 @@ class NetworkAddPressure:
             rout_name_prefix (str): [description]
         """
 		self.prefix_from = to_list(prefix_from)
-		self.excel_loader = excel_loader  # todo remove load db to class
+		self.excel_loader = excel_loader
 		self.network = network
 		self.df = df_branch
 		self.new_columns = NetworkPressureConstants.new_columns
@@ -136,7 +136,7 @@ class NetworkAddPressure:
             [dict]: [main diam,veloc,pressure loss]
         """
 		seting_builder = SettingBuilder(self.excel_loader, power, network_branch_type)
-		drop_pressure = seting_builder.drop_presuer
+		drop_pressure = seting_builder.drop_pressure
 		k_local_pressure = seting_builder.get_k_local_pressure()
 		if power == 0:
 			return dict(
@@ -148,10 +148,10 @@ class NetworkAddPressure:
 			),
 		else:
 			return dict(
-				flow=seting_builder.get_flow(),
-				diameter=seting_builder.choose_standart_diameter(),
+				flow=seting_builder.flow,
+				diameter=seting_builder.choose_standard_diameter(),
 				velocity=drop_pressure.get_velocity(),
-				line_pressure=drop_pressure.get_presure_line_drop(),
+				line_pressure=drop_pressure.get_pressure_line_drop(),
 				dinamic_pressure=drop_pressure.get_full_dynamic_drop_pressure(k_local_pressure)
 			)
 

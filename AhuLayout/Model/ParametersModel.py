@@ -1,8 +1,8 @@
 from AhuLayout.Model.LabelsModel import *
+from dataclasses import dataclass, field
 import locale
+
 locale.setlocale(locale.LC_ALL, '')
-from library_hvac_app.list_custom_functions import flatten
-from library_hvac_app.docx_custom_function import RenderDocx
 
 
 @dataclass
@@ -26,5 +26,3 @@ class AirParameters:
 	volume_air_consumption: float = 0
 	power: float = 0
 	wet_power: float = 0
-
-

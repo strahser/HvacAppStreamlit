@@ -2,7 +2,7 @@ import networkx as nx
 
 
 class NetworkGraph:
-	def __init__(self, df) -> None:
+	def __init__(self, df):
 		self.df = df
 		self.G = nx.DiGraph()
 

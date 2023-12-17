@@ -1,15 +1,15 @@
-from Session.StatementInit import *
+import streamlit as st
 from MultipleApp import MultipleApp
+from Session.StatementInit import StatementInit
 from StaticData.CSS import CssStyle
 from StaticData.AppConfig import MenuChapters, MenuIcons
 from streamlit_option_menu import option_menu
-
 import streamlit_nested_layout
+
+
 # pip install git+https://github.com/joy13975/streamlit-nested-layout.git
 # icons https://icons.getbootstrap.com/icons/calculator-fill/
 # https://bimhvac.streamlit.app/
-
-st.set_page_config(layout="wide")
 
 
 def create_multiple_app():
@@ -27,7 +27,6 @@ def create_multiple_app():
 	def run_upp():
 		multy_app = MultipleApp()
 		multy_app.create_upload_data()
-
 		for name in MenuChapters.menu_list:
 			if getattr(MenuChapters, name) == selected2:
 				att = getattr(multy_app, name)

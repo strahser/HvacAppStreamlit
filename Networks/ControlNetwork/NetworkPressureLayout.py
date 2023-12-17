@@ -1,14 +1,18 @@
 import io
 import zipfile
-import streamlit as st
 
-from Networks.CalculationNetwork.NetworkLevelValue import NetworkLevelValue
+import pandas as pd
+import streamlit as st
 from Networks.CalculationNetwork.PressureCalculator.GetLongRoute import GetLongRoute
-from Networks.ControlNetwork.CreateMainNetworkLayout import *
+from Networks.ControlNetwork.CreateMainNetworkLayout import CreateMainNetworkLayout
 from Networks.NetworkModels.NetworkBranchModel import NetworkBranchModel
-from Networks.PloteNetwork.NetworkPressurePlotter import *
+from Networks.NetworkViews.NetworkConfigView import NetworkConfigView
+from Networks.NetworkViews.NetworkMainView import NetworkMainView
+from Networks.PloteNetwork.NetworkPlotter import NetworkPlotter
+from Networks.PloteNetwork.NetworkPressurePlotter import NetworkPressurePlotter
+from Polygons.PolygonPlot.PolygonPlotter import save_plot_to_svg
 from Session.StatementConfig import StatementConstants
-from library_hvac_app.DbFunction.pandas_custom_function import df_to_excel_in_memory
+from library_hvac_app.list_custom_functions import to_list
 
 
 class NetworkPressureLayout:
@@ -20,8 +24,8 @@ class NetworkPressureLayout:
 		self.input_settings_df = network_main_view.input_settings_df
 		self.network_layout = CreateMainNetworkLayout(network_main_view, network_config_view, json_path=json_path)
 		self.network_layout.create_main_layout()
-		self.system_name = self.network_main_view.network_system_view.system_name_choice
-		self.level = self.network_config_view.network_level_view.level_val
+		self.system_name = self.network_main_view.system_name_choice
+		self.level = self.network_config_view.level_value
 		self.long_route_df_filter = None
 		self.long_route_df = None
 		self.df_pressure_concat = None
@@ -41,28 +45,34 @@ class NetworkPressureLayout:
 
 	@property
 	def polygon_merge(self):
+		from Polygons.PolygonPlot.PolygonMerge import PolygonMerge
 		polygon_merge = PolygonMerge(
 			self.df_to_revit,
 			self.json_path,
-			self.network_main_view.network_system_view.system_choice,
-			self.network_main_view.network_system_view.level_column,
-			self.network_config_view.network_level_view.level_val,
+			self.network_main_view.system_choice,
+			self.network_main_view.level_column,
+			self.network_config_view.level_value,
 		)
 		return polygon_merge
 
 	def add_data_to_session(self) -> None:
 		_fig1, _fig2, _fig3 = self._create_svg_from_fig()
 		system_branch = NetworkBranchModel(system_level=self.level,
+		                                   location_point=(
+			                                   self.network_config_view.local_point_x,
+			                                   self.network_config_view.local_point_y),
 		                                   network_draft_plot_data=_fig1,
 		                                   network_pressure_plot_data=_fig2,
 		                                   network_long_plot_data=_fig3,
 		                                   network_pressure_table=self.df_pressure_concat_filter.to_dict(),
 		                                   network_long_pressure_table=self.long_route_df_filter.to_dict(),
 		                                   system_name=self.system_name,
-		                                   system_type=self.network_main_view.network_system_view.system_type_choice
+		                                   system_type=self.network_main_view.system_type_choice
 		                                   )
 		st.session_state[StatementConstants.network_plots][self.system_name][
 			system_branch.branch_name] = system_branch.dict()
+		st.session_state[StatementConstants.network_plots][self.system_name][
+			"system_type"] = self.network_main_view.system_type_choice
 
 	def _get_figures_for_layout(self) -> tuple[object, object, object]:
 		height, weight = self.network_main_view.plot_height, self.network_main_view.plot_width
@@ -79,9 +89,9 @@ class NetworkPressureLayout:
 	def _create_svg_from_fig(self):
 		_fig1, _fig2, _fig3 = self._get_figures_for_layout()  # plt object
 		# svg object
-		fig1 = self.get_saved_figures(_fig1)
-		fig2 = self.get_saved_figures(_fig2)
-		fig3 = self.get_saved_figures(_fig3)
+		fig1 = save_plot_to_svg(_fig1)
+		fig2 = save_plot_to_svg(_fig2)
+		fig3 = save_plot_to_svg(_fig3)
 		return fig1, fig2, fig3
 
 	@staticmethod
@@ -123,7 +133,7 @@ class NetworkPressureLayout:
 			df_network=[
 				network.df_branch for network in self.network_layout.networks_update
 			],
-			space_name=self.network_layout.system_layouts.space_name,
+			space_name=self.network_layout.network_main_view.space_name,
 			is_filled=True,
 		)
 		return network_plotter
@@ -154,10 +164,6 @@ class NetworkPressureLayout:
 		)
 		return pressure_plotter_long_route
 
-	def get_saved_figures(self, fig) -> str:
-		saved_figure1 = self.create_network_plotter().save_plot_to_svg(fig)
-		return saved_figure1
-
 	@staticmethod
 	def download_list_fig(file_name: str = "plot"):
 		with io.BytesIO() as buffer:
@@ -166,7 +172,7 @@ class NetworkPressureLayout:
 					# zip.writestr(f"{file_name}_{en + 1}.jpg", res1)
 					zip.writestr(f"plot_{en + 1}.html", f_)
 			buffer.seek(0)
-			btn = st.download_button(
+			st.download_button(
 				label="📥 Download Plots ZIP",
 				data=buffer,  # StreamlitDownloadFunctions buffer
 				file_name=f"{file_name}.zip"

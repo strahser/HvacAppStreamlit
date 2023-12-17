@@ -1,12 +1,6 @@
 import pandas as pd
 import streamlit as st
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode, DataReturnMode
-import os
-import inspect
-import sys
-import io
-
-from library_hvac_app.docx_custom_function import RenderDocx
 from library_hvac_app.DbFunction.pandas_custom_function import df_to_excel_in_memory
 
 
@@ -75,34 +69,6 @@ class AggGridOptions:
 			return selected_rows
 
 
-def get_download_docx_in_memory(ahu_list: list,
-                                path_to_template: str,
-                                ContextAhuDictionary,
-                                InputTableNames,
-                                project_number="project_number"):
-	render_docx = RenderDocx(InputTableNames)
-	render_docx.create_or_open_docx_file(path_to_template)
-	render_docx.change_footer_text(new_text=project_number, footer_number=0)
-	for ahu in ahu_list:
-		context_dictionary = ContextAhuDictionary()
-		context_dictionary.system_name = ahu.system_name
-		context_dictionary.ahu_equip_name = ahu.list_ahu_labels
-		context_dictionary.ahu_pictures = ahu.list_ahu_pictures
-		context_dictionary.ahu_property = ahu.list_ahu_property.reset_index(
-			drop=True).reset_index().fillna("")
-		context_dictionary.ahu_excel_df = ahu.excel_df.fillna("")
-		render_docx.add_context_to_file(context_dictionary)
-	# Create in-memory buffer
-	file_stream = io.BytesIO()
-	# Save the .docx to the buffer
-	render_docx.save(file_stream)
-	# Reset the buffer's file-pointer to the beginning of the file
-	file_stream.seek(0)
-	st.download_button(label='📥 Download docx files',
-	                   data=file_stream,
-	                   file_name="AhuData.docx")
-
-
 def get_download_excel_data(download_data, sheet_list, excel_file_name, label_name='Download excel table', index=True):
 	buffer_list = df_to_excel_in_memory(download_data, sheet_list, index=index)
 
@@ -111,3 +77,28 @@ def get_download_excel_data(download_data, sheet_list, excel_file_name, label_na
 		data=buffer_list,
 		file_name=excel_file_name,
 	)
+
+
+def create_editable_standard_df(options: list[str], _df: pd.DataFrame, num_rows="fixed") -> pd.DataFrame:
+	"""
+    Args:
+     num_rows:
+     options:
+     _df:
+        options:al levels
+    """
+	df = st.data_editor(_df, num_rows=num_rows,
+	                    column_config={
+		                    "from_branch": st.column_config.SelectboxColumn(
+			                    options=options,
+			                    required=True,
+		                    ),
+		                    "to_branch": st.column_config.SelectboxColumn(
+			                    options=options,
+			                    required=True,
+		                    )
+	                    },
+	                    hide_index=True,
+	                    column_order=["from_branch", "to_branch", "distance", "flow"]
+	                    )
+	return df

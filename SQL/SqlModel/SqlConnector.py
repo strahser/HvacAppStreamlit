@@ -1,5 +1,5 @@
-
 import sqlite3
+
 
 class Singleton(type):
 	_instances = {}
@@ -15,4 +15,3 @@ class SqlConnector(object):
 	memory_connection_path = "file::memory:?cache=shared"
 	conn_sql: sqlite3.Connection = sqlite3.connect(memory_connection_path, uri=True, check_same_thread=False)
 	conn_local_sql: sqlite3.Connection = sqlite3.connect("./export_excel.db", check_same_thread=False)
-

@@ -1,20 +1,18 @@
 import io
-import os
-import inspect
-import sys
 import numpy as np
 from matplotlib.patches import Polygon
-
 from library_hvac_app.list_custom_functions import flatten, to_list
-
-current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parent_dir = os.path.dirname(current_dir)
-root_dir = os.path.dirname(parent_dir)
-sys.path.insert(0, parent_dir)
-sys.path.insert(0, root_dir)
 from Polygons.PolygonPlot.PolygonMerge import *
 from Polygons.PolygonPlot.SetColor import *
 import math
+
+
+def save_plot_to_svg(fig:plt.figure)->str:
+	img = io.StringIO()
+	fig.savefig(img, format="svg")
+	# clip off the xml headers from the image
+	svg_img = "<svg" + img.getvalue().split("<svg")[1]
+	return svg_img
 
 
 class PolygonPlotter:
@@ -182,15 +180,6 @@ class PolygonPlotter:
 				)
 			df_ = df_.drop("temp", axis=1)
 			return df_
-
-	@staticmethod
-	def save_plot_to_svg(fig):
-		img = io.StringIO()
-		fig.savefig(img, format="svg")
-		# clip off the xml headers from the image
-		svg_img = "<svg" + img.getvalue().split("<svg")[1]
-		return svg_img
-
 	def plot_polygons(
 			self,
 			text_prefix: str = "",

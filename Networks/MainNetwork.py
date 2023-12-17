@@ -1,11 +1,10 @@
 import pandas as pd
 import streamlit as st
-import SQL.SqlModel.SqlConnector
-from Networks.CalculationNetwork.NetworkLevelValue import NetworkLevelValue
+from SQL.SqlModel.SqlConnector import SqlConnector
 from Networks.ControlNetwork.NetworkPressureLayout import NetworkPressureLayout
 from Networks.NetworkViews.NetworkMainView import NetworkMainView
 from Session.StatementConfig import StatementConstants
-from library_hvac_app.files_custom_functions import Loader
+from StaticData.AppConfig import MenuChapters
 
 
 def create_plot_layouts(network_main_view: NetworkMainView):
@@ -21,13 +20,10 @@ def create_network_plot():
 	json_polygons = st.session_state[StatementConstants.json_polygons]
 	condition = "revit_export" in session_tables and "medium_property" in session_tables and len(json_polygons) > 1
 	if condition:  # todo add user interface
-		revit_export = pd.read_sql(f"select * from revit_export", con=SQL.SqlModel.SqlConnector.SqlConnector.conn_sql)
-		medium_property = pd.read_sql(f"select * from medium_property",
-		                              con=SQL.SqlModel.SqlConnector.SqlConnector.conn_sql)
-		ducts_round = pd.read_sql(f"select * from ducts_round",
-		                          con=SQL.SqlModel.SqlConnector.SqlConnector.conn_sql)
-		pipes = pd.read_sql(f"select * from pipes",
-		                    con=SQL.SqlModel.SqlConnector.SqlConnector.conn_sql)
+		revit_export = pd.read_sql(f"select * from revit_export", con=SqlConnector.conn_sql)
+		medium_property = pd.read_sql(f"select * from medium_property", con=SqlConnector.conn_sql)
+		ducts_round = pd.read_sql(f"select * from ducts_round", con=SqlConnector.conn_sql)
+		pipes = pd.read_sql(f"select * from pipes",	con=SqlConnector.conn_sql)
 		input_settings_df = {"medium_property": medium_property, "ducts_round": ducts_round, "pipes": pipes}
-		network_main_view = NetworkMainView(revit_export, input_settings_df)
+		network_main_view = NetworkMainView(revit_export, input_settings_df,key=MenuChapters.Networks)
 		network_main_view.create_layout(create_plot_layouts)

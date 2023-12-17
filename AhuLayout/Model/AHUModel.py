@@ -1,7 +1,10 @@
 import os
 import inspect
 import sys
+
+
 from AhuLayout.Model.EquipmentModel import *
+from library_hvac_app.list_custom_functions import flatten
 
 current_dir = os.path.dirname(
 	os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -136,7 +139,7 @@ class ListAHUModel:
 		}
 		return self.filtered_excel
 
-	def create_ahu_list(self, df_setting: pd.DataFrame) -> None:
+	def create_ahu_list(self, df_setting: pd.DataFrame) -> list[AHU]:
 		"""calculated ahu and create list AHU and AHU Table"""
 		self._create_filtered_excel()
 		for k, v in self.filtered_excel.items():

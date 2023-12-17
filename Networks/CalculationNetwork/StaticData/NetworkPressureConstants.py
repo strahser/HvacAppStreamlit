@@ -43,14 +43,14 @@ class NetworkPressureConstants:
 	]
 
 	calculation_dict: dict = {
-		"flow": lambda x: x["seting_builder"].get_flow(),
+		"flow": lambda x: x["seting_builder"].flow,
 		"k_local_pressure": lambda x: x["seting_builder"].get_k_local_pressure(),
-		"diameter": lambda x: x["seting_builder"].choose_standart_diameter(),
-		"velocity": lambda x: x["seting_builder"].drop_presuer.get_velocity(),
-		"Renolds": lambda x: x["seting_builder"].drop_presuer.get_renolds_number(),
-		"lambda": lambda x: x["seting_builder"].drop_presuer.get_lamda_turbulence(),
-		"line_pressure": lambda x: x["seting_builder"].drop_presuer.get_presure_line_drop(),
-		'dinamic_pressure': lambda x: x["seting_builder"].drop_presuer.get_presure_dynamic_drop(),
-		"full_dinamic_pressure": lambda x: x["seting_builder"].drop_presuer.get_full_dynamic_drop_pressure(
+		"diameter": lambda x: x["seting_builder"].choose_standard_diameter(),
+		"velocity": lambda x: x["seting_builder"].drop_pressure.get_velocity(),
+		"Renolds": lambda x: x["seting_builder"].drop_pressure.get_renolds_number(),
+		"lambda": lambda x: x["seting_builder"].drop_pressure.get_lamda_turbulence(),
+		"line_pressure": lambda x: x["seting_builder"].drop_pressure.get_pressure_line_drop(),
+		'dinamic_pressure': lambda x: x["seting_builder"].drop_pressure.get_pressure_dynamic_drop(),
+		"full_dinamic_pressure": lambda x: x["seting_builder"].drop_pressure.get_full_dynamic_drop_pressure(
 			x["k_local_pressure"])
 	}

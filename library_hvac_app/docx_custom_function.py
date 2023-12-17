@@ -13,7 +13,7 @@ class DocxConfig:
 		"""
 		create/open file/. Add Margins,boarders,Title,tables to Docx
 		"""
-		self.document = None
+		self.document: Document = None
 
 	def open_file(self, docx_file_path: str):
 		doc_ = open(docx_file_path, "rb")
@@ -25,11 +25,11 @@ class DocxConfig:
 		return self.document
 
 	def add_page_borders(self):
-		border_list =(
-				"top",
-				"left",
-				"bottom",
-				"right",
+		border_list = (
+			"top",
+			"left",
+			"bottom",
+			"right",
 		)
 		sec_pr = self.document.sections[0]._sectPr  # get the section properties el
 		# create new borders el
@@ -64,9 +64,9 @@ class DocxConfig:
 		font.size = Pt(16)
 		font.bold = True
 
-	def add_doctable(self, data: pd.DataFrame, tabletitle: str):
-		self.__add_title_config(tabletitle)
-
+	def add_doctable(self, data: pd.DataFrame, tabletitle: str = ""):
+		if tabletitle:
+			self.__add_title_config(tabletitle)
 		table = self.document.add_table(
 			data.shape[0] + 1, data.shape[1], style="Table Grid"
 		)  # First row are table headers!
@@ -93,9 +93,7 @@ class DocxConfig:
 
 	def add_picture_table(self, first_row_list, picture_path, tabletitle):
 		self.__add_title_config(tabletitle)
-
 		table = self.document.add_table(rows=3, cols=len(first_row_list))
-
 		for en, eq in enumerate(first_row_list):
 			# --- by default a cell has one paragraph with zero runs ---
 			table.cell(0, en).text = eq
@@ -123,9 +121,8 @@ class DocxConfig:
 
 class RenderDocx:
 
-	def __init__(self, InputTableNames) -> None:
+	def __init__(self) -> None:
 		self.doc_file = DocxConfig()
-		self.InputTableNames = InputTableNames
 
 	def _create_docx_file(self):
 		self.doc_file.create_file()
@@ -143,35 +140,6 @@ class RenderDocx:
 			return self.open_docx_file(docx_file_path)
 		else:
 			return self._create_docx_file()
-
-	def __add_pictures_ahu_table(self, context_dictionary):
-		self.doc_file.add_picture_table(
-			context_dictionary.ahu_equip_name,
-			context_dictionary.ahu_pictures,
-			self.InputTableNames.filter_pivot_table,
-		)
-
-	def add_context_to_file(self, context_dictionary):
-		self.doc_file.document.add_heading(
-			f'{self.InputTableNames.heading} {context_dictionary.system_name}',
-			level=1)
-		self.__add_pictures_ahu_table(context_dictionary)
-
-		self.doc_file.add_doctable(
-			context_dictionary.ahu_property,
-			self.InputTableNames.ahu_equipment_property,
-		)
-		self.doc_file.add_doctable(
-			context_dictionary.ahu_excel_df,
-			self.InputTableNames.ahu_equipment_table_name,
-		)
-
-		self.doc_file.add_page_break()
-
-	def change_footer_text(self,
-	                       new_text='new_text,footer_number=1',
-	                       footer_number=1):
-		self.doc_file.change_footer_text(new_text, footer_number)
 
 	def save(self, pathfile):
 		self.doc_file.save(pathfile)

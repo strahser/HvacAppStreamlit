@@ -1,4 +1,4 @@
-from Networks.CalculationNetwork.NetworkEngineer import ExcelLoader, ExcelQuery
+from Networks.CalculationNetwork.NetworkEngineer import ExcelQuery
 from Networks.CalculationNetwork.NetworkMultyCreation import NetworkMultyCreate
 from Networks.CalculationNetwork.PressureCalculator.NetworkAddPressure import NetworkAddPressure
 from Networks.ControlNetwork.NetowrkCreateSingleRoute import *
@@ -17,11 +17,9 @@ class CreateMainNetworkLayout:
 		self.list_of_from = None
 		self.list_of_from_to = None
 		self.network_layout_list = None
-		self.system_layouts = None
 
 	def create_main_layout(self):
-		self.system_layouts = self.network_main_view.network_system_view
-		self.network_layout_list = self.network_config_view.networks_layouts_list
+		self.network_layout_list = self.network_config_view.network_branches_view_list
 
 	def get_from_to_layout_data(self):
 		self.list_of_from_to = self.network_config_view.from_to_list
@@ -42,8 +40,7 @@ class CreateMainNetworkLayout:
 
 	def add_layout_data_to_pressure_calculation(self) -> list[NetworkAddPressure]:
 		self.add_layout_data_to_network_calculation()
-		excel_Query = ExcelQuery(self.system_layouts.system_type_choice, self.input_settings_df)
-		excel_loader = ExcelLoader(excel_Query)
+		excel_loader = ExcelQuery(self.network_main_view.system_type_choice, self.input_settings_df)
 		self.pressure_df_list = []
 		for network in self.networks_update:
 			presser_df = NetworkAddPressure(excel_loader, network, network.df_branch, self.list_of_from)

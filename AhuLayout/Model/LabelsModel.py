@@ -1,7 +1,7 @@
 
-import pandas as pd
-from dataclasses import dataclass, field
 from enum import Enum
+
+
 # region data Labels
 
 class AHULabels:
@@ -40,12 +40,14 @@ class AHULabels:
 	)
 	mix_up = "Камера Смешения"
 
+
 class PumpLabels:
 	system_name: str = "Система"
 	equipment_name: str = "Насос"
 	pump_flow: str = "G, м3/час"
 	electric_power: str = "N,кВт"
 	pressure: str = "Р,м.в.ст"
+
 
 class LabelAirParameters:
 	# do NOT change! names  as Excel file have to be
@@ -60,6 +62,7 @@ class LabelAirParameters:
 	power: str = 'Мощность'
 	wet_power: str = 'Влагоприток'
 
+
 class LiquidAttributes:
 	# populate with Excel setting sheet db keys can NOT be changed!
 	liquid_attributes: dict = {
@@ -69,6 +72,7 @@ class LiquidAttributes:
 		"heat_capacity": "heat_capacity",
 		"system_column_name": "short_sys_type"
 	}
+
 
 class InputTableLabels:
 	ahu_equipment_table_name = "Конфигурация приточной установки"
@@ -90,11 +94,6 @@ class BuildingHeatCoolLabel(Enum):
 	cooling_total_power: str = "Расход холода Вт"
 	electrical_engin_power: str = "Мощность элект.дв. кВт"
 
-@dataclass
-class ContextAhuDictionary:
-	system_name: str = None
-	ahu_equip_name: list = None
-	ahu_pictures: list = None
-	ahu_property: str = None
-	ahu_excel_df: pd.DataFrame = None
+
+
 # endregion

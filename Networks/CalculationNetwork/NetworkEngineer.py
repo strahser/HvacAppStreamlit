@@ -50,25 +50,8 @@ class ExcelQuery:
 		return self.__class__.__name__
 
 
-class ExcelLoader:
-	def __init__(self, excel_query: ExcelQuery) -> None:
-		self.excel_query = excel_query.get_excel_data()
-
-	def get_medium_dict(self):
-		return self.excel_query["get_medium_dict"]
-
-	def get_diameter_list(self):
-		return self.excel_query["get_diameter_list"]
-
-	def get_default_velocity(self, network_branch_type="root"):
-		if network_branch_type == "branch":
-			return self.excel_query["get_default_velocity_branch"]
-		else:
-			return self.excel_query["get_default_velocity_root"]
-
-
 class DiameterSelector:
-	def __init__(self, flow: float, default_velocity: float) -> int:
+	def __init__(self, flow: float, default_velocity: float):
 		"""calculate diameter by flow and velocity.
             select standart diameter from diameter list
 
@@ -92,7 +75,7 @@ class DiameterSelector:
 		diameter = diameter * 1000
 		return diameter
 
-	def choose_standart_diameter(self, diameter_list: list) -> int:
+	def choose_standard_diameter(self, diameter_list: list) -> int:
 		"""select diameter from diametr list
 
         Args:
@@ -158,7 +141,7 @@ class DropPressure:
         diameter -mm
         flow - m3/h
         """
-		self.ke = (medium_property["k_roughness"],)
+		self.ke = medium_property["k_roughness"]
 		self.density = medium_property["density"]
 		# kinematic viscosity m2/s
 		self.viscosity = medium_property["viscosity"]
@@ -190,7 +173,6 @@ class DropPressure:
 		else:
 			return 0
 
-
 	def get_lamda_turbulence(self):
 		"""
         air formula
@@ -206,21 +188,21 @@ class DropPressure:
 			lamda = 0.1266 / Re ** (0.1667)
 			return lamda
 
-	def get_presure_line_drop(self):
+	def get_pressure_line_drop(self):
 		lamda = self.get_lamda_turbulence()
-		dynamic_presure = self.get_presure_dynamic_drop()
+		dynamic_pressure = self.get_pressure_dynamic_drop()
 		pressure_drop = (
-			(lamda / self.diameter) * dynamic_presure if self.diameter else 0
+			(lamda / self.diameter) * dynamic_pressure if self.diameter else 0
 		)
 		return pressure_drop
 
-	def get_presure_dynamic_drop(self):
+	def get_pressure_dynamic_drop(self):
 		velocity = self.get_velocity()
 		dynamic_presure = self.density * (velocity ** 2) / 2
 		return dynamic_presure
 
 	def get_full_dynamic_drop_pressure(self, k_local_pressure=0):
-		full_dynamic_pressure = self.get_presure_dynamic_drop() * k_local_pressure
+		full_dynamic_pressure = self.get_pressure_dynamic_drop() * k_local_pressure
 		return full_dynamic_pressure
 
 	def __str__(self) -> str:
@@ -229,50 +211,46 @@ class DropPressure:
         diameter = {self.diameter}
         Re = {self.get_renolds_number()}
         lamda = {self.get_lamda_turbulence()}
-        line pressure = {self.get_presure_line_drop()}
-        dynamic pressure unit = {self.get_presure_dynamic_drop()}
+        line pressure = {self.get_pressure_line_drop()}
+        dynamic pressure unit = {self.get_pressure_dynamic_drop()}
         """
 
 
 class SettingBuilder:
 	"""choose data from excel setting file"""
 
-	def __init__(self, excel_loader: ExcelLoader, power: float, network_branch_type: str):
+	def __init__(self, excel_query: ExcelQuery, power: float, network_branch_type: str):
 		"""load data from excel to DF
         Args:
-            excel_loader (ExcelLoader): constant
+            excel_query (ExcelLoader): constant
             power (float): value from data frame
             network_branch_type (str): "branch", "root"
         """
-		self.excel_loader = excel_loader
+		self.excel_loader = excel_query
 		self.power = power
 		self.network_branch_type = network_branch_type
 		self.medium_dict = self.excel_loader.get_medium_dict()
-		self.drop_presuer = DropPressure(self.medium_dict, self.choose_standart_diameter(), self.get_flow())
+		self.drop_pressure = DropPressure(self.medium_dict, self.choose_standard_diameter(), self.flow)
 
-	def get_flow(self):
+	@property
+	def flow(self):
 		flow = FlowCalculation(self.medium_dict).calculate_flow(self.power)
 		return flow
 
-	def get_default_diameter(self):
-		flow = self.get_flow()
-		default_velocity = self.excel_loader.get_default_velocity(
-			self.network_branch_type
-		)
-		self.diameter = DiameterSelector(flow, default_velocity)
-		diameter = self.diameter.calculate_default_diameter()
+	@property
+	def _diameter_selector(self):
+		default_velocity = self.excel_loader.get_default_velocity(self.network_branch_type)
+		diameter = DiameterSelector(self.flow, default_velocity)
+		diameter.calculate_default_diameter()
 		return diameter
 
 	def get_diameter_list(self):
 		diameter_list = self.excel_loader.get_diameter_list()
 		return diameter_list
 
-	def choose_standart_diameter(self):
-		self.get_default_diameter()
-		standart_diameter = self.diameter.choose_standart_diameter(
-			self.get_diameter_list()
-		)
-		return standart_diameter
+	def choose_standard_diameter(self):
+		standard_diameter = self._diameter_selector.choose_standard_diameter(self.get_diameter_list())
+		return standard_diameter
 
 	def get_k_local_pressure(self):
 		k_local_pressure = self.medium_dict["k_local_pressure"]

@@ -25,17 +25,12 @@ class NetworkMultyCreate:
             _type_: _description_
         """
         def create_chain_of_update():
-            network_add_route = NetworkProduct(
-                network_builder_list_data,
-            )
+            network_add_route = NetworkProduct(network_builder_list_data)
             networks = network_add_route.create_network_builder_list()
             network_product_result = network_add_route.product_networks(networks)
             add_row = NetworkAddRow(networks, network_product_result, add_row_list)
             add_row_dict = add_row.group_list_to()
-            network_add_route_update = NetworkProduct(
-                network_builder_list_data,
-                add_row_dict,
-            )
+            network_add_route_update = NetworkProduct(network_builder_list_data,add_row_dict)
             networks_update = network_add_route_update.create_network_builder_list()
             network_add_route_update.product_networks(networks_update)
             return networks_update

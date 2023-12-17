@@ -6,6 +6,7 @@ import datetime
 @dataclass
 class NetworkBranchModel:
 	system_name: str
+	location_point: tuple[float, float]
 	system_type: str
 	system_level: str
 	network_draft_plot_data: str

@@ -26,9 +26,9 @@ class NetworkCreateSingleRoute:
 		self.polygon_merge = PolygonMerge(
 			self.df,
 			json_path,
-			self.network_main_view.network_system_view.system_choice,
-			self.network_main_view.network_system_view.level_column,
-			self.network_config_view.network_level_view.level_val,
+			self.network_main_view.system_choice,
+			self.network_main_view.level_column,
+			self.network_config_view.level_value,
 		)
 		self.system_layouts = network_main_view
 		self.level_location_point_coordinates = level_location_point_coordinates
@@ -49,8 +49,8 @@ class NetworkCreateSingleRoute:
 			temp_dict = dict(
 				polygon_merge=self.polygon_merge,
 				system_location_point=self.level_location_point_coordinates,
-				system_name=self.network_main_view.network_system_view.system_name_choice,
-				sys_flow_column=self.network_main_view.network_system_view.sys_flow_choice,
+				system_name=self.network_main_view.system_name_choice,
+				sys_flow_column=self.network_main_view.sys_flow_choice,
 				network_coordinate_x=(
 					getattr(layout, "network_start_point_x" + prefix_),
 					getattr(layout, "network_end_point_x" + prefix_),

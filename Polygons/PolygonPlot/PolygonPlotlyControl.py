@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 from plotly import graph_objs as go
+
+from Polygons.PolygonPlot.PlotPlotlyUtils import PlotPlotlyUtils
 from Polygons.PolygonView.PlotView import *
 from Utility.TextWorker import *
 from Polygons.PolygonPlot.PolygonMerge import *
@@ -24,17 +26,9 @@ class CheckSelectedPlotID:
 		else:
 			return []
 
-	@staticmethod
-	def __get_clicked_filter(clicked_filter_id_list: list[str]) -> list[str]:
-		"""return id to type str"""
-		if clicked_filter_id_list:
-			return [str(val) for val in clicked_filter_id_list]
-		else:
-			return []
-
 	def check_filter_mode(self, row: pd.Series, column_filtered_list_id: pd.DataFrame,
 	                      clicked_filter_id_list: list[str]):
-		clicked_filter = self.__get_clicked_filter(clicked_filter_id_list)
+		clicked_filter = PlotPlotlyUtils.get_clicked_filter(clicked_filter_id_list)
 		if clicked_filter or not column_filtered_list_id.empty:
 			column_filter = self.__get_column_filter(column_filtered_list_id)
 			concat_filter = column_filter + clicked_filter
@@ -51,7 +45,7 @@ class PolygonPlotlyControl:
 	             upload_layout: UploadLayout,
 	             _df: pd.DataFrame,
 	             plot_view: PlotView,
-	             merged_df_id="S_ID"):
+	             merged_df_id=MergedIdProperty.merged_df_id):
 		self.upload_layout = upload_layout
 		self.plot_view = plot_view
 		self.merged_df_id = merged_df_id  # id for plot
@@ -64,7 +58,6 @@ class PolygonPlotlyControl:
 	                       line_width=2
 	                       ) -> list[PlotlyFigList]:
 		self.fig_list = []
-
 		for level_val in level_list:
 			fig = go.Figure()
 			filter_df = self.merge_df[self.merge_df[self.plot_view.level_column_name] == level_val]
@@ -72,7 +65,6 @@ class PolygonPlotlyControl:
 			                                 column_filtered_list_id,
 			                                 clicked_filter_id_list,
 			                                 line_width)
-
 			with st.expander(f"{level_val}"):
 				self.fig_list.append(fig_values)
 		return self.fig_list
@@ -93,34 +85,6 @@ class PolygonPlotlyControl:
 			concat_value_with_prefix(self.plot_view.space_prefix, self.plot_view.space_suffix,
 		                             self.plot_view.space_value)
 
-	@staticmethod
-	def add_text_to_plot(fig: go.Figure, _df: pd.DataFrame):
-		# add text to center polygon. _df- df with text(TextWorkerForPlot)
-		fig.add_trace(
-			go.Scatter(
-				x=_df["pcx"],
-				y=_df["pcy"],
-				mode="text",
-				textfont=dict(size=14, family="Issocuper", color="black"),
-				text="<em>" + _df["text"] + "</em>",
-				texttemplate="%{text}",
-				legendgroup="Space Text",
-				name="Space Text",
-				showlegend=False,
-				hovertemplate="Space Text"
-			)
-		)
-
-	@staticmethod
-	def __show_only_unique_legend(fig):
-		names = set()
-		fig.for_each_trace(
-			lambda trace: trace.update(showlegend=False)
-			if (trace.name in names)
-			else names.add(trace.name)
-		)
-		return fig
-
 	def plot_one_level(
 			self, fig: go.Figure,
 			filter_df: pd.DataFrame,
@@ -139,7 +103,8 @@ class PolygonPlotlyControl:
 				go.Scatter(
 					x=row["px"],
 					y=row["py"],
-					fill=checked_selected_plot_id.check_filter_mode(row, column_filtered_list_id, clicked_filter_id_list),
+					fill=checked_selected_plot_id.check_filter_mode(row, column_filtered_list_id,
+					                                                clicked_filter_id_list),
 					line_color=row["color"],
 					line_width=line_width,
 					legendgroup=row[self.plot_view.color_filter_name],
@@ -148,7 +113,7 @@ class PolygonPlotlyControl:
 					showlegend=True,
 				)
 			)
-		self.add_text_to_plot(fig, filter_df)
+		PlotPlotlyUtils.add_text_to_plot(fig, filter_df)
 		fig.update_xaxes(
 			showgrid=False, zeroline=False, showticklabels=False
 		)
@@ -176,5 +141,5 @@ class PolygonPlotlyControl:
 			title_font_family="Issocuper",
 		)
 		fig_values = PlotlyFigList(fig, level_val)
-		self.__show_only_unique_legend(fig)
+		PlotPlotlyUtils.show_only_unique_legend(fig)
 		return fig_values

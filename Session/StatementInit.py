@@ -21,6 +21,9 @@ class StatementInit:
 			st.session_state[StatementConstants.tableau_table] = ""
 		if StatementConstants.network_plots not in st.session_state:
 			st.session_state[StatementConstants.network_plots] = {}
+		if StatementConstants.network_plots not in st.session_state:
+			st.session_state[StatementConstants.network_plots] = {}
+
 
 	@staticmethod
 	def _load_app_session_state():
@@ -59,6 +62,3 @@ class StatementInit:
 			st.session_state[StatementConstants.terminal_names_dict] = dict()
 		if StatementConstants.ahu_names_dict not in st.session_state:
 			st.session_state[StatementConstants.ahu_names_dict] = dict()
-
-
-StatementInit()
