@@ -1,13 +1,14 @@
 import pandas as pd
 import streamlit as st
-from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode, DataReturnMode
+from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode, DataReturnMode, ColumnsAutoSizeMode
 from library_hvac_app.DbFunction.pandas_custom_function import df_to_excel_in_memory
 
 
 class AggGridOptions:
-	def __init__(self, df: pd.DataFrame, check_box_show_option=True):
+	def __init__(self, df: pd.DataFrame, check_box_show_option=True, key: str = None):
 		self.df = df
 		self.check_box_show = check_box_show_option
+		self.key = key
 
 	def _get_grid_options(self):
 		gb = GridOptionsBuilder.from_dataframe(self.df)
@@ -25,7 +26,7 @@ class AggGridOptions:
 		gb.configure_selection(selection_mode=selection_mode,
 		                       use_checkbox=self.check_box_show,
 		                       header_checkbox=self.check_box_show,
-		                       groupSelectsChildren="Group checkbox select children",
+		                       groupSelectsChildren=True,
 		                       header_checkbox_filtered_only=self.check_box_show
 		                       )
 		gb.configure_side_bar()
@@ -49,12 +50,13 @@ class AggGridOptions:
 			)
 		self.agg_table = AgGrid(self.df,
 		                        gridOptions=self._get_grid_options(),
-		                        columns_auto_size_mode=True,
+		                        columns_auto_size_mode= ColumnsAutoSizeMode.NO_AUTOSIZE,
 		                        # height=600,
 		                        enable_enterprise_modules=True,
 		                        update_mode=GridUpdateMode.MODEL_CHANGED,
 		                        data_return_mode=DataReturnMode.AS_INPUT,
 		                        fit_columns_on_grid_load=False,
+		                        key=self.key,
 		                        **check_box_show_flag
 		                        )
 

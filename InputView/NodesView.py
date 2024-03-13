@@ -2,6 +2,7 @@ import streamlit as st
 from InputView.CreateTreeSelectView import create_tree_select_view
 from Session.StatementConfig import StatementConstants
 from library_hvac_app.html.TreeViewModel import get_tree_data_from_db
+from typing import Any
 
 
 class ViewNodes:
@@ -15,7 +16,7 @@ class ViewNodes:
 		nodes_vew = get_tree_data_from_db("View data", self.views_name)
 		return [nodes_table, nodes_vew]
 
-	def create_tree_view_options(self, header: str):
+	def create_tree_view_options(self, header: str) -> Any:
 		st.subheader(f"Select {header} data")
 		nodes = self._create_view_nodes()
-		self.table_tree = create_tree_select_view(nodes=nodes, key=self.key)
+		return create_tree_select_view(nodes=nodes, key=self.key)

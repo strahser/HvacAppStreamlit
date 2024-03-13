@@ -140,5 +140,8 @@ def calculate_pressure_model_from_data_frame(system_name: str, df_from_session: 
 
 def add_main_root_to_session(df_from_session: pd.DataFrame, system_name: str) -> None:
 	system = get_session_system(system_name)
-	system[NetworkSessionConstants.full_pressure_df] = df_from_session.to_dict()
-	visualise_graph(df_from_session, system_name)
+	if system:
+		system[NetworkSessionConstants.full_pressure_df] = df_from_session.to_dict()
+		visualise_graph(df_from_session, system_name)
+	else:
+		st.warning(f"No plot data in session for {system}")

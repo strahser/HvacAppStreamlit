@@ -42,9 +42,8 @@ class MultipleApp:
 			if self.condition_excel:
 				main_analytical_tabel(self.upload_layout)
 
-	@staticmethod
-	def Networks():
-		create_network_plot()
+	def Networks(self):
+		create_network_plot(self.upload_layout, key=MenuChapters.Networks)
 
 	@staticmethod
 	def ifc_dash_board():

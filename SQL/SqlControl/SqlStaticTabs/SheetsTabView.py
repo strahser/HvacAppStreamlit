@@ -2,6 +2,8 @@ import streamlit as st
 import sqlite3
 import pandas as pd
 
+from SQL.SqlView.AggTabelView import AggTabelView
+
 
 class SheetsTabView:
 	def __init__(self, tables_name: list[any], connection: sqlite3.Connection, key):
@@ -27,12 +29,11 @@ class SheetsTabView:
 			st.warning(e)
 
 	def _write_df(self, table: str):
-		col_names, col_df = st.columns([3, 7])
-		with col_names:
-			st.markdown(f"Columns of **{table}**")
-			columns = pd.read_sql_query(f"select * from {table}", con=self.connection).columns
-			st.write(columns)
-		with col_df:
-			st.markdown(f" **{table}**")
-			df = pd.read_sql_query(f"SELECT * from {table}", con=self.connection)
-			st.write(df)
+		st.markdown(f"Columns of **{table}**")
+		table = pd.read_sql_query(f"select * from {table}", con=self.connection)
+		columns = table.columns.unique().to_list()
+		st.write(columns)
+		with st.expander("Sample of table"):
+			agg_table = AggTabelView(table)
+			agg_table.create_filtered_table('sample of static table')
+

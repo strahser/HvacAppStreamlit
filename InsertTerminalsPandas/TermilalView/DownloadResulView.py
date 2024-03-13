@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 class DownloadResulLayout:
 	def __init__(self, excel_file, json_file):
 		self.excel_file = excel_file

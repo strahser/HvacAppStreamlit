@@ -16,7 +16,7 @@ SystemProperty = namedtuple('SystemProperty', ['system_flow', 'system_name'])
 
 class InputDataDF:
 
-	def __init__(self, upload_layout: UploadLayout,):
+	def __init__(self, upload_layout: UploadLayout, ):
 		self.upload_layout = upload_layout
 		self.json_data = upload_layout.json_file
 		self.revit_export = None
@@ -39,7 +39,6 @@ class InputDataDF:
 			ExcelSheetsLoads.excel_sheet_names_Terminal,
 			StatementConstants.terminal_names_dict
 		)
-
 
 	def create_config_data(self):
 		self.concat_base = pd.concat(self.EquipmentBase)

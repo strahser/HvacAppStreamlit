@@ -2,21 +2,11 @@ from dataclasses import dataclass
 
 import pandas as pd
 import streamlit as st
-import inspect
-import os
-import sys
-
-from InputView.InputViewModel.InputViewLoadDFfromStatment import create_input_choosing_data_form
 from SQL.SqlModel.SqlConnector import SqlConnector
 from Session.StatementConfig import StatementConstants
 from StaticData.AppConfig import ExcelSheetsLoads
 
-current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parent_dir = os.path.dirname(current_dir)
-root_dir = os.path.dirname(parent_dir)
-sys.path.insert(0, current_dir)
-sys.path.insert(0, parent_dir)
-sys.path.insert(0, root_dir)
+
 from AhuLayout.Control.AHUControl import AHUControl
 from InputView.InputViewMultyChoosing import InputViewMultyChoosing
 from Upload.UploadLayout import UploadLayout
@@ -34,8 +24,7 @@ def MainAHU(upload_layout: UploadLayout, key):
 
 	@st.cache_data
 	def _get_input_excel_AHU_files_loads():
-		input_excel_AHU_files_loads = pd.read_excel(input_excel_AHU, sheet_name=None, skiprows=14, nrows=10)
-		return input_excel_AHU_files_loads
+		return pd.read_excel(input_excel_AHU, sheet_name=None, skiprows=14, nrows=10)
 
 	multy_load = InputViewMultyChoosing(upload_layout, key=key)
 	multy_load.check_input_data_loaded(ExcelSheetsLoads.excel_sheet_names_AHU, StatementConstants.ahu_names_dict)

@@ -77,11 +77,16 @@ def group_subgroups(df: pd.DataFrame, key_group_index: str, columns_list: list[s
 	return group
 
 
+class ConditionFormatData:
+	pass
+
 def result_to_excel_add_table(df_dict: dict[str, pd.DataFrame],
                               excel_book_path: str,
                               index: bool = False,
                               convert_to_table: bool = True,
-                              renamed_sheet_dict: dict[str, str] = None):
+                              renamed_sheet_dict: dict[str, str] = None,
+                              condition_format_data:ConditionFormatData= None
+                              ):
 	"""
     create new file excel. convert_to_table == True -> make smart excel table.
     df_dict {sheet_name:df}
@@ -98,7 +103,6 @@ def result_to_excel_add_table(df_dict: dict[str, pd.DataFrame],
 				index=index,
 				freeze_panes=(1, 1),
 				float_format="%.2f")
-
 			workbook = writer.book
 			worksheet = writer.sheets[sh_name]
 			column_settings = [{'header': column}
@@ -126,12 +130,13 @@ def result_to_excel_add_table(df_dict: dict[str, pd.DataFrame],
 			# https://xlsxwriter.readthedocs.io/worksheet.html#conditional_format%23conditional_format
 			# https://stackoverflow.com/questions/44150078/python-using-pandas-to-format-excel-cell
 			# Add a format for pass. Green fill with dark green text.
-			pass_format = workbook.add_format({'bg_color': '#C6EFCE',
-			                                   'font_color': '#006100'})
-			worksheet.conditional_format(0, 0, max_row, max_col, {'type': 'text',
-			                                                      'criteria': 'containing',
-			                                                      'value': "define value separately",
-			                                                      'format': pass_format})
+			pass_format = workbook.add_format({'bg_color': 'red', 'font_color': '#006100'})
+			# if ConditionFormatData:
+			# 	worksheet.conditional_format(0, 0, max_row, max_col, {'type': 'cell',
+			# 	                                                      'criteria': '>=',
+			# 	                                                      'value': 50,
+			# 	                                                      'format': pass_format}
+			#                              )
 		# worksheet.set_column(0, max_col - 1, 25)
 
 		else:

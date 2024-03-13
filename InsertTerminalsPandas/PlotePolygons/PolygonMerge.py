@@ -21,7 +21,7 @@ class PolygonMergeBase:
         """
 		self.in_df = in_df
 		self.json_path = json_path
-		self.level_colum = level_column
+		self.level_column = level_column
 		self.level_val = level_val
 
 	def load_json(self) -> pd.DataFrame:

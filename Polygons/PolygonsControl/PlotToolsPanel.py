@@ -1,7 +1,13 @@
-from Polygons.PolygonPlot.PolygonPlotlyControl import UploadLayout, pd, st, PlotView, PolygonPlotlyControl
+
+import pandas as pd
+import streamlit as st
+
+from Polygons.PolygonPlot.PolygonPlotlyControl import PolygonPlotlyControl
+from Polygons.PolygonView.PlotView import PlotView
 from Session.StatementConfig import StatementConstants
 import plotly.graph_objects as go
 
+from Upload.UploadLayout import UploadLayout
 from library_hvac_app.StreamlitDownloadFunctions.DownloadPlotlyFigList import download_jpg_zip
 
 

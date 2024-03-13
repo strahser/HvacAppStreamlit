@@ -10,6 +10,7 @@ import streamlit as st
 from SQL.SqlModel.SqlConnector import SqlConnector
 import pandas as pd
 
+
 def _create_dashboard_grid(table_name: str):
 	columns, rows = get_db_table(table_name)
 
@@ -40,6 +41,7 @@ def _create_dashboard_grid(table_name: str):
 
 		)
 
+
 def _create_dashboard_card():
 	with mui.Card(key="test",
 	              sx={"display": "flex", "flexDirection": "column", "borderRadius": 3, "overflow": "hidden"},
@@ -61,6 +63,7 @@ def _create_dashboard_card():
 			image="https://mui.com/static/images/cards/paella.jpg",
 			alt="Paella dish",
 		)
+
 
 def _create_nivo_card():
 	DATA = [

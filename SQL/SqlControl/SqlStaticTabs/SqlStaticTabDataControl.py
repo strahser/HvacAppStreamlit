@@ -61,13 +61,16 @@ class SqlStaticTabDataControl:
 			col1, col2,col3 = st.columns(3)
 			with col1:
 				st.markdown("#### All Tables Names #####")
-				st.dataframe(pd.DataFrame({"Table Names": self.tables_name}))
+				if self.tables_name:
+					st.write(pd.DataFrame({"Table Names": self.tables_name}).to_dict())
 			with col2:
 				st.markdown("#### All Views Names #####")
-				st.dataframe(pd.DataFrame({"View Names": self.views_name}))
+				if self.views_name:
+					st.write(pd.DataFrame({"View Names": self.views_name}).to_dict())
 			with col3:
 				st.markdown("#### All Category Names #####")
-				st.write(self.category_name)
+				if self.category_name:
+					st.write(self.category_name).to_dict()
 		with st.expander("Selected Table"):
 			selected_sheet_and_books = SelectSheetAndBookNames(self.upload_layout, self.key)
 			tab_view = SheetsTabView(selected_sheet_and_books.excel_books_data, self.connector, self.key)
@@ -84,6 +87,6 @@ class SqlStaticTabDataControl:
 				for data in selected_column:
 					unique_column_data = pd.DataFrame({data: df[data].unique()})
 					df_list.append(unique_column_data)
-				st.write(pd.concat(df_list, axis=1))
+				st.write(pd.concat(df_list, axis=1).to_dict())
 			except Exception as e:
 				st.warning(e)

@@ -13,8 +13,9 @@ class SqlDynamicControl:
 			return ""
 
 	def create_sql_query(self):
-		sql = f"""
-		        SELECT\n{self.tabs_view.joined_table_control.selected_columns_parsing_to_string}{self.__check_custom_functions()}
-		        {self.tabs_view.joined_table_tables_string}\n{self.tabs_view.where_filter}
-		        """
-		return sql
+		if self.tabs_view.joined_table_control:
+			sql = f"""
+			        SELECT\n{self.tabs_view.joined_table_control.selected_columns_parsing_to_string}{self.__check_custom_functions()}
+			        {self.tabs_view.joined_table_tables_string}\n{self.tabs_view.where_filter}
+			        """
+			return sql
