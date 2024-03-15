@@ -5,15 +5,15 @@ import streamlit as st
 
 
 class FromToLevelView:
-	def __init__(self, level_list: list[str], system_name,key:str):
-		self.system_name =system_name
+	def __init__(self, level_list: list[str], system_name, key: str):
+		self.system_name = system_name
 		self.key = key
 		self.columns = st.columns(4)
 		self.level_list = level_list
 
 	def create_table(self):
 		self.__create_table_header()
-		number_columns =st.columns(6)
+		number_columns = st.columns(6)
 		with number_columns[5]:
 			self.level_chain_quantity = st.number_input(
 				"select level chain quantity",
@@ -21,10 +21,10 @@ class FromToLevelView:
 				step=1,
 				key=f"level_chain_quantity {self.key}"
 			)
-			self.add_table_to_session = st.button ("Confirm", key=f"add_table_to_session button {self.key}")
+			self.add_table_to_session = st.button("Confirm", key=f"add_table_to_session button {self.key}")
 			system = get_session_system(self.system_name)
 			dict_to_df = {
-				GraphConstance.system_type:None,
+				GraphConstance.system_type: None,
 				GraphConstance.from_branch: self.__create_table_from_to(0, GraphConstance.from_branch).values(),
 				GraphConstance.to_branch: self.__create_table_from_to(1, GraphConstance.to_branch).values(),
 				GraphConstance.distance: self.__add_distance_column(2).values(),
@@ -32,11 +32,10 @@ class FromToLevelView:
 			}
 			system[NetworkSessionConstants.df_from_to_level] = dict_to_df
 
-	def __create_table_header(self):
-		self.columns[0].write(GraphConstance.from_branch)
-		self.columns[1].write(GraphConstance.to_branch)
-		self.columns[2].write(GraphConstance.distance)
-		self.columns[3].write(GraphConstance.flow)
+	def __create_table_header(self)->None:
+		data_list = [GraphConstance.from_branch, GraphConstance.to_branch, GraphConstance.distance, GraphConstance.flow]
+		for en, data in enumerate(data_list):
+			self.columns[en].write(data)
 
 	def __add_distance_column(self, index_columns: int):
 		res = {}

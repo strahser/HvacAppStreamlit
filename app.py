@@ -1,6 +1,6 @@
 import streamlit as st
-from MultipleApp import MultipleApp
 from Session.StatementInit import StatementInit
+from MultipleApp import MultipleApp
 from StaticData.CSS import CssStyle
 from StaticData.AppConfig import MenuChapters, MenuIcons
 from streamlit_option_menu import option_menu

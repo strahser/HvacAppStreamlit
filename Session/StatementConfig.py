@@ -26,6 +26,7 @@ class StatementConstants:
 	ahu_names_dict = "ahu_names_dict"
 	network_plots = "Network Plots"
 	networks = "Networks"
+	zones = 'zones'
 
 
 class SettingConfig:

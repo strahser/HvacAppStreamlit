@@ -12,8 +12,7 @@ class TabsPolygonSqlCreator:
 		self.fig_list = None
 
 	def _create_tab_list(self) -> None:
-		all_tabs = st.tabs(["Input Table", "Plot Setting", "downloads"])
-		self.change_input_table_tab, self.plot_setting_tab, self.downloads_tab = all_tabs
+		self.change_input_table_tab, self.plot_setting_tab, self.downloads_tab = st.tabs(["Input Table", "Plot Setting", "downloads"])
 
 	def create_polygons_plot_and_tabs(self):
 		self._create_tab_list()

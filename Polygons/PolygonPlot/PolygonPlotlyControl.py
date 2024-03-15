@@ -59,6 +59,7 @@ class PolygonPlotlyControl:
 	                       ) -> list[PlotlyFigList]:
 		self.fig_list = []
 		for level_val in level_list:
+
 			fig = go.Figure()
 			filter_df = self.merge_df[self.merge_df[self.plot_view.level_column_name] == level_val]
 			fig_values = self.plot_one_level(fig, filter_df, level_val,

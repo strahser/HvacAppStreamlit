@@ -25,6 +25,8 @@ class StatementInit:
 			st.session_state[StatementConstants.network_plots] = {}
 		if StatementConstants.networks not in st.session_state:
 			st.session_state[StatementConstants.networks] = {}
+		if StatementConstants.zones not in st.session_state:
+			st.session_state[StatementConstants.zones] = {}
 
 	@staticmethod
 	def _load_app_session_state():

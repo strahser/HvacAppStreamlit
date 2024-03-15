@@ -34,6 +34,5 @@ class SheetsTabView:
 		columns = table.columns.unique().to_list()
 		st.write(columns)
 		with st.expander("Sample of table"):
-			agg_table = AggTabelView(table)
-			agg_table.create_filtered_table('sample of static table')
+			st.write(table)
 
