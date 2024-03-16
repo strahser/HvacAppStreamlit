@@ -35,6 +35,6 @@ def create_multiple_app():
 	run_upp()
 
 
-StatementInit()
+
 create_multiple_app()
 CssStyle.run()

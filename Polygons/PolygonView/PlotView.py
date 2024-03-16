@@ -20,6 +20,8 @@ class PlotViewAttributes:
 
 
 class PlotViewComponents(PlotViewAttributes):
+	# if StatementConstants.zones not in st.session_state:
+	# 	st.session_state[StatementConstants.zones]={}
 	zones = st.session_state[StatementConstants.zones]
 
 	def __init__(self, revit_df: pd.DataFrame, key: str):
