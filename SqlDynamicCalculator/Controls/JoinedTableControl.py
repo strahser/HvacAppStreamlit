@@ -1,7 +1,7 @@
 import sqlite3
 
 from SqlDynamicCalculator.Controls.TableColumnsSelectorControl import (
-	TableColumnsSelectorControl, SqlConnector, UploadLayout, st
+	TableColumnsSelectorControl, SqlConnector, UploadLayout
 )
 from InputView.SelectedTreeInputView import SelectedTreeInputView
 from SqlDynamicCalculator.View.SelectedJoinedTableView import SelectedJoinedTableView
@@ -83,7 +83,7 @@ class JoinedTableControl:
 		all_tables_and_views = ViewNodes(
 			key=f"{MenuChapters.analytics} {StatementConstants.select_join_table} all tables")
 		all_tables_and_views.create_tree_view_options("All tables")
-		all_tables_and_views_tree = all_tables_and_views.table_tree
+		all_tables_and_views_tree = all_tables_and_views.create_tree_view_options
 		self.selected_tables = []
 		if isinstance(all_tables_and_views_tree, list):
 			self.selected_tables.extend(all_tables_and_views_tree)

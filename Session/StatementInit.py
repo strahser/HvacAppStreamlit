@@ -28,6 +28,9 @@ class StatementInit:
         if StatementConstants.zones not in st.session_state:
             st.session_state[StatementConstants.zones] = {}
 
+        if "ifc_file" not in st.session_state:
+            st.session_state["ifc_file"] = {}
+
     @staticmethod
     def _load_app_session_state():
         if StatementConstants.mainHydralitMenuComplex not in st.session_state:
@@ -67,4 +70,4 @@ class StatementInit:
             st.session_state[StatementConstants.ahu_names_dict] = dict()
 
 
-StatementInit()
+

@@ -25,8 +25,8 @@ class TabsViewControl:
 				try:
 					self.joined_table_control = JoinedTableControl(self.upload_layout, self.conn)
 					self.joined_table_control.create_join_table_columns()
-				except:
-					return None
+				except Exception as e:
+					return st.warning(e)
 		with option_tab:
 			with st.expander("Show Options"):
 				self.joined_table_tables_string = self.joined_table_control \

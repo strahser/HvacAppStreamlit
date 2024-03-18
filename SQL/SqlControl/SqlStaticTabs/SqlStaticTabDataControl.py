@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+
+from InputView.NodesView import ViewNodes
 from SQL.SqlControl.SqlStaticTabs.SheetsTabView import SheetsTabView
 from InputView.InputViewControl import InputViewControl
 from StaticData.AppConfig import MenuChapters, StaticVariable
@@ -27,7 +29,8 @@ class SelectSheetAndBookNames:
 				self.input_view_control.input_view.selected_excel_books in
 				st.session_state[StatementConstants.category_dictionary].keys()
 		):
-			return st.session_state[StatementConstants.category_dictionary][self.input_view_control.input_view.selected_excel_books]
+			return st.session_state[StatementConstants.category_dictionary][
+				self.input_view_control.input_view.selected_excel_books]
 
 	def _select_sheet_or_book(self) -> str:
 		if hasattr(self.input_view_control.input_view, "selected_excel_books"):
@@ -55,10 +58,12 @@ class SqlStaticTabDataControl:
 		self.views_name = st.session_state[StatementConstants.table_db][StatementConstants.all_tables_view]
 		self.category_name = st.session_state[StatementConstants.category_dictionary]
 		self.key = MenuChapters.analytics
+		view_nodes = ViewNodes(f"{self.key} static sql data")
+		self.data = view_nodes.create_tree_view_options("Input")
 
 	def create_sample_tables_db(self):
 		with st.expander("All Tables and Views"):
-			col1, col2,col3 = st.columns(3)
+			col1, col2, col3 = st.columns(3)
 			with col1:
 				st.markdown("#### All Tables Names #####")
 				if self.tables_name:
@@ -72,21 +77,6 @@ class SqlStaticTabDataControl:
 				if self.category_name:
 					st.write(self.category_name).to_dict()
 		with st.expander("Selected Table"):
-			selected_sheet_and_books = SelectSheetAndBookNames(self.upload_layout, self.key)
-			tab_view = SheetsTabView(selected_sheet_and_books.excel_books_data, self.connector, self.key)
-			tab_view.choose_table_or_view_data()
-			self._create_unique_column_data(selected_sheet_and_books.selected_sheet)
-
-	def _create_unique_column_data(self, selected_sheet):
-		with st.expander("Select unique column data"):
-			col = st.columns(3)
-			try:
-				df = pd.read_sql_query(f"select * from {selected_sheet}", con=self.connector)
-				selected_column = col[0].multiselect("select column for checking", df.columns)
-				df_list = []
-				for data in selected_column:
-					unique_column_data = pd.DataFrame({data: df[data].unique()})
-					df_list.append(unique_column_data)
-				st.write(pd.concat(df_list, axis=1).to_dict())
-			except Exception as e:
-				st.warning(e)
+			if self.data:
+				tab_view = SheetsTabView(self.data, self.connector, self.key)
+				tab_view.write_table_or_view_data()

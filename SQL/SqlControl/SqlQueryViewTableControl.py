@@ -18,8 +18,8 @@ class SqlQueryViewTableControl:
 		self.upload_layout = upload_layout
 		self.connector = connector
 		self.key = key
-		self.sql_tools, self.static_sql_tab, self.dynamic_sql_tab, self.example_tab = st.tabs(
-			["SQL TOOLS", "StaticData SQL", "Dynamic SQL", "Example"]
+		self.sql_tools, self.static_sql_tab,  self.example_tab = st.tabs(
+			["SQL TOOLS", "StaticData SQL",  "Example"]
 		)
 
 	def create_all_query_view(self):
@@ -33,8 +33,6 @@ class SqlQueryViewTableControl:
 			config_view = SQLCreateViewPanel(add_table_tools.query_input, self.key)
 			config_view.show_sql_view_panel(show_sql=False)
 			CopyToClipBoardView(add_table_tools.query_input,self.connector,self.key)
-		with self.dynamic_sql_tab:
-			SqlDynamicCalculator(self.upload_layout)
 		with self.sql_tools:
 			self._create_sql_tools_panel()
 

@@ -16,7 +16,7 @@ class ViewNodes:
 		nodes_vew = get_tree_data_from_db("View data", self.views_name)
 		return [nodes_table, nodes_vew]
 
-	def create_tree_view_options(self, header: str) -> Any:
+	def create_tree_view_options(self, header: str="Table ") -> Any:
 		st.subheader(f"Select {header} data")
 		nodes = self._create_view_nodes()
 		return create_tree_select_view(nodes=nodes, key=self.key)

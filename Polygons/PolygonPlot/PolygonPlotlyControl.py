@@ -1,11 +1,14 @@
 from dataclasses import dataclass
 from plotly import graph_objs as go
+import pandas as pd
+import streamlit as st
 
+from InsertTerminalsPandas.PlotePolygons.PolygonMerge import PolygonMerge
 from Polygons.PolygonPlot.PlotPlotlyUtils import PlotPlotlyUtils
-from Polygons.PolygonView.PlotView import *
-from Utility.TextWorker import *
-from Polygons.PolygonPlot.PolygonMerge import *
-from Upload.UploadLayout import *
+from Polygons.PolygonPlot.PolygonMergeStatic import MergedIdProperty
+from Polygons.PolygonView.PlotView import PlotView
+from Upload.UploadLayout import UploadLayout
+from Utility.TextWorker import TextWorkerForPlot
 
 
 @dataclass()
