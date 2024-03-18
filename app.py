@@ -31,9 +31,9 @@ class MultipleApp:
 
 	def create_upload_data(self):
 		with st.expander("__Input data show__."):
-			self.upload_view = UploadView()
-			self.upload_view.get_upload_layout()
-			self.upload_layout = UploadLayout(self.upload_view)
+			upload_view = UploadView()
+			upload_view.get_upload_layout()
+			self.upload_layout = UploadLayout(upload_view)
 			self.upload_layout.get_files_from_memory()
 			self.condition_json = self.upload_layout.json_file
 			AutoloadSession.autoload()
@@ -77,10 +77,6 @@ class MultipleApp:
 			insert_terminals_main(self.upload_layout, key=MenuChapters.terminals)
 		else:
 			st.warning("no loaded file json polygons")
-
-	def analytics(self):
-		if self.condition_excel:
-			main_analytical_tabel(self.upload_layout)
 
 	def download(self):
 		UploadSessionSettingControl.load_session_download()

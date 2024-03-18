@@ -37,16 +37,16 @@ class SheetsTabView:
 				st.warning(e)
 
 	def _create_tabs(self, table: str, tabs: st.tabs, en: int = 0):
-		try:
-			with tabs[en]:
-				self._write_df(table)
-				self._create_unique_column_data(table)
-				selected_columns = TableColumnsSelectorControl(key=f' {table}')
-				sql_columns = selected_columns.get_columns_for_query(table)
-				st.write("Selected columns sql expiration")
-				st.code(sql_columns, language='sql')
-		except Exception as e:
-			st.warning(e)
+		# try:
+		with tabs[en]:
+			self._write_df(table)
+			self._create_unique_column_data(table)
+			selected_columns = TableColumnsSelectorControl(key=f' {table} {en}')
+			sql_columns = selected_columns.get_columns_for_query(table)
+			st.write("Selected columns sql expiration")
+			st.code(sql_columns, language='sql')
+		# except Exception as e:
+		# 	st.warning(e)
 
 	def _write_df(self, table: str):
 		st.markdown(f"Columns of **{table}**")
