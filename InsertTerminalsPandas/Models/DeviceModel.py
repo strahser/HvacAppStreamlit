@@ -21,7 +21,7 @@ class Device:
 	geometry: str = None
 	color: str = None
 	dimension1: str = None
-	minimum_device_number: float = None
+	minimum_device_number: int = None
 	point_z: float = None
 	point_x_y_list: tuple[tuple[float]] = None
 	device_orientation_option1: str = None

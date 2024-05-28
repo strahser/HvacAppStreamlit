@@ -1,5 +1,5 @@
 from InsertTerminalsPandas.Core.InsertTerminalsСalculation import InsertTerminals, Polygon, gl
-from InsertTerminalsPandas.Core.UpdateDFModel import DataFrameUpdating
+from InsertTerminalsPandas.Controls.UpdateDFModel import DataFrameUpdating
 from InsertTerminalsPandas.Core.ChooseTerminalFromDBModel import ChooseTerminalsInstanceFromDB, math
 from InsertTerminalsPandas.PlotePolygons.PolygonMerge import PolygonMergeBase, PolygonMerge
 from InsertTerminalsPandas.Static.ColumnChoosing import ColumnChoosing

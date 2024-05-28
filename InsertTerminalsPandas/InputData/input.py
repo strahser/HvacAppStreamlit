@@ -1,16 +1,11 @@
 from collections import namedtuple
 import pandas as pd
-import streamlit as st
-
-import SQL.SqlModel.SqlConnector
-from InsertTerminalsPandas.Static.CalculationOptions import CalculationOptions
 from Session.StatementConfig import StatementConstants
 from Upload.UploadLayout import UploadLayout
 from InputView.InputViewMultyChoosing import InputViewMultyChoosing
 from StaticData.AppConfig import ExcelSheetsLoads
 from InsertTerminalsPandas.Static.DevicePropertiesName import DevicePropertiesName
 from StaticData.AppConfig import MenuChapters
-
 SystemProperty = namedtuple('SystemProperty', ['system_flow', 'system_name'])
 
 
@@ -20,6 +15,7 @@ class InputDataDF:
 		self.upload_layout = upload_layout
 		self.json_data = upload_layout.json_file
 		self.revit_export = None
+		self.concat_base = None
 		self.EquipmentBase = []
 		self.devices = None
 		self.device_type = None

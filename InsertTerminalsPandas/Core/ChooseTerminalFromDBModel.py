@@ -24,7 +24,8 @@ class ChooseTerminalsInstanceFromDB:
 		filter_ = self.terminal_base[ColumnChoosing.family_device_name] == self.family_device_name
 		return self.terminal_base[filter_]
 
-	def __query_min_column_value_in_DF(self, df, column_filter):
+	@staticmethod
+	def __query_min_column_value_in_DF(df, column_filter):
 		return df[column_filter] == df[column_filter].min()
 
 	def get_minimum_device_number(self) -> pd.DataFrame:
@@ -36,7 +37,8 @@ class ChooseTerminalsInstanceFromDB:
 			terminals_data = terminals_data[self.__query_min_column_value_in_DF(terminals_data, 'max_flow')]
 			return terminals_data
 
-	def __check_correct_terminal_points_quantity(self, calculated_flow_to_instance, max_terminal_flow):
+	@staticmethod
+	def __check_correct_terminal_points_quantity(calculated_flow_to_instance, max_terminal_flow):
 		flow_value = max_terminal_flow - calculated_flow_to_instance
 		checking_flow = flow_value if flow_value > 0 else None
 		return checking_flow

@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 from SQL.SqlModel.SqlConnector import SqlConnector
-from InsertTerminalsPandas.Core.DetailAggModel import get_level_filter_grid_df
+from InsertTerminalsPandas.Controls.DetailAggModel import get_level_filter_grid_df
 from InsertTerminalsPandas.Controls.LevelPlotControl import CreateSelectedPlotsControl, CreateLevelPlots
 from InsertTerminalsPandas.Static.CalculationOptions import CalculationOptions
 from InsertTerminalsPandas.TermilalView.ConfigView import InputDataDF, ConfigView, LayoutOptions, ColumnChoosing
