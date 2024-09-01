@@ -14,6 +14,8 @@ class PolygonPointsMergeControl:
         """add start,end points,color from callback widgets  to df for plotting
 
         """
+        self.system_list = None
+        self.add_color_df = None
         self.input_df = input_df
         self.tabs_view = tabs_view
         self.layout_view_context_data = LayoutViewContextData(tabs_view.system_and_flow_view, tabs_view.static_layout)
@@ -78,9 +80,7 @@ class PolygonPointsMergeControl:
         )
         return df_level_points
 
-    def _add_system_color_to_df(
-            self, dynamic_layout_view_context_data: DynamicLayoutViewContextData
-    ) -> pd.DataFrame:
+    def _add_system_color_to_df(self, dynamic_layout_view_context_data: DynamicLayoutViewContextData) -> pd.DataFrame:
         df_level_points = self._get_system_points_between_levels()
         df_level_points["color"] = df_level_points.apply(
             lambda df: WidgetsModelControl.add_color_to_widget(
@@ -90,30 +90,24 @@ class PolygonPointsMergeControl:
         )
         return df_level_points
 
-    def _add_color_filter_to_df(self) -> pd.DataFrame:
+    @property
+    def polygon_merge_df(self) -> pd.DataFrame:
+        """получаем px,py,pcx,pcy,color"""
         polygon_merge = PolygonMerge(
             self.input_df,
             self.polygon_dict,
             self.layout_view_context_data.space_data_view.color_filter_name,
         )
-        merge_df = polygon_merge.merge_df()
-        return merge_df
+        return polygon_merge.merge_df()
 
-    def _add_text_to_df(self) -> TextWorkerForPlot:
-        text_worker = TextWorkerForPlot(self._add_color_filter_to_df())
+    @property
+    def text_worker(self) -> TextWorkerForPlot:
         pl_layout = self.layout_view_context_data.space_data_view
-        text_worker.concat_value_with_prefix(
-            pl_layout.space_prefix, pl_layout.space_suffix, pl_layout.space_value
-        )
+        text_worker = TextWorkerForPlot(self.polygon_merge_df)
+        text_worker.concat_value_with_prefix(pl_layout.space_prefix, pl_layout.space_suffix, pl_layout.space_value)
         return text_worker
 
     def calculate(self) -> None:
         self._get_start_end_system_points()
-        self.add_color_df = self._add_system_color_to_df(
-            self.dynamic_layout_context_data
-        )
-        self.merge_df = self._add_color_filter_to_df()
-        self.df_text = self._add_text_to_df()
-        self.system_list: list[
-            pd.DataFrame
-        ] = self.dynamic_layout_context_data.unique_systems["system"].tolist()
+        self.add_color_df = self._add_system_color_to_df(self.dynamic_layout_context_data)
+        self.system_list: list[pd.DataFrame] = self.dynamic_layout_context_data.unique_systems["system"].tolist()

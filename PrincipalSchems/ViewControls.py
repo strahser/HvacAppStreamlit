@@ -80,7 +80,7 @@ class SchemeMain:
         tabs = st.tabs(StaticTabsView.tabs)
         tabs_view1, tabs_view2 = self.tab_0(tabs)
         tab_view_list = self.tab_1(tabs, tabs_view1, tabs_view2)
-
+        plotter_data_list = []
         if tabs_view1.is_input_data_load() and tabs_view2.is_input_data_load():
             for tab in tab_view_list:
                 with tabs[2]:
@@ -88,31 +88,36 @@ class SchemeMain:
                 with tabs[3]:
                     tab.create_dynamic_system_layout()
                 data_for_plotting = DataForPlotting(self.input_df, tab)
-                text_position = self.get_flow_text_direction(tab)
-                plotter_create_layout1 = PlotterCreateLayout(self.fig, data_for_plotting)
-                plotter_create_layout1.create_plot_layout(text_position)
-                dxf_export = DxfExport(plotter_create_layout1)
-                dxf_export.export_to_dxf_data()
-
+                # text_position = self.get_flow_text_direction(tab)
+                # plotter_create_layout1 = PlotterCreateLayout(self.fig, data_for_plotting)
+                # plotter_create_layout1.create_plot_layout(text_position)
+                plotter_data_list.append(data_for_plotting)
         elif tabs_view1.is_input_data_load():
             with tabs[2]:
                 self.expander_equipment(tabs_view1)
             with tabs[3]:
                 tabs_view1.create_dynamic_system_layout()
                 data_for_plotting1 = DataForPlotting(self.input_df, tabs_view1)
-                plotter_create_layout1 = PlotterCreateLayout(self.fig, data_for_plotting1)
-                text_position = self.get_flow_text_direction(tabs_view1)
-                plotter_create_layout1.create_plot_layout(text_position)
+                # plotter_create_layout1 = PlotterCreateLayout(self.fig, data_for_plotting1)
+                # text_position = self.get_flow_text_direction(tabs_view1)
+                # plotter_create_layout1.create_plot_layout(text_position)
+                plotter_data_list.append(data_for_plotting1)
+
         else:
             tabs_view1.waring_if_main_data_not_load()
         create_plot = st.button("Create Plot")
         if create_plot:
-            self.download_plt_html()
-            # plt_plotter_polygon = PltPolygonPlotter(fig_mpl, ax, data_for_plotting)
-            # plt_plotter_polygon()
-            # legend_without_duplicate_labels_fig(fig_mpl)
-            # plt.legend()
-            # st.pyplot(fig_mpl)
-            # , use_container_width=True
+            dxf_export = DxfExport(plotter_data_list)
+            dxf_export.export_to_dxf_data()
+            dxf_export.export_to_mpl()
+            # create_plot = st.button("Create Plot")
+        # if create_plot:
+        # self.download_plt_html()
+        # plt_plotter_polygon = PltPolygonPlotter(fig_mpl, ax, data_for_plotting)
+        # plt_plotter_polygon()
+        # legend_without_duplicate_labels_fig(fig_mpl)
+        # plt.legend()
+        # st.pyplot(fig_mpl)
+        # , use_container_width=True
 
-            st.plotly_chart(self.fig)
+        # st.plotly_chart(self.fig)

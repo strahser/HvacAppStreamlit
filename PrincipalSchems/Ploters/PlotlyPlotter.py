@@ -10,7 +10,7 @@ class PlotlyPlotter:
             self, fig: go.Figure, polygon_points_merge_control: PolygonPointsMergeControl
     ):
         self.fig = fig
-        self._df = polygon_points_merge_control.df_text._df
+        self._df = polygon_points_merge_control.text_worker._df
         self.polygon_points_merge_control = polygon_points_merge_control
         self.level_property = polygon_points_merge_control.get_level_property()
 

@@ -171,8 +171,6 @@ class TabsView:
             self.color_reverse,
             system_distance=self.static_layout.space_dimension_view.distance_between_systems,
         )
-
-
 # endregion
 
 # region Context Data
@@ -224,6 +222,7 @@ class DynamicWidgetsViewContextData:
     def __init__(self, dynamic_layout_context_data: DynamicLayoutViewContextData) -> None:
         """equipment level,symbol"""
         self.dynamic_layout_context_data = dynamic_layout_context_data
+
     @property
     def level_list_value (self):
         level_list_value = [

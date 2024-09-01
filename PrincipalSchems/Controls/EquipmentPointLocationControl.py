@@ -39,7 +39,7 @@ class EquipmentPointLocationControl:
 
     def get_location_point_list(
             self, level_list_value: DynamicWidgetsViewContextData.level_list_value
-    ) -> list:
+    ) -> list[pd.DataFrame]:
         location_point_list = []
         for en, system in enumerate(self.polygon_points_merge_control.system_list):
             location_point = self.__create_equipment_location_point(system, level_list_value[en])
