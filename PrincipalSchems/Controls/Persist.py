@@ -14,7 +14,6 @@ def persist(key: str) -> str:
     return key
 
 
-
 def load_widget_state():
     """Load persistent widget state."""
     # if _PERSIST_STATE_KEY in _state:
@@ -23,8 +22,6 @@ def load_widget_state():
         for key, value in _state.items()
         # if key in _state[_PERSIST_STATE_KEY]
     })
-
-
 
 
 def _write_state():

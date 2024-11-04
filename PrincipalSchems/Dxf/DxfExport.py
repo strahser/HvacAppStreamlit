@@ -1,10 +1,18 @@
 import datetime
+from copy import deepcopy
 
+import dxfwrite
+from dxfwrite import DXFEngine as dxf
 import ezdxf
 import pandas as pd
 import streamlit
 from ezdxf import colors
+from ezdxf.document import Drawing
 from ezdxf.enums import TextEntityAlignment
+from ezdxf import recover
+from ezdxf.addons.drawing import RenderContext, Frontend
+from ezdxf.addons.drawing.matplotlib import MatplotlibBackend
+from matplotlib import pyplot as plt
 
 from PrincipalSchems.Controls.DataForPlotting import DataForPlotting
 from PrincipalSchems.Dxf.DxfBlockCreator import DxfBlockCreator
@@ -79,7 +87,7 @@ class DxfExport:
             self.add_color_legend_title(start_x, start_y + increment)
             return increment
 
-    def export_to_dxf_data(self):
+    def export_to_dxf_data(self)->plt.figure:
         self.creator.create_blocks_if_not_exists()
         streamlit.success("DXF Создано")
         polygons = DxfDrawPolygons(self.text_worker_df)
@@ -88,7 +96,6 @@ class DxfExport:
         level_data = DxfDrawLevelData()
         level_data.add_level_text(self.data_for_plotting[0])
         start_legend_coordinates = 0
-
         for plotting_data in self.data_for_plotting:
             equipment_data = DxfDrawEquipmentData(plotting_data, self.creator)
             equipment_data.plot_horizontal_line_to_equipment()
@@ -100,5 +107,12 @@ class DxfExport:
             offset_value = all_schemes_lines.draw_legend(start_legend_coordinates)
             start_legend_coordinates += offset_value
         self.create_color_legend(start_legend_coordinates)
+        fig = plt.figure()
+        ax = fig.add_axes([0, 0, 1, 1])
+        ctx = RenderContext(self.doc)
+        out = MatplotlibBackend(ax)
+        Frontend(ctx, out).draw_layout(self.doc.modelspace(), finalize=True)
+        return fig
 
+    def save(self):
         self.doc.saveas(self.doc_name)

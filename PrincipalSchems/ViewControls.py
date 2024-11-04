@@ -93,9 +93,13 @@ class SchemeMain:
                 plotter_data_list.append(data_for_plotting1)
         else:
             tabs_view1.waring_if_main_data_not_load()
-        create_plot = st.button("Create Plot")
+        create_plot = st.button("Создать график")
+        show_sketch = st.checkbox("показать эскиз")
         # Создать DXF
         if create_plot and len(plotter_data_list) > 0:
             dxf_export = DxfExport(plotter_data_list)
-            dxf_export.export_to_dxf_data()
+            _fig = dxf_export.export_to_dxf_data()
+            dxf_export.save()
             download_dxf_from_drawing(DxfExport.doc)
+            if show_sketch:
+                st.pyplot(_fig)

@@ -1,13 +1,8 @@
 import ezdxf
 from ezdxf.enums import TextEntityAlignment
-
 import pandas as pd
-import streamlit as st
-
 from PrincipalSchems.Dxf.DxfDocument import DxfDocument
 from PrincipalSchems.Models.ConstantModel import SystemProperty
-from InsertTerminalsPandas.InputData.input import SystemFlowAndNameData
-from PrincipalSchems.Controls.DataForPlotting import DataForPlotting
 from PrincipalSchems.Dxf.DxfConstants import TEXT_PROPERTY, PLOTLY_COLORS, ARROW_SIZE
 
 
