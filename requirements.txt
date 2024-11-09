@@ -61,6 +61,7 @@ numpy==1.23.5
 openpyxl==3.1.2
 packaging==23.1
 pandas==2.0.3
+pandas-profiling==3.6.6
 parso==0.8.3
 patsy==0.5.3
 phik==0.12.3
@@ -100,7 +101,7 @@ SQLAlchemy==2.0.28
 st-mui-dialog==0.0.10
 stack-data==0.6.2
 statsmodels==0.14.0
-streamlit==1.32.1
+streamlit==1.40.0
 streamlit-ace==0.1.1
 streamlit-aggrid==0.3.4.post3
 streamlit-agraph==0.0.45
