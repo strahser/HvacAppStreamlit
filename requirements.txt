@@ -34,7 +34,7 @@ htmlmin==0.1.12
 hydralit==1.0.14
 hydralit-components==1.0.10
 idna==3.4
-ifcopenshell==0.7.0.230818
+ifcopenshell==0.8.0
 ImageHash==4.3.1
 importlib-metadata==6.8.0
 importlib-resources==6.0.1
@@ -47,6 +47,7 @@ jsonschema==4.19.0
 jsonschema-specifications==2023.7.1
 kaleido==0.2.1
 kiwisolver==1.4.4
+lark==1.2.2
 linque==3.0.0
 lxml==4.9.3
 markdown-it-py==3.0.0
