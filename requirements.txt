@@ -61,7 +61,6 @@ numpy==1.23.5
 openpyxl==3.1.2
 packaging==23.1
 pandas==2.0.3
-pandas-profiling==3.6.6
 parso==0.8.3
 patsy==0.5.3
 phik==0.12.3
